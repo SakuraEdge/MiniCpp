@@ -1,0 +1,4 @@
+.review-tools/
+node_modules/
+design/.qa/
+*.log

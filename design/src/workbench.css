@@ -1,0 +1,94 @@
+#mini-cpp-review .wb-filebar { display:flex; align-items:stretch; background:var(--mc-soft); border-bottom:1px solid var(--mc-line); min-height:36px; }
+#mini-cpp-review .wb-filetab { display:flex; align-items:center; gap:8px; padding:0 18px; border-inline-end:1px solid var(--mc-line); border-top:2px solid var(--mc-accent); margin-bottom:-1px; background:var(--mc-surface); }
+#mini-cpp-review .wb-filetab svg { color:var(--mc-accent); }
+#mini-cpp-review .wb-filetab strong { font:600 13px var(--mc-mono); }
+#mini-cpp-review .wb-plus { align-self:center; display:grid; place-items:center; width:33px; height:29px; color:var(--mc-muted); }
+#mini-cpp-review .wb-plus:hover { color:var(--mc-accent); }
+#mini-cpp-review .wb-filekind { margin-left:auto; align-self:center; padding-right:14px; color:var(--mc-muted); font-size:11px; }
+#mini-cpp-review .wb-well { display:grid; grid-template-columns:minmax(0,1fr); }
+#mini-cpp-review .wb-split { grid-template-columns:minmax(0,1fr) clamp(205px,26%,265px); }
+#mini-cpp-review .wb-editor { min-width:0; padding:12px 0 16px; min-height:312px; }
+#mini-cpp-review .wb-row { display:grid; grid-template-columns:31px 25px minmax(0,1fr); min-height:20px; align-items:start; }
+#mini-cpp-review .wb-at { background:var(--mc-amber-tint); }
+#mini-cpp-review .wb-invalid { background:var(--mc-danger-tint); }
+#mini-cpp-review .wb-picked .wb-line { border-left:2px solid var(--mc-danger); padding-left:10px; }
+#mini-cpp-review .wb-line { padding:0 6px 0 12px; color:var(--mc-ink); border-left:1px solid var(--mc-line); white-space:pre-wrap; overflow-wrap:anywhere; min-height:20px; font:14px/20px var(--mc-mono); }
+#mini-cpp-review .wb-lno { text-align:right; padding-right:8px; color:var(--mc-muted); font:11px/20px var(--mc-mono); user-select:none; }
+#mini-cpp-review .wb-at .wb-lno { color:var(--mc-amber); font-weight:700; }
+#mini-cpp-review .wb-gutter { display:flex; align-items:center; justify-content:flex-end; position:relative; height:20px; }
+#mini-cpp-review .wb-bp-btn { display:grid; place-items:center; position:absolute; left:1px; width:16px; height:20px; }
+#mini-cpp-review .wb-break { width:8px; height:8px; border-radius:50%; border:1px solid var(--mc-muted); }
+#mini-cpp-review .wb-solid { background:var(--mc-danger); border-color:var(--mc-danger); }
+#mini-cpp-review .wb-arrow { font:700 15px/1 var(--mc-mono); color:var(--mc-amber); }
+#mini-cpp-review .wb-errmark { background:var(--mc-danger); color:var(--mc-surface); width:13px; height:13px; border-radius:50%; text-align:center; font:700 11px/13px var(--mc-mono); }
+#mini-cpp-review .wb-insert { border-left:2px solid var(--mc-danger); margin-left:1px; }
+#mini-cpp-review .wb-unknown { text-decoration: underline wavy var(--mc-danger); text-underline-offset:3px; }
+#mini-cpp-review .wb-comment { color:var(--mc-muted); }
+#mini-cpp-review .wb-key { color:var(--mc-purple); }
+#mini-cpp-review .wb-directive, #mini-cpp-review .wb-name { color:var(--mc-blue); }
+#mini-cpp-review .wb-string { color:var(--mc-accent); }
+#mini-cpp-review .wb-number { color:var(--mc-amber); }
+#mini-cpp-review .wb-token { display:inline; vertical-align:baseline; line-height:inherit; font:inherit; padding:0; border-radius:2px; }
+#mini-cpp-review .wb-hot { background:var(--mc-ink); color:var(--mc-surface); }
+#mini-cpp-review .wb-hover { z-index:16; position:absolute; background:var(--mc-surface); color:var(--mc-ink); padding:7px 11px; border:1px solid var(--mc-line); box-shadow:0 3px 12px #17291f26; border-radius:4px; pointer-events:none; display:grid; gap:3px; }
+#mini-cpp-review .wb-hover span { font-size:11px; color:var(--mc-muted); }
+#mini-cpp-review .wb-hover code { font:14px var(--mc-mono); }
+#mini-cpp-review .wb-side { min-width:0; border-left:1px solid var(--mc-line); display:flex; flex-direction:column; background:var(--mc-soft); }
+#mini-cpp-review .wb-side header { display:flex; justify-content:space-between; align-items:center; padding:10px 14px; border-bottom:1px solid var(--mc-line); }
+#mini-cpp-review .wb-side-title { display:inline-flex; gap:7px; align-items:center; font-weight:600; }
+#mini-cpp-review .wb-side-title svg { color:var(--mc-accent); }
+#mini-cpp-review .wb-tag { display:inline-flex; align-items:center; height:20px; padding:1px 6px; border-radius:3px; font-size:11px; background:var(--mc-tint); color:var(--mc-accent); }
+#mini-cpp-review .wb-warn { color:var(--mc-amber); background:var(--mc-amber-tint); }
+#mini-cpp-review .wb-red { color:var(--mc-danger); background:var(--mc-danger-tint); }
+#mini-cpp-review .wb-frame { margin:10px 14px 8px; border-left:2px solid var(--mc-accent); padding-left:10px; }
+#mini-cpp-review .wb-framelabel, #mini-cpp-review .wb-framevalue { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:4px; }
+#mini-cpp-review .wb-framelabel { font-size:11px; color:var(--mc-muted); }
+#mini-cpp-review .wb-framelabel span { font-family:var(--mc-mono); }
+#mini-cpp-review .wb-framevalue { margin-top:2px; }
+#mini-cpp-review .wb-framevalue b { font:600 15px var(--mc-mono); }
+#mini-cpp-review .wb-framevalue code { font-size:12px; color:var(--mc-muted); }
+#mini-cpp-review .wb-locals { padding:6px 14px 8px; }
+#mini-cpp-review .wb-locals h3 { display:flex; align-items:center; gap:6px; font-size:13px; font-weight:600; }
+#mini-cpp-review .wb-locals h3 span, #mini-cpp-review .wb-count { padding:0 4px; border-radius:3px; background:var(--mc-line); color:var(--mc-muted); font:11px/15px var(--mc-mono); }
+#mini-cpp-review .wb-locals table { border-collapse:collapse; width:100%; margin-top:5px; font:13px var(--mc-mono); }
+#mini-cpp-review .wb-locals :is(td,th) { border:0; border-bottom:1px solid var(--mc-line); text-align:left; padding:4px 2px; }
+#mini-cpp-review .wb-locals th { font:400 11px 'Microsoft YaHei UI',sans-serif; color:var(--mc-muted); }
+#mini-cpp-review .wb-locals td:nth-child(2), #mini-cpp-review .wb-locals td small { color:var(--mc-muted); }
+#mini-cpp-review .wb-locals tr>:last-child { text-align:right; }
+#mini-cpp-review .wb-locals .wb-changed td:last-child b { color:var(--mc-accent); }
+#mini-cpp-review .wb-inspected { background:var(--mc-tint); }
+#mini-cpp-review .wb-debugbar { margin-top:auto; display:flex; align-items:center; gap:3px; padding:8px 10px; border-top:1px solid var(--mc-line); }
+#mini-cpp-review .wb-debugbar button { min-height:27px; font-size:12px; padding:3px 7px; }
+#mini-cpp-review .wb-debugbar svg { width:14px; height:14px; }
+#mini-cpp-review .wb-stop { margin-left:auto; }
+#mini-cpp-review .wb-output { border-top:1px solid var(--mc-line); }
+#mini-cpp-review .wb-output-head { display:flex; align-items:center; justify-content:space-between; gap:3px; min-height:35px; padding:0 12px; background:var(--mc-soft); border-bottom:1px solid var(--mc-line); }
+#mini-cpp-review .wb-output-head nav { display:flex; gap:14px; flex-wrap:wrap; }
+#mini-cpp-review .wb-ptab { display:inline-flex; align-items:center; gap:5px; padding:7px 1px 5px; min-height:34px; border-bottom:2px solid transparent; color:var(--mc-muted); font-size:12px; }
+#mini-cpp-review .wb-ptab svg { width:13px; height:13px; }
+#mini-cpp-review .wb-ptab[aria-pressed=true] { color:var(--mc-ink); border-color:var(--mc-accent); font-weight:600; }
+#mini-cpp-review .wb-count.wb-has { color:var(--mc-danger); background:var(--mc-danger-tint); }
+#mini-cpp-review .wb-output-status { font:11px var(--mc-mono); color:var(--mc-muted); }
+#mini-cpp-review .wb-io { background:light-dark(#202925,#181d1b); color:#e6f1ea; display:grid; grid-template-columns:1fr 1fr; padding:12px 17px; gap:15px; min-height:83px; }
+#mini-cpp-review .wb-io>div+div { border-left:1px solid #48564f; padding-left:16px; }
+#mini-cpp-review .wb-io h3 { color:#bdcfc4; font:400 11px/1.3 'Microsoft YaHei UI',sans-serif; margin:0 0 5px; }
+#mini-cpp-review .wb-io small { color:#a0b6aa; font:11px var(--mc-mono); margin-left:5px; }
+#mini-cpp-review .wb-io pre, #mini-cpp-review .wb-console-muted { font:13px/18px var(--mc-mono); padding:0; background:none; border:0; color:inherit; }
+#mini-cpp-review .wb-console-muted { color:#a8bcb0; font-size:12px; }
+#mini-cpp-review .wb-empty, #mini-cpp-review .wb-log, #mini-cpp-review .wb-diag { min-height:83px; padding:12px 16px; }
+#mini-cpp-review .wb-empty { display:flex; gap:7px; align-items:center; color:var(--mc-muted); font-size:13px; }
+#mini-cpp-review .wb-diag-line, #mini-cpp-review .wb-advice { display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 8px; }
+#mini-cpp-review .wb-diag-line code { font-size:13px; overflow-wrap:anywhere; }
+#mini-cpp-review .wb-link { color:var(--mc-blue); font:12px var(--mc-mono); text-decoration:underline; text-underline-offset:2px; }
+#mini-cpp-review .wb-link svg { width:12px; height:12px; }
+#mini-cpp-review .wb-advice { margin-top:9px; align-items:flex-start; flex-wrap:nowrap; padding-left:9px; border-left:2px solid var(--mc-amber); color:var(--mc-ink); }
+#mini-cpp-review .wb-advice>svg { color:var(--mc-amber); margin-top:2px; }
+#mini-cpp-review .wb-advice>div { font-size:13px; }
+#mini-cpp-review .wb-advice button { display:inline-flex; align-items:center; margin-left:6px; }
+#mini-cpp-review .wb-log { font:13px/1.6 var(--mc-mono); overflow-wrap:anywhere; }
+#mini-cpp-review .wb-log-note { color:var(--mc-muted); font-size:12px; }
+#mini-cpp-review .wb-fail { color:var(--mc-danger); }
+@media(max-width:710px){#mini-cpp-review .wb-split{grid-template-columns:minmax(0,1fr) 195px}#mini-cpp-review .wb-row{grid-template-columns:26px 22px minmax(0,1fr)}#mini-cpp-review .wb-line{padding-left:8px}}
+@media(max-width:590px){#mini-cpp-review .wb-split{grid-template-columns:minmax(0,1fr)}#mini-cpp-review .wb-side{border-left:0;border-top:1px solid var(--mc-line)}#mini-cpp-review .wb-locals{padding-bottom:12px}#mini-cpp-review .wb-side header{padding-block:7px}#mini-cpp-review .wb-side .wb-frame{margin-block:8px 4px}#mini-cpp-review .wb-editor{min-height:0}#mini-cpp-review .wb-output-head{padding-inline:8px}#mini-cpp-review .wb-output-head nav{gap:9px}#mini-cpp-review .wb-output-status{display:none}}
+@media(max-width:390px){#mini-cpp-review .wb-row{grid-template-columns:24px 20px minmax(0,1fr)}#mini-cpp-review .wb-line{font-size:12px;padding-left:6px}#mini-cpp-review .wb-ptab{gap:3px}}
+@media(pointer:coarse){#mini-cpp-review .wb-debugbar button,#mini-cpp-review .wb-ptab,#mini-cpp-review .wb-plus{min-height:44px}#mini-cpp-review .wb-debugbar button,#mini-cpp-review .wb-plus{min-width:44px}}

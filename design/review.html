@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Mini C++ · 设计审查 R02</title><link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3EMini%20C%2B%2B%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%2311654f%22%2F%3E%0A%20%20%3Cg%20fill%3D%22%23fff%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M39%2013H22L11%2024v16l11%2011h17v-8H25l-6-6V27l6-6h14z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M32%2026h4v4h4v4h-4v4h-4v-4h-4v-4h4zm15%200h4v4h4v4h-4v4h-4v-4h-4v-4h4z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A"><style>html{color-scheme:light dark}body{margin:0;background:light-dark(#eef2f0,#131816);padding:clamp(10px,3.8vw,50px) clamp(8px,3vw,40px)}main{max-width:1152px;margin:0 auto}@media(max-width:570px){body{padding:9px 4px}}</style></head><body><main><script>(()=>{const nodes={"align-left":[["path",{"d":"M15 12H3"}],["path",{"d":"M17 18H3"}],["path",{"d":"M21 6H3"}]],"arrow-up-right":[["path",{"d":"M7 7h10v10"}],["path",{"d":"M7 17 17 7"}]],"bug":[["path",{"d":"m8 2 1.88 1.88"}],["path",{"d":"M14.12 3.88 16 2"}],["path",{"d":"M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"}],["path",{"d":"M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"}],["path",{"d":"M12 20v-9"}],["path",{"d":"M6.53 9C4.6 8.8 3 7.1 3 5"}],["path",{"d":"M6 13H2"}],["path",{"d":"M3 21c0-2.1 1.7-3.9 3.8-4"}],["path",{"d":"M20.97 5c0 2.1-1.6 3.8-3.5 4"}],["path",{"d":"M22 13h-4"}],["path",{"d":"M17.2 17c2.1.1 3.8 1.9 3.8 4"}]],"check":[["path",{"d":"M20 6 9 17l-5-5"}]],"chevron-down":[["path",{"d":"m6 9 6 6 6-6"}]],"circle-alert":[["circle",{"cx":"12","cy":"12","r":"10"}],["line",{"x1":"12","x2":"12","y1":"8","y2":"12"}],["line",{"x1":"12","x2":"12.01","y1":"16","y2":"16"}]],"circle-check":[["circle",{"cx":"12","cy":"12","r":"10"}],["path",{"d":"m9 12 2 2 4-4"}]],"corner-down-left":[["polyline",{"points":"9 10 4 15 9 20"}],["path",{"d":"M20 4v7a4 4 0 0 1-4 4H4"}]],"file-code-2":[["path",{"d":"M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"}],["path",{"d":"M14 2v4a2 2 0 0 0 2 2h4"}],["path",{"d":"m5 12-3 3 3 3"}],["path",{"d":"m9 18 3-3-3-3"}]],"file-pen-line":[["path",{"d":"m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2"}],["path",{"d":"M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"}],["path",{"d":"M8 18h1"}]],"file-plus-2":[["path",{"d":"M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"}],["path",{"d":"M14 2v4a2 2 0 0 0 2 2h4"}],["path",{"d":"M3 15h6"}],["path",{"d":"M6 12v6"}]],"folder-open":[["path",{"d":"m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"}]],"gauge":[["path",{"d":"m12 14 4-4"}],["path",{"d":"M3.34 19a10 10 0 1 1 17.32 0"}]],"git-branch":[["line",{"x1":"6","x2":"6","y1":"3","y2":"15"}],["circle",{"cx":"18","cy":"6","r":"3"}],["circle",{"cx":"6","cy":"18","r":"3"}],["path",{"d":"M18 9a9 9 0 0 1-9 9"}]],"hammer":[["path",{"d":"m15 12-8.373 8.373a1 1 0 1 1-3-3L12 9"}],["path",{"d":"m18 15 4-4"}],["path",{"d":"m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172V7l-2.26-2.26a6 6 0 0 0-4.202-1.756L9 2.96l.92.82A6.18 6.18 0 0 1 12 8.4V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"}]],"indent-decrease":[["path",{"d":"M21 12H11"}],["path",{"d":"M21 18H11"}],["path",{"d":"M21 6H11"}],["path",{"d":"m7 8-4 4 4 4"}]],"indent-increase":[["path",{"d":"M21 12H11"}],["path",{"d":"M21 18H11"}],["path",{"d":"M21 6H11"}],["path",{"d":"m3 8 4 4-4 4"}]],"info":[["circle",{"cx":"12","cy":"12","r":"10"}],["path",{"d":"M12 16v-4"}],["path",{"d":"M12 8h.01"}]],"keyboard":[["path",{"d":"M10 8h.01"}],["path",{"d":"M12 12h.01"}],["path",{"d":"M14 8h.01"}],["path",{"d":"M16 12h.01"}],["path",{"d":"M18 8h.01"}],["path",{"d":"M6 8h.01"}],["path",{"d":"M7 16h10"}],["path",{"d":"M8 12h.01"}],["rect",{"width":"20","height":"16","x":"2","y":"4","rx":"2"}]],"lightbulb":[["path",{"d":"M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"}],["path",{"d":"M9 18h6"}],["path",{"d":"M10 22h4"}]],"list":[["path",{"d":"M3 12h.01"}],["path",{"d":"M3 18h.01"}],["path",{"d":"M3 6h.01"}],["path",{"d":"M8 12h13"}],["path",{"d":"M8 18h13"}],["path",{"d":"M8 6h13"}]],"minus":[["path",{"d":"M5 12h14"}]],"pause":[["rect",{"x":"14","y":"4","width":"4","height":"16","rx":"1"}],["rect",{"x":"6","y":"4","width":"4","height":"16","rx":"1"}]],"play":[["polygon",{"points":"6 3 20 12 6 21 6 3"}]],"plus":[["path",{"d":"M5 12h14"}],["path",{"d":"M12 5v14"}]],"redo":[["path",{"d":"M21 7v6h-6"}],["path",{"d":"M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"}]],"redo-2":[["path",{"d":"m15 14 5-5-5-5"}],["path",{"d":"M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13"}]],"replace":[["path",{"d":"M14 4a2 2 0 0 1 2-2"}],["path",{"d":"M16 10a2 2 0 0 1-2-2"}],["path",{"d":"M20 2a2 2 0 0 1 2 2"}],["path",{"d":"M22 8a2 2 0 0 1-2 2"}],["path",{"d":"m3 7 3 3 3-3"}],["path",{"d":"M6 10V5a3 3 0 0 1 3-3h1"}],["rect",{"x":"2","y":"14","width":"8","height":"8","rx":"2"}]],"rotate-ccw":[["path",{"d":"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"}],["path",{"d":"M3 3v5h5"}]],"rotate-cw":[["path",{"d":"M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"}],["path",{"d":"M21 3v5h-5"}]],"save":[["path",{"d":"M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"}],["path",{"d":"M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"}],["path",{"d":"M7 3v4a1 1 0 0 0 1 1h7"}]],"search":[["circle",{"cx":"11","cy":"11","r":"8"}],["path",{"d":"m21 21-4.3-4.3"}]],"settings-2":[["path",{"d":"M20 7h-9"}],["path",{"d":"M14 17H5"}],["circle",{"cx":"17","cy":"17","r":"3"}],["circle",{"cx":"7","cy":"7","r":"3"}]],"square":[["rect",{"width":"18","height":"18","x":"3","y":"3","rx":"2"}]],"square-play":[["rect",{"width":"18","height":"18","x":"3","y":"3","rx":"2"}],["path",{"d":"m9 8 6 4-6 4Z"}]],"square-terminal":[["path",{"d":"m7 11 2-2-2-2"}],["path",{"d":"M11 13h4"}],["rect",{"width":"18","height":"18","x":"3","y":"3","rx":"2","ry":"2"}]],"step-forward":[["line",{"x1":"6","x2":"6","y1":"4","y2":"20"}],["polygon",{"points":"10,4 20,12 10,20"}]],"terminal":[["polyline",{"points":"4 17 10 11 4 5"}],["line",{"x1":"12","x2":"20","y1":"19","y2":"19"}]],"text-select":[["path",{"d":"M5 3a2 2 0 0 0-2 2"}],["path",{"d":"M19 3a2 2 0 0 1 2 2"}],["path",{"d":"M21 19a2 2 0 0 1-2 2"}],["path",{"d":"M5 21a2 2 0 0 1-2-2"}],["path",{"d":"M9 3h1"}],["path",{"d":"M9 21h1"}],["path",{"d":"M14 3h1"}],["path",{"d":"M14 21h1"}],["path",{"d":"M3 9v1"}],["path",{"d":"M21 9v1"}],["path",{"d":"M3 14v1"}],["path",{"d":"M21 14v1"}],["line",{"x1":"7","x2":"15","y1":"8","y2":"8"}],["line",{"x1":"7","x2":"17","y1":"12","y2":"12"}],["line",{"x1":"7","x2":"13","y1":"16","y2":"16"}]],"undo":[["path",{"d":"M3 7v6h6"}],["path",{"d":"M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"}]],"undo-2":[["path",{"d":"M9 14 4 9l5-5"}],["path",{"d":"M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"}]],"x":[["path",{"d":"M18 6 6 18"}],["path",{"d":"m6 6 12 12"}]]};
+window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i of document.querySelectorAll('#mini-cpp-review i[data-lucide]')) {
+ const name=i.dataset.lucide, data=nodes[name]; if(!data)continue;
+ const svg=document.createElementNS(ns,'svg'); for(const [k,v] of Object.entries({class:'lucide lucide-'+name,'data-lucide':name,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor','stroke-width':'2','stroke-linecap':'round','stroke-linejoin':'round','aria-hidden':'true'}))svg.setAttribute(k,v);
+ for(const [tag,attrs] of data){const el=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))el.setAttribute(k,v);svg.append(el);} i.replaceWith(svg);
+}}};})()</script>
+<div id="mini-cpp-review" lang="zh-CN" aria-label="Mini C++ 界面与图标审查">
+  <header class="mc-reviewbar">
+    <div class="mc-reviewtag"><span class="mc-rid">R02</span><span>设计审查</span></div>
+    <nav class="mc-scenes" aria-label="审查场景">
+      <button type="button" data-scene="edit" aria-pressed="true">编辑器</button>
+      <button type="button" data-scene="debug" aria-pressed="false">断点调试</button>
+      <button type="button" data-scene="error" aria-pressed="false">编译报错</button>
+      <button type="button" data-scene="icons" aria-pressed="false">图标稿</button>
+    </nav>
+    <select class="mc-case" data-case aria-label="报错样例" hidden><option value="semicolon">样例：漏写分号</option><option value="name">样例：变量名误写</option></select>
+    <span class="mc-reviewmeta">交互样稿</span>
+  </header>
+  <section class="mc-window" aria-label="Mini C++ 单文件工作台" data-window>
+    <header class="mc-titlebar">
+      <div class="mc-brand"><span class="mc-mark" aria-hidden="true"><b></b><i></i><i></i></span><span class="mc-titlefile" data-titlefile>main.cpp</span><span class="mc-title-dash" aria-hidden="true">-</span><strong>Mini C++</strong></div>
+      <div class="mc-caption" aria-hidden="true"><i data-lucide="minus"></i><i data-lucide="square"></i><i data-lucide="x"></i></div>
+    </header>
+    <nav class="mc-menustrip" aria-label="应用菜单">
+      <div class="mc-menus">
+        <button type="button" data-menu="file" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+F">文件</button>
+        <button type="button" data-menu="edit" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+E">编辑</button>
+        <button type="button" data-menu="search" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+S">搜索</button>
+        <button type="button" data-menu="view" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+V">视图</button>
+        <button type="button" data-menu="project" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+P">项目</button>
+        <button type="button" data-menu="run" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+R">运行</button>
+        <button type="button" data-menu="tools" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+T">工具</button>
+        <button type="button" data-menu="cvs" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+C">CVS</button>
+        <button type="button" data-menu="window" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+W">窗口</button>
+        <button type="button" data-menu="help" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+H">帮助</button>
+      </div>
+      <div class="mc-dropdown" data-dropdown hidden></div>
+    </nav>
+    <div class="mc-toolbar" aria-label="工具栏">
+      <div class="mc-cluster" role="group" aria-label="文件操作" data-filetools></div>
+      <div class="mc-cluster" role="group" aria-label="编辑操作" data-edittools></div>
+      <div class="mc-cluster mc-builds" role="group" aria-label="四个构建操作" data-buildtools></div>
+      <div class="mc-cluster" role="group" aria-label="调试操作" data-debugtools></div>
+      <div class="mc-config" role="group" aria-label="下次构建设置">
+        <label class="mc-selectbox"><span class="mc-sr">C++ 标准</span><select data-std aria-label="C++ 标准"><option value="98">C++98</option><option value="11">C++11</option><option value="14" selected>C++14</option></select><i data-lucide="chevron-down" aria-hidden="true"></i></label>
+        <label class="mc-switch" data-tip="下次普通构建使用 -O2"><input type="checkbox" data-o2 aria-label="开启 O2 优化"><span class="mc-track" aria-hidden="true"></span><span>O2</span></label>
+      </div>
+    </div>
+    <div data-workbench></div>
+    <footer class="mc-status"><span class="mc-footstate" data-status></span><span class="mc-statusinfo"><span data-position></span><span>空格: 4</span><span>UTF-8</span><span>CRLF</span></span></footer>
+  </section>
+  <section class="mc-identity" data-identity hidden aria-label="Mini C++ 图标审查稿">
+    <header class="mc-id-head"><div class="mc-brand"><span class="mc-mark" aria-hidden="true"><b></b><i></i><i></i></span><strong>Mini C++</strong></div><span>图标规范 <i>/</i> 02</span></header>
+    <div class="mc-id-main">
+      <div class="mc-id-intro"><span class="mc-index">01 / APP</span><h2>应用图标</h2></div>
+      <div class="mc-id-spec">
+        <div class="mc-swatch mc-swatch-light"><span class="mc-mark" role="img" aria-label="浅色背景上的 Mini C++ 图标"><b></b><i></i><i></i></span><span>浅色背景</span></div>
+        <div class="mc-swatch mc-swatch-dark"><span class="mc-mark" role="img" aria-label="深色背景上的 Mini C++ 图标"><b></b><i></i><i></i></span><span>深色背景</span></div>
+        <div class="mc-scales"><div data-sizes></div><span>原始像素尺寸</span></div>
+      </div>
+      <div class="mc-id-intro"><span class="mc-index">02 / TOOLBAR</span><h2>构建工具栏</h2></div>
+      <div class="mc-id-actions" data-spec-actions></div>
+      <div class="mc-id-fine"><span>24 × 24 网格</span><span>2 px 线宽</span><span>圆角端点</span></div>
+    </div>
+  </section>
+  <div class="mc-dialogstage" data-dialog hidden></div>
+  <div class="mc-sr" data-announce role="status" aria-live="polite"></div>
+</div>
+
+<style>
+#mini-cpp-review {
+  --mc-bg: light-dark(#f1f4f3, #171c1b); --mc-surface: light-dark(#fff, #202625);
+  --mc-soft: light-dark(#f6f8f7, #262d2b); --mc-line: light-dark(#d9e2de, #3c4643);
+  --mc-ink: light-dark(#1b2824, #ecf2ef); --mc-muted: light-dark(#576961, #a2b3ab);
+  --mc-accent: light-dark(#16664f, #80d7b6); --mc-tint: light-dark(#e4f3ec, #253e34);
+  --mc-danger: light-dark(#aa3d40, #ffacad); --mc-danger-tint: light-dark(#fff0f0, #432c30);
+  --mc-amber: light-dark(#815611, #f5cc78); --mc-amber-tint: light-dark(#fff4d9, #403823);
+  --mc-blue: light-dark(#205f90, #92c9f2); --mc-purple: light-dark(#744091, #dbb0ef);
+  --mc-mono: Consolas, 'Cascadia Mono', 'SFMono-Regular', 'Microsoft YaHei UI', monospace;
+  color-scheme: light dark; color: var(--mc-ink); font: 14px/1.45 'Segoe UI','Microsoft YaHei UI','PingFang SC',sans-serif;
+  text-align: start; letter-spacing: 0; position: relative; min-width: 0; isolation: isolate;
+}
+#mini-cpp-review *, #mini-cpp-review *::before, #mini-cpp-review *::after { box-sizing: border-box; }
+#mini-cpp-review [hidden] { display: none !important; }
+#mini-cpp-review :is(h1,h2,h3,p,pre) { margin: 0; }
+#mini-cpp-review button, #mini-cpp-review input, #mini-cpp-review select { font: inherit; color: inherit; }
+#mini-cpp-review button { background: none; border: 0; margin: 0; padding: 0; cursor: pointer; letter-spacing: 0; }
+#mini-cpp-review button:disabled { opacity: .49; cursor: default; }
+#mini-cpp-review :is(button,select,input,textarea):focus-visible { outline: 2px solid var(--mc-blue); outline-offset: 2px; z-index: 2; }
+#mini-cpp-review :is(svg.lucide,i[data-lucide]) { display: inline-block; width: 16px; height: 16px; flex: 0 0 auto; vertical-align: middle; }
+#mini-cpp-review code, #mini-cpp-review kbd, #mini-cpp-review pre { font-family: var(--mc-mono); }
+#mini-cpp-review code, #mini-cpp-review kbd { color: inherit; background: none; border: 0; padding: 0; font-size: 1em; }
+#mini-cpp-review .mc-sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; clip-path: inset(50%); overflow: hidden; white-space: nowrap; }
+#mini-cpp-review .mc-reviewbar { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-bottom: 14px; }
+#mini-cpp-review .mc-reviewtag, #mini-cpp-review .mc-reviewmeta { display: flex; align-items: center; gap: 8px; color: var(--mc-muted); font-size: 12px; }
+#mini-cpp-review .mc-rid { border-left: 3px solid var(--mc-accent); padding-left: 8px; font: 600 12px/1.25 var(--mc-mono); color: var(--mc-accent); }
+#mini-cpp-review .mc-scenes { display: flex; flex-wrap: wrap; align-items: center; padding: 3px; gap: 1px; border: 1px solid var(--mc-line); background: var(--mc-soft); border-radius: 7px; }
+#mini-cpp-review .mc-scenes button { font-size: 12px; min-height: 27px; padding: 3px 12px; border-radius: 4px; color: var(--mc-muted); }
+#mini-cpp-review .mc-scenes button[aria-pressed=true] { color: var(--mc-ink); background: var(--mc-surface); box-shadow: 0 1px 3px #0d241a24; font-weight: 600; }
+#mini-cpp-review .mc-reviewmeta { margin-left: auto; padding-right: 4px; }
+#mini-cpp-review .mc-case { color: var(--mc-muted); background: var(--mc-surface); border: 1px solid var(--mc-line); padding: 4px; font-size: 12px; border-radius: 4px; }
+#mini-cpp-review .mc-window, #mini-cpp-review .mc-identity { border: 1px solid var(--mc-line); border-radius: 8px; background: var(--mc-surface); box-shadow: 0 4px 16px #10261d0b; }
+#mini-cpp-review .mc-titlebar, #mini-cpp-review .mc-id-head { display: flex; align-items: center; gap: 12px; position: relative; padding: 0 12px; min-height: 33px; background: var(--mc-bg); border-radius: 7px 7px 0 0; border-bottom: 1px solid var(--mc-line); }
+#mini-cpp-review .mc-brand { display: inline-flex; align-items: center; gap: 9px; flex: 0 0 auto; }
+#mini-cpp-review .mc-brand strong { font: 650 17px/1.2 'Segoe UI',sans-serif; }
+#mini-cpp-review .mc-mark { --mark-size: 26px; position: relative; width: var(--mark-size); height: var(--mark-size); flex: 0 0 auto; display: inline-block; background: #11654f; border-radius: 21.875%; vertical-align: middle; }
+#mini-cpp-review .mc-mark b { position: absolute; inset: 0; background: white; clip-path: polygon(60.9375% 20.3125%,34.375% 20.3125%,17.1875% 37.5%,17.1875% 62.5%,34.375% 79.6875%,60.9375% 79.6875%,60.9375% 67.1875%,39.0625% 67.1875%,29.6875% 57.8125%,29.6875% 42.1875%,39.0625% 32.8125%,60.9375% 32.8125%); }
+#mini-cpp-review .mc-mark i { width: 18.75%; height: 18.75%; position: absolute; left: 43.75%; top: 40.625%; background: white; clip-path: polygon(33.333% 0,66.667% 0,66.667% 33.333%,100% 33.333%,100% 66.667%,66.667% 66.667%,66.667% 100%,33.333% 100%,33.333% 66.667%,0 66.667%,0 33.333%,33.333% 33.333%); }
+#mini-cpp-review .mc-mark i+i { left: 67.1875%; }
+#mini-cpp-review .mc-titlebar .mc-mark { --mark-size:20px; }
+#mini-cpp-review .mc-titlebar .mc-brand { gap:7px; max-width:100%; min-width:0; }
+#mini-cpp-review .mc-titlebar .mc-brand strong { font:500 14px/1.2 'Segoe UI',sans-serif; white-space:nowrap; }
+#mini-cpp-review .mc-titlefile { font:13px/1.2 var(--mc-mono); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+#mini-cpp-review .mc-title-dash { color:var(--mc-muted); }
+#mini-cpp-review .mc-menus, #mini-cpp-review .mc-caption, #mini-cpp-review .mc-config { display: flex; align-items: center; }
+#mini-cpp-review .mc-menustrip { position:relative; z-index:8; background:var(--mc-soft); padding:0 5px; border-bottom:1px solid var(--mc-line); }
+#mini-cpp-review .mc-menus { gap:1px; flex-wrap:wrap; }
+#mini-cpp-review .mc-menus button { min-height:26px; padding:2px 10px; font-size:13px; border-radius:3px; }
+#mini-cpp-review .mc-menus button:hover, #mini-cpp-review .mc-menus button[aria-expanded=true] { background: var(--mc-line); }
+#mini-cpp-review .mc-caption { margin-left: auto; gap: 21px; color: var(--mc-muted); }
+#mini-cpp-review .mc-caption svg { width: 12px; height: 12px; stroke-width: 1.6; }
+#mini-cpp-review .mc-dropdown { position: absolute; top: calc(100% - 4px); z-index: 12; left: 0; width: min(253px,100%); padding: 4px; background: var(--mc-surface); border: 1px solid var(--mc-line); border-radius: 6px; box-shadow: 0 7px 23px #10261d2a; }
+#mini-cpp-review .mc-dropdown button { display: flex; align-items: center; gap: 9px; width: 100%; min-height: 30px; text-align: left; padding: 4px 8px; border-radius: 3px; font-size: 13px; }
+#mini-cpp-review .mc-dropdown kbd { margin-left: auto; font-size: 11px; color: var(--mc-muted); }
+#mini-cpp-review .mc-dropdown button:hover, #mini-cpp-review .mc-quiet:hover { background: var(--mc-tint); color: var(--mc-accent); }
+#mini-cpp-review .mc-dropdown hr { border: 0; border-top: 1px solid var(--mc-line); margin: 3px 5px; }
+#mini-cpp-review .mc-toolbar { display:flex; align-items:center; gap:4px 6px; flex-wrap:wrap; padding:3px 9px; border-bottom:1px solid var(--mc-line); background:var(--mc-surface); }
+#mini-cpp-review .mc-cluster { display:flex; align-items:center; gap:1px; }
+#mini-cpp-review .mc-cluster+.mc-cluster::before { content:''; width:1px; align-self:center; height:17px; margin-right:6px; background:var(--mc-line); }
+#mini-cpp-review .mc-gbtn { flex:0 0 auto; display:inline-grid; place-items:center; width:28px; height:28px; margin:0; padding:0; border:0; border-radius:3px; background:transparent; color:var(--mc-ink); }
+#mini-cpp-review .mc-gbtn :is(svg,i[data-lucide]) { width:17px; height:17px; }
+#mini-cpp-review .mc-gbtn:hover, #mini-cpp-review .mc-gbtn:focus-visible { color:var(--mc-ink); background:var(--mc-soft); }
+#mini-cpp-review .mc-gbtn:active { background:var(--mc-line); }
+#mini-cpp-review .mc-gbtn:is([data-act=run],[data-act=buildRun],[data-act=continue]) { color:var(--mc-accent); }
+#mini-cpp-review .mc-tool, #mini-cpp-review .mc-quiet, #mini-cpp-review .mc-sm-btn { border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 30px; padding: 4px 9px; font-size: 13px; }
+#mini-cpp-review .mc-tool:hover { background: var(--mc-soft); }
+#mini-cpp-review[data-density=compact] :is(.wb-row,.wb-line,.wb-lno,.wb-gutter) { min-height:18px; line-height:18px; }
+#mini-cpp-review[data-density=compact] .wb-gutter { height:18px; }
+#mini-cpp-review .mc-main, #mini-cpp-review .mc-main:hover { color: #fff; background: #17664f; }
+#mini-cpp-review .mc-main:hover { background: #10543f; }
+#mini-cpp-review .mc-sm-btn { border: 1px solid var(--mc-line); background: var(--mc-surface); }
+#mini-cpp-review .mc-sm-btn:hover { border-color: var(--mc-accent); }
+#mini-cpp-review .mc-config { margin-left:auto; gap:12px; }
+#mini-cpp-review .mc-selectbox { display: inline-flex; align-items: center; position: relative; }
+#mini-cpp-review .mc-selectbox select { cursor: pointer; appearance: none; border: 1px solid var(--mc-line); border-radius: 4px; padding: 4px 24px 4px 9px; height: 29px; background: var(--mc-surface); font: 13px var(--mc-mono); }
+#mini-cpp-review .mc-selectbox svg { position: absolute; right: 6px; width: 12px; pointer-events: none; }
+#mini-cpp-review .mc-switch { position: relative; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font: 13px var(--mc-mono); }
+#mini-cpp-review .mc-switch input { position: absolute; inset: 0; z-index: 1; opacity: 0; cursor: pointer; width: 100%; height: 100%; margin: 0; }
+#mini-cpp-review .mc-switch span { pointer-events: none; }
+#mini-cpp-review .mc-track { width: 26px; height: 15px; border-radius: 12px; display: inline-block; padding: 2px; background: var(--mc-muted); }
+#mini-cpp-review .mc-track::after { content: ''; display: block; width: 11px; height: 11px; border-radius: 100%; background: var(--mc-surface); }
+#mini-cpp-review .mc-switch input:checked + .mc-track { background: var(--mc-accent); }
+#mini-cpp-review .mc-switch input:checked + .mc-track::after { transform: translateX(11px); }
+#mini-cpp-review .mc-switch input:focus-visible + .mc-track { outline: 2px solid var(--mc-blue); outline-offset: 2px; }
+#mini-cpp-review .mc-status { display: flex; justify-content: space-between; gap: 8px; align-items: center; flex-wrap: wrap; padding: 5px 13px; background: var(--mc-bg); border-top: 1px solid var(--mc-line); border-radius: 0 0 7px 7px; min-height: 28px; font-size: 11px; color: var(--mc-muted); }
+#mini-cpp-review .mc-footstate, #mini-cpp-review .mc-statusinfo { display: inline-flex; align-items: center; gap: 7px; }
+#mini-cpp-review .mc-footstate svg { width: 13px; height: 13px; }
+#mini-cpp-review .mc-statusinfo { font-family: var(--mc-mono); gap: 15px; }
+#mini-cpp-review .mc-id-head { justify-content: space-between; }
+#mini-cpp-review .mc-id-head>span { color: var(--mc-muted); font-size: 12px; }
+#mini-cpp-review .mc-id-head i { font-style: normal; }
+#mini-cpp-review .mc-id-main { padding: 24px clamp(12px,3%,32px); }
+#mini-cpp-review .mc-id-intro { display: flex; align-items: baseline; gap: 14px; margin-bottom: 12px; }
+#mini-cpp-review .mc-index { font: 600 11px var(--mc-mono); color: var(--mc-accent); }
+#mini-cpp-review .mc-id-main h2 { font-size: 18px; font-weight: 600; }
+#mini-cpp-review .mc-id-spec { display: grid; grid-template-columns: 1fr 1fr 1.35fr; border: 1px solid var(--mc-line); border-radius: 5px; overflow: hidden; margin-bottom: 28px; }
+#mini-cpp-review .mc-swatch, #mini-cpp-review .mc-scales { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 154px; gap: 10px; font-size: 11px; }
+#mini-cpp-review .mc-swatch .mc-mark { --mark-size: 72px; }
+#mini-cpp-review .mc-swatch-light { background: #eff4f1; color: #42594e; }
+#mini-cpp-review .mc-swatch-dark { background: #202825; color: #c7d5ce; }
+#mini-cpp-review .mc-scales { color: var(--mc-muted); padding: 10px; }
+#mini-cpp-review [data-sizes] { display: flex; gap: 12px; align-items: end; }
+#mini-cpp-review [data-sizes]>span { display: grid; justify-items: center; gap: 6px; font: 11px var(--mc-mono); }
+#mini-cpp-review .mc-id-actions { display: grid; grid-template-columns: repeat(4,1fr); border-block: 1px solid var(--mc-line); }
+#mini-cpp-review .mc-glyph { padding: 16px 13px; display: grid; gap: 7px; border-inline-end: 1px solid var(--mc-line); }
+#mini-cpp-review .mc-glyph:last-child { border: 0; }
+#mini-cpp-review .mc-glyph strong { font-size: 14px; font-weight: 600; }
+#mini-cpp-review .mc-glyph small { font-size: 12px; color: var(--mc-muted); }
+#mini-cpp-review .mc-glyph .mc-glyph-view { display: flex; gap: 8px; align-items: center; margin-bottom: 4px; }
+#mini-cpp-review .mc-glyph-view span { display: inline-grid; place-items: center; width: 35px; height: 35px; background: #eef3f0; color: #22372d; border-radius: 4px; }
+#mini-cpp-review .mc-glyph-view span+span { background: #26302c; color: #f3f9f5; }
+#mini-cpp-review .mc-glyph-view svg { width: 18px; height: 18px; }
+#mini-cpp-review .mc-id-fine { display: flex; gap: 16px; color: var(--mc-muted); font: 11px var(--mc-mono); margin-top: 12px; }
+#mini-cpp-review .mc-dialogstage { position: absolute; inset: 0; z-index: 20; padding: 70px 15px 15px; background: #13271d35; display: flex; align-items: start; justify-content: center; border-radius: 8px; }
+#mini-cpp-review .mc-dialog { background: var(--mc-surface); border: 1px solid var(--mc-line); border-radius: 7px; box-shadow: 0 7px 28px #17241c38; width: min(100%,420px); padding: 16px; }
+#mini-cpp-review .mc-dialog header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+#mini-cpp-review .mc-dialog h2 { font-size: 16px; }
+#mini-cpp-review .mc-dialog input[type=text] { width: 100%; border: 1px solid var(--mc-line); padding: 5px 8px; background: var(--mc-surface); border-radius: 4px; }
+#mini-cpp-review .mc-dialog label { display: grid; gap: 4px; color: var(--mc-muted); font-size: 12px; margin-block: 6px; }
+#mini-cpp-review .mc-dialog p { margin: 7px 0; color: var(--mc-muted); font-size: 13px; }
+#mini-cpp-review .mc-dialog .mc-example { display: block; background: var(--mc-soft); border-left: 2px solid var(--mc-accent); padding: 10px; margin: 8px 0; font-size: 13px; white-space: pre-wrap; overflow-wrap: anywhere; }
+#mini-cpp-review .mc-dialog .mc-dialog-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; margin-top: 12px; }
+#mini-cpp-review .mc-dialog [data-selected=true] { color: var(--mc-ink); background: light-dark(#d7e9fa,#354c60); }
+#mini-cpp-review .mc-dialog mark { color: var(--mc-ink); background: var(--mc-amber-tint); border-bottom: 1px solid var(--mc-amber); }
+#mini-cpp-review .mc-keylist>div { display:flex; justify-content:space-between; gap:12px; padding:3px 0; }
+#mini-cpp-review .mc-keylist kbd { color:var(--mc-muted); }
+#mini-cpp-review .mc-tip { position: absolute; width: max-content; max-width: calc(100% - 8px); z-index: 30; display: block; padding: 5px 9px; border-radius: 4px; font-size: 12px; background: var(--mc-ink); color: var(--mc-surface); pointer-events: none; box-shadow: 0 2px 6px #13261e22; }
+@media (max-width: 700px) {
+  #mini-cpp-review .mc-reviewmeta { display: none; }
+  #mini-cpp-review .mc-titlebar { padding-inline: 10px; gap: 8px; }
+  #mini-cpp-review .mc-caption { gap: 13px; }
+  #mini-cpp-review .mc-toolbar { padding: 6px 8px; }
+}
+@media (max-width: 560px) {
+  #mini-cpp-review .mc-caption { display: none; }
+  #mini-cpp-review .mc-reviewbar { gap: 6px 10px; margin-bottom: 9px; }
+  #mini-cpp-review .mc-scenes button { padding-inline: 8px; }
+  #mini-cpp-review .mc-toolbar { gap: 4px 8px; }
+  #mini-cpp-review .mc-menus button { padding-inline:8px; }
+  #mini-cpp-review .mc-config { margin-left: auto; gap: 7px; }
+  #mini-cpp-review .mc-id-spec { grid-template-columns: 1fr 1fr; }
+  #mini-cpp-review .mc-scales { grid-column: 1/-1; min-height: 100px; }
+  #mini-cpp-review .mc-id-actions { grid-template-columns: repeat(2,1fr); }
+  #mini-cpp-review .mc-glyph:nth-child(2) { border-inline-end: 0; }
+  #mini-cpp-review .mc-glyph:nth-child(-n+2) { border-bottom: 1px solid var(--mc-line); }
+  #mini-cpp-review .mc-statusinfo { gap: 8px; }
+}
+@media (max-width: 380px) {
+  #mini-cpp-review .mc-titlebar { gap: 5px; padding-inline: 6px; }
+  #mini-cpp-review .mc-menus button { padding-inline: 5px; }
+  #mini-cpp-review .mc-toolbar { justify-content: flex-start; }
+  #mini-cpp-review .mc-brand { gap: 5px; }
+  #mini-cpp-review .mc-brand strong { font-size: 16px; }
+}
+@media (pointer: coarse) {
+  #mini-cpp-review :is(.mc-scenes,.mc-menus,.mc-dropdown) button, #mini-cpp-review :is(.mc-selectbox select,.mc-switch,.mc-quiet,.mc-sm-btn,.mc-gbtn) { min-height: 44px; }
+  #mini-cpp-review .mc-gbtn { min-width: 44px; }
+  #mini-cpp-review .mc-switch { padding-inline: 3px; }
+}
+
+#mini-cpp-review .wb-filebar { display:flex; align-items:stretch; background:var(--mc-soft); border-bottom:1px solid var(--mc-line); min-height:36px; }
+#mini-cpp-review .wb-filetab { display:flex; align-items:center; gap:8px; padding:0 18px; border-inline-end:1px solid var(--mc-line); border-top:2px solid var(--mc-accent); margin-bottom:-1px; background:var(--mc-surface); }
+#mini-cpp-review .wb-filetab svg { color:var(--mc-accent); }
+#mini-cpp-review .wb-filetab strong { font:600 13px var(--mc-mono); }
+#mini-cpp-review .wb-plus { align-self:center; display:grid; place-items:center; width:33px; height:29px; color:var(--mc-muted); }
+#mini-cpp-review .wb-plus:hover { color:var(--mc-accent); }
+#mini-cpp-review .wb-filekind { margin-left:auto; align-self:center; padding-right:14px; color:var(--mc-muted); font-size:11px; }
+#mini-cpp-review .wb-well { display:grid; grid-template-columns:minmax(0,1fr); }
+#mini-cpp-review .wb-split { grid-template-columns:minmax(0,1fr) clamp(205px,26%,265px); }
+#mini-cpp-review .wb-editor { min-width:0; padding:12px 0 16px; min-height:312px; }
+#mini-cpp-review .wb-row { display:grid; grid-template-columns:31px 25px minmax(0,1fr); min-height:20px; align-items:start; }
+#mini-cpp-review .wb-at { background:var(--mc-amber-tint); }
+#mini-cpp-review .wb-invalid { background:var(--mc-danger-tint); }
+#mini-cpp-review .wb-picked .wb-line { border-left:2px solid var(--mc-danger); padding-left:10px; }
+#mini-cpp-review .wb-line { padding:0 6px 0 12px; color:var(--mc-ink); border-left:1px solid var(--mc-line); white-space:pre-wrap; overflow-wrap:anywhere; min-height:20px; font:14px/20px var(--mc-mono); }
+#mini-cpp-review .wb-lno { text-align:right; padding-right:8px; color:var(--mc-muted); font:11px/20px var(--mc-mono); user-select:none; }
+#mini-cpp-review .wb-at .wb-lno { color:var(--mc-amber); font-weight:700; }
+#mini-cpp-review .wb-gutter { display:flex; align-items:center; justify-content:flex-end; position:relative; height:20px; }
+#mini-cpp-review .wb-bp-btn { display:grid; place-items:center; position:absolute; left:1px; width:16px; height:20px; }
+#mini-cpp-review .wb-break { width:8px; height:8px; border-radius:50%; border:1px solid var(--mc-muted); }
+#mini-cpp-review .wb-solid { background:var(--mc-danger); border-color:var(--mc-danger); }
+#mini-cpp-review .wb-arrow { font:700 15px/1 var(--mc-mono); color:var(--mc-amber); }
+#mini-cpp-review .wb-errmark { background:var(--mc-danger); color:var(--mc-surface); width:13px; height:13px; border-radius:50%; text-align:center; font:700 11px/13px var(--mc-mono); }
+#mini-cpp-review .wb-insert { border-left:2px solid var(--mc-danger); margin-left:1px; }
+#mini-cpp-review .wb-unknown { text-decoration: underline wavy var(--mc-danger); text-underline-offset:3px; }
+#mini-cpp-review .wb-comment { color:var(--mc-muted); }
+#mini-cpp-review .wb-key { color:var(--mc-purple); }
+#mini-cpp-review .wb-directive, #mini-cpp-review .wb-name { color:var(--mc-blue); }
+#mini-cpp-review .wb-string { color:var(--mc-accent); }
+#mini-cpp-review .wb-number { color:var(--mc-amber); }
+#mini-cpp-review .wb-token { display:inline; vertical-align:baseline; line-height:inherit; font:inherit; padding:0; border-radius:2px; }
+#mini-cpp-review .wb-hot { background:var(--mc-ink); color:var(--mc-surface); }
+#mini-cpp-review .wb-hover { z-index:16; position:absolute; background:var(--mc-surface); color:var(--mc-ink); padding:7px 11px; border:1px solid var(--mc-line); box-shadow:0 3px 12px #17291f26; border-radius:4px; pointer-events:none; display:grid; gap:3px; }
+#mini-cpp-review .wb-hover span { font-size:11px; color:var(--mc-muted); }
+#mini-cpp-review .wb-hover code { font:14px var(--mc-mono); }
+#mini-cpp-review .wb-side { min-width:0; border-left:1px solid var(--mc-line); display:flex; flex-direction:column; background:var(--mc-soft); }
+#mini-cpp-review .wb-side header { display:flex; justify-content:space-between; align-items:center; padding:10px 14px; border-bottom:1px solid var(--mc-line); }
+#mini-cpp-review .wb-side-title { display:inline-flex; gap:7px; align-items:center; font-weight:600; }
+#mini-cpp-review .wb-side-title svg { color:var(--mc-accent); }
+#mini-cpp-review .wb-tag { display:inline-flex; align-items:center; height:20px; padding:1px 6px; border-radius:3px; font-size:11px; background:var(--mc-tint); color:var(--mc-accent); }
+#mini-cpp-review .wb-warn { color:var(--mc-amber); background:var(--mc-amber-tint); }
+#mini-cpp-review .wb-red { color:var(--mc-danger); background:var(--mc-danger-tint); }
+#mini-cpp-review .wb-frame { margin:10px 14px 8px; border-left:2px solid var(--mc-accent); padding-left:10px; }
+#mini-cpp-review .wb-framelabel, #mini-cpp-review .wb-framevalue { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:4px; }
+#mini-cpp-review .wb-framelabel { font-size:11px; color:var(--mc-muted); }
+#mini-cpp-review .wb-framelabel span { font-family:var(--mc-mono); }
+#mini-cpp-review .wb-framevalue { margin-top:2px; }
+#mini-cpp-review .wb-framevalue b { font:600 15px var(--mc-mono); }
+#mini-cpp-review .wb-framevalue code { font-size:12px; color:var(--mc-muted); }
+#mini-cpp-review .wb-locals { padding:6px 14px 8px; }
+#mini-cpp-review .wb-locals h3 { display:flex; align-items:center; gap:6px; font-size:13px; font-weight:600; }
+#mini-cpp-review .wb-locals h3 span, #mini-cpp-review .wb-count { padding:0 4px; border-radius:3px; background:var(--mc-line); color:var(--mc-muted); font:11px/15px var(--mc-mono); }
+#mini-cpp-review .wb-locals table { border-collapse:collapse; width:100%; margin-top:5px; font:13px var(--mc-mono); }
+#mini-cpp-review .wb-locals :is(td,th) { border:0; border-bottom:1px solid var(--mc-line); text-align:left; padding:4px 2px; }
+#mini-cpp-review .wb-locals th { font:400 11px 'Microsoft YaHei UI',sans-serif; color:var(--mc-muted); }
+#mini-cpp-review .wb-locals td:nth-child(2), #mini-cpp-review .wb-locals td small { color:var(--mc-muted); }
+#mini-cpp-review .wb-locals tr>:last-child { text-align:right; }
+#mini-cpp-review .wb-locals .wb-changed td:last-child b { color:var(--mc-accent); }
+#mini-cpp-review .wb-inspected { background:var(--mc-tint); }
+#mini-cpp-review .wb-debugbar { margin-top:auto; display:flex; align-items:center; gap:3px; padding:8px 10px; border-top:1px solid var(--mc-line); }
+#mini-cpp-review .wb-debugbar button { min-height:27px; font-size:12px; padding:3px 7px; }
+#mini-cpp-review .wb-debugbar svg { width:14px; height:14px; }
+#mini-cpp-review .wb-stop { margin-left:auto; }
+#mini-cpp-review .wb-output { border-top:1px solid var(--mc-line); }
+#mini-cpp-review .wb-output-head { display:flex; align-items:center; justify-content:space-between; gap:3px; min-height:35px; padding:0 12px; background:var(--mc-soft); border-bottom:1px solid var(--mc-line); }
+#mini-cpp-review .wb-output-head nav { display:flex; gap:14px; flex-wrap:wrap; }
+#mini-cpp-review .wb-ptab { display:inline-flex; align-items:center; gap:5px; padding:7px 1px 5px; min-height:34px; border-bottom:2px solid transparent; color:var(--mc-muted); font-size:12px; }
+#mini-cpp-review .wb-ptab svg { width:13px; height:13px; }
+#mini-cpp-review .wb-ptab[aria-pressed=true] { color:var(--mc-ink); border-color:var(--mc-accent); font-weight:600; }
+#mini-cpp-review .wb-count.wb-has { color:var(--mc-danger); background:var(--mc-danger-tint); }
+#mini-cpp-review .wb-output-status { font:11px var(--mc-mono); color:var(--mc-muted); }
+#mini-cpp-review .wb-io { background:light-dark(#202925,#181d1b); color:#e6f1ea; display:grid; grid-template-columns:1fr 1fr; padding:12px 17px; gap:15px; min-height:83px; }
+#mini-cpp-review .wb-io>div+div { border-left:1px solid #48564f; padding-left:16px; }
+#mini-cpp-review .wb-io h3 { color:#bdcfc4; font:400 11px/1.3 'Microsoft YaHei UI',sans-serif; margin:0 0 5px; }
+#mini-cpp-review .wb-io small { color:#a0b6aa; font:11px var(--mc-mono); margin-left:5px; }
+#mini-cpp-review .wb-io pre, #mini-cpp-review .wb-console-muted { font:13px/18px var(--mc-mono); padding:0; background:none; border:0; color:inherit; }
+#mini-cpp-review .wb-console-muted { color:#a8bcb0; font-size:12px; }
+#mini-cpp-review .wb-empty, #mini-cpp-review .wb-log, #mini-cpp-review .wb-diag { min-height:83px; padding:12px 16px; }
+#mini-cpp-review .wb-empty { display:flex; gap:7px; align-items:center; color:var(--mc-muted); font-size:13px; }
+#mini-cpp-review .wb-diag-line, #mini-cpp-review .wb-advice { display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 8px; }
+#mini-cpp-review .wb-diag-line code { font-size:13px; overflow-wrap:anywhere; }
+#mini-cpp-review .wb-link { color:var(--mc-blue); font:12px var(--mc-mono); text-decoration:underline; text-underline-offset:2px; }
+#mini-cpp-review .wb-link svg { width:12px; height:12px; }
+#mini-cpp-review .wb-advice { margin-top:9px; align-items:flex-start; flex-wrap:nowrap; padding-left:9px; border-left:2px solid var(--mc-amber); color:var(--mc-ink); }
+#mini-cpp-review .wb-advice>svg { color:var(--mc-amber); margin-top:2px; }
+#mini-cpp-review .wb-advice>div { font-size:13px; }
+#mini-cpp-review .wb-advice button { display:inline-flex; align-items:center; margin-left:6px; }
+#mini-cpp-review .wb-log { font:13px/1.6 var(--mc-mono); overflow-wrap:anywhere; }
+#mini-cpp-review .wb-log-note { color:var(--mc-muted); font-size:12px; }
+#mini-cpp-review .wb-fail { color:var(--mc-danger); }
+@media(max-width:710px){#mini-cpp-review .wb-split{grid-template-columns:minmax(0,1fr) 195px}#mini-cpp-review .wb-row{grid-template-columns:26px 22px minmax(0,1fr)}#mini-cpp-review .wb-line{padding-left:8px}}
+@media(max-width:590px){#mini-cpp-review .wb-split{grid-template-columns:minmax(0,1fr)}#mini-cpp-review .wb-side{border-left:0;border-top:1px solid var(--mc-line)}#mini-cpp-review .wb-locals{padding-bottom:12px}#mini-cpp-review .wb-side header{padding-block:7px}#mini-cpp-review .wb-side .wb-frame{margin-block:8px 4px}#mini-cpp-review .wb-editor{min-height:0}#mini-cpp-review .wb-output-head{padding-inline:8px}#mini-cpp-review .wb-output-head nav{gap:9px}#mini-cpp-review .wb-output-status{display:none}}
+@media(max-width:390px){#mini-cpp-review .wb-row{grid-template-columns:24px 20px minmax(0,1fr)}#mini-cpp-review .wb-line{font-size:12px;padding-left:6px}#mini-cpp-review .wb-ptab{gap:3px}}
+@media(pointer:coarse){#mini-cpp-review .wb-debugbar button,#mini-cpp-review .wb-ptab,#mini-cpp-review .wb-plus{min-height:44px}#mini-cpp-review .wb-debugbar button,#mini-cpp-review .wb-plus{min-width:44px}}
+
+</style>
+<script>
+(() => {
+'use strict';
+const source = [
+  '#include <iostream>', 'using namespace std;', '', '// 读入 n 个整数，输出它们的和。',
+  'int main() {', '    int n, x, sum = 0;', '    cin >> n;', '    for (int i = 0; i < n; ++i) {',
+  '        cin >> x;', '        sum += x;', '    }', "    cout << sum << '\\n';", '    return 0;', '}'
+];
+const emptySource = ['#include <iostream>', '', 'int main() {', '    return 0;', '}'];
+const stops = [
+  { line: 10, col: 9, i: 1, x: 8, sum: 3, changed: '', before: '' },
+  { line: 8, col: 5, i: 1, x: 8, sum: 11, changed: 'sum', before: '3' },
+  { line: 9, col: 9, i: 2, x: 8, sum: 11, changed: 'i', before: '1' },
+  { line: 10, col: 9, i: 2, x: -2, sum: 11, changed: 'x', before: '8' },
+  { line: 8, col: 5, i: 2, x: -2, sum: 9, changed: 'sum', before: '11' },
+  { line: 12, col: 5, x: -2, sum: 9, changed: '', before: '' },
+  { line: 13, col: 5, x: -2, sum: 9, changed: '', before: '' }
+];
+const ceSamples = {
+  semicolon:{line:11,col:5,hintLine:10,hintCol:17,code:'        sum += x',msg:"error: expected ';' before '}' token",advice:'第 11 行的 <code>}</code> 前缺少分号。可能是上一行 <code>sum += x</code> 的末尾漏写了 <code>;</code>。'},
+  name:{line:10,col:16,hintLine:10,hintCol:16,code:'        sum += xx;',msg:"error: 'xx' was not declared in this scope",advice:'第 10 行的 <code>xx</code> 未声明。上一行读入的是 <code>x</code>，请检查是否多写了一个 <code>x</code>。'}
+};
+function makeWorkbench(host) {
+  const frame = () => stops[state.step];
+  function lines() {
+    const text = state.blank ? emptySource.slice() : source.slice();
+    if (state.scene === 'error') text[9] = ceSamples[state.ce].code;
+    return text;
+  }
+  function nameValue(name) { return name === 'n' ? 3 : frame()[name]; }
+  function codeTokens(text, num) {
+    if (text.startsWith('//')) return `<span class="wb-comment">${esc(text)}</span>`;
+    if (text.startsWith('#')) return '<span class="wb-directive">#include</span> <span class="wb-string">&lt;iostream&gt;</span>';
+    const vars = { n:1, x:1, sum:1, i:1 };
+    return text.split(/('(?:\\.|[^'])*'|\b(?:int|using|namespace|for|return|main|cin|cout|std|n|x|sum|i)\b|\b\d+\b)/g).map(t => {
+      if (vars[t] && state.scene==='debug' && nameValue(t)!==undefined) {
+        return `<button type="button" class="wb-token" data-var="${t}" data-line-ref="${num}" aria-label="查看 ${t} 的值">${t}</button>`;
+      }
+      const cls = /^(?:int|using|namespace|for|return)$/.test(t) ? 'wb-key' : /^(?:main|cin|cout|std)$/.test(t) ? 'wb-name' : /^'/.test(t) ? 'wb-string' : /^\d+$/.test(t) ? 'wb-number' : '';
+      return cls ? `<span class="${cls}">${esc(t)}</span>` : esc(t);
+    }).join('');
+  }
+  function drawLine(text, n) {
+    const debug = state.scene==='debug', error = state.scene==='error';
+    const current = debug && !state.running && n===frame().line;
+    const bp = !state.blank && n===10 && state.breakpoint && debug;
+    const picked = error && n===state.targetLine;
+    const invalid = error && n===ceSamples[state.ce].line;
+    const cls = `${current?' wb-at':''}${picked?' wb-picked':''}${invalid?' wb-invalid':''}`;
+    const gutter = !state.blank && n===10 && debug ? `<button class="wb-bp-btn" type="button" data-act="breakpoint" aria-pressed="${bp}" aria-label="${bp?'移除':'添加'}第 10 行断点" data-tip="${bp?'移除':'添加'}断点"><span class="wb-break ${bp?'wb-solid':''}"></span></button>` : '';
+    const marker = current ? '<span class="wb-arrow" aria-label="下一条将执行的语句">➜</span>' : invalid ? '<span class="wb-errmark" aria-label="编译器报错位置">!</span>' : '';
+    const code=error && state.ce==='name' && n===10 ? codeTokens(text,n).replace('xx','<span class="wb-unknown">xx</span>') : codeTokens(text,n);
+    return `<div class="wb-row${cls}" data-code-line="${n}"><span class="wb-gutter">${gutter}${marker}</span><span class="wb-lno" aria-hidden="true">${n}</span><code class="wb-line">${code}${error && state.ce==='semicolon' && n===10 && state.targetLine===10 ? '<span class="wb-insert" aria-label="建议补分号的位置"></span>':''}</code></div>`;
+  }
+  function inspector() {
+    const f=frame(), running=state.running;
+    const vars=['n','i','x','sum'].filter(v=>nameValue(v)!==undefined);
+    const rows=vars.map(v => `<tr data-local="${v}"${v===f.changed?' class="wb-changed"':''}><td><code>${v}</code></td><td>int</td><td>${v===f.changed?`<small>${f.before} → </small>`:''}<b>${nameValue(v)}</b></td></tr>`).join('');
+    return `<aside class="wb-side" aria-label="调试变量侧边栏">
+      <header><span class="wb-side-title">${icon('bug')} 调试器</span><span class="wb-tag ${running?'':'wb-warn'}">${running?'运行中':'已暂停'}</span></header>
+      <div class="wb-frame"><div class="wb-framelabel">${running?'最近采样':'当前栈帧'}<span>01</span></div><div class="wb-framevalue"><b>main()</b><code>${esc(fileName())}:${f.line}</code></div></div>
+      <div class="wb-locals"><h3>局部变量 <span>${vars.length}</span></h3><table aria-label="${running?'最近采样的变量快照':'当前变量值'}"><thead><tr><th>名称</th><th>类型</th><th>值</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <div class="wb-debugbar">${running?`<button type="button" data-act="pause" class="mc-gbtn" aria-label="暂停" data-tip="暂停">${icon('pause')}</button>`:`<button type="button" data-act="step" class="mc-gbtn" aria-label="单步" data-tip="单步执行">${icon('step-forward')}</button><button type="button" data-act="continue" class="mc-gbtn" aria-label="继续" data-tip="继续执行">${icon('play')}</button>`}<button type="button" data-act="stop" class="mc-gbtn wb-stop" aria-label="停止调试" data-tip="停止调试">${icon('square')}</button></div>
+    </aside>`;
+  }
+  function diagnostics() {
+    const d=ceSamples[state.ce];
+    return `<div class="wb-diag" aria-label="编译诊断"><div class="wb-diag-line"><span class="wb-tag wb-red">错误</span><button class="wb-link" type="button" data-jump="${d.line}" data-tip="定位编译器报告的位置">${esc(fileName())}:${d.line}:${d.col}</button><code>${esc(d.msg)}</code></div>
+      <div class="wb-advice">${icon('lightbulb')}<div><strong>中文建议</strong><span> ${d.advice}</span><button class="wb-link" type="button" data-jump="${d.hintLine}">检查第 ${d.hintLine} 行 · 第 ${d.hintCol} 列 ${icon('arrow-up-right')}</button></div></div></div>`;
+  }
+  function output() {
+    const debug=state.scene==='debug', error=state.scene==='error', pan=state.panel;
+    const tabs=[['console','square-terminal','运行输出'],['log','list','编译日志'],['issues','circle-alert','问题']];
+    const nav=tabs.map(([id,ic,label])=>`<button type="button" class="wb-ptab" data-panel="${id}" aria-pressed="${pan===id}">${icon(ic)}${label}${id==='issues'?`<span class="wb-count ${error?'wb-has':''}">${error?1:0}</span>`:''}</button>`).join('');
+    let body, right;
+    if (pan==='issues') {
+      body=error?diagnostics():`<div class="wb-empty">${icon('circle-check')} 暂无诊断</div>`; right=error?'1 个错误':'0 个错误';
+    } else if (pan==='log') {
+      const cfg = debug ? `${state.debugStd} -g -O0` : `${state.lastStd} ${state.lastO2?'-O2':'-O0'}`;
+      const base=fileName().replace(/\.cpp$/i,'');
+      const cmd=`g++ -std=c++${cfg} "${fileName()}" -o "${base}${debug?'.debug':''}.exe"`;
+      const d=ceSamples[state.ce];
+      body=state.result==='idle' && !debug && !error?`<div class="wb-empty">${icon('hammer')} 尚无构建记录</div>`:`<div class="wb-log">${state.lastBuild==='rebuilt' && !debug?'<div class="wb-log-note">已清理当前源文件的旧产物</div>':''}<code>${esc(cmd)}</code><div class="wb-log-note">${error?`<span class="wb-fail">${esc(fileName())}:${d.line}:${d.col}: ${esc(d.msg)}</span>`:debug?'调试构建成功 · 独立的调试副本':'编译成功 · 0 错误，0 警告'}</div></div>`;
+      right=error?'失败':debug?'调试构建':'普通构建';
+    } else if (error) {
+      body=`<div class="wb-empty">${icon('circle-alert')} 编译失败，本次未启动程序。</div>`; right='未运行';
+    } else if (debug || ['ran','builtRan'].includes(state.result)) {
+      const done=!debug || state.step===6;
+      body=`<div class="wb-io"><div><h3>标准输入 <small>stdin</small></h3><pre>${state.blank?'无输入':'3\n3 8 -2'}</pre></div><div><h3>标准输出 <small>stdout</small></h3>${done && !state.blank?'<pre>9</pre>':`<span class="wb-console-muted">${done?'无输出':'尚无输出'}</span>`}</div></div>`;
+      right=debug?(state.running?'运行中':'断点会话'):'退出码 0';
+    } else {
+      body=`<div class="wb-empty">${icon('terminal')} ${state.result==='idle'?'等待运行':'编译成功，尚未运行'}</div>`;right='未运行';
+    }
+    return `<section class="wb-output" aria-label="输出与诊断"><div class="wb-output-head"><nav aria-label="输出面板">${nav}</nav><span class="wb-output-status">${right}</span></div>${body}</section>`;
+  }
+  function render() {
+    const hot=host.querySelector('.wb-hot');const anchor=hot && state.running?`[data-var="${hot.dataset.var}"][data-line-ref="${hot.dataset.lineRef}"]`:null;
+    hoverClear(); const debug=state.scene==='debug';
+    host.innerHTML=`<div class="wb-filebar"><div class="wb-filetab">${icon('file-code-2')}<strong>${esc(fileName())}</strong></div><button type="button" class="wb-plus" data-act="new" data-tip="新建源代码 · Ctrl+N" aria-label="新建源代码">${icon('plus')}</button><span class="wb-filekind">单文件</span></div>
+      <div class="wb-well${debug?' wb-split':''}"><section class="wb-editor" aria-label="${esc(fileName())} 源码示例">${lines().map((t,i)=>drawLine(t,i+1)).join('')}</section>${debug?inspector():''}</div>${output()}`;
+    if(anchor) inspect(host.querySelector(anchor));
+  }
+  let hover=null;
+  function hoverClear() { if(hover) hover.remove(); hover=null; host.querySelector('.wb-hot')?.classList.remove('wb-hot'); host.querySelector('.wb-inspected')?.classList.remove('wb-inspected'); }
+  function inspect(node) {
+    if (state.scene!=='debug'||!node) return;
+    hoverClear(); const name=node.dataset.var; node.classList.add('wb-hot'); host.querySelector(`[data-local="${name}"]`)?.classList.add('wb-inspected');
+    hover=document.createElement('div'); hover.className='wb-hover'; hover.setAttribute('role','tooltip');
+    hover.innerHTML=`<span>${state.running?'运行中 · 最近采样':'局部变量'}</span><code>int <b>${name}</b> = <b>${nameValue(name)}</b></code>`;
+    root.append(hover); placeFloat(hover,node,true);
+  }
+  host.addEventListener('pointerover', e=>{const v=e.target.closest('[data-var]'); if(v && !v.contains(e.relatedTarget)) inspect(v);});
+  host.addEventListener('pointerout', e=>{const v=e.target.closest('[data-var]'); if(v && !v.contains(e.relatedTarget) && document.activeElement!==v) hoverClear();});
+  host.addEventListener('focusin',e=>{ if(e.target.matches('[data-var]')) inspect(e.target); });
+  host.addEventListener('focusout',e=>{ if(e.target.matches('[data-var]')) hoverClear(); });
+  host.addEventListener('click',e=>{ const v=e.target.closest('[data-var]'); if(v) inspect(v); });
+  return {render,hoverClear,lines};
+}
+
+const root = document.getElementById('mini-cpp-review');
+const $ = (sel) => root.querySelector(sel);
+const $$ = (sel) => Array.from(root.querySelectorAll(sel));
+const esc = (s) => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const icon = (id) => `<i data-lucide="${id}" aria-hidden="true"></i>`;
+const icons = () => { if (globalThis.lucide?.createIcons) globalThis.lucide.createIcons({attrs:{width:16,height:16}}); };
+const fileName = () => state.file;
+const defaultState = {scene:'edit',std:'14',o2:false,debugStd:'14',lastStd:'14',lastO2:false,step:0,running:false,breakpoint:true,targetLine:11,ce:'semicolon',panel:'console',result:'builtRan',lastBuild:'builtRan',file:'main.cpp',blank:false};
+const state = {...defaultState};
+const changeSet = [ ['compile','hammer','编译','F9','生成当前源文件的程序'], ['run','play','运行','F10','运行已有程序，不编译'], ['buildRun','square-play','编译并运行','F11','编译成功后再运行'], ['rebuild','rotate-cw','全部重新编译','F12','清理旧产物并完整编译'] ];
+const menus = {
+  file:[['new','file-plus-2','新建源代码','Ctrl+N'],['open','folder-open','打开源代码…','Ctrl+O'],null,['save','save','保存','Ctrl+S'],['saveAs','file-pen-line','另存为…','Ctrl+Shift+S']],
+  edit:[['undo','undo-2','撤销','Ctrl+Z'],['redo','redo-2','重做','Ctrl+Y'],['selectAll','text-select','全选','Ctrl+A'],null,['indent','indent-increase','增加缩进','Tab'],['outdent','indent-decrease','减少缩进','Shift+Tab'],['format','align-left','自动缩进选区','Ctrl+Tab'],['newline','corner-down-left','换行并继承缩进','Enter']],
+  search:[['find','search','查找…','Ctrl+F'],['replace','replace','替换…','Ctrl+H']],
+  view:[['console','square-terminal','运行输出',''],['log','list','编译日志',''],['issues','circle-alert','问题','']],
+  project:[['sourceInfo','file-code-2','当前源文件属性…','']],
+  run:[...changeSet,null,['debug','bug','开始调试',''],['continue','play','继续',''],['pause','pause','暂停',''],['step','step-forward','单步',''],['stop','square','停止调试','']],
+  tools:[['selectStd','settings-2','语言标准…',''],['toggleO2','gauge','O2 优化','']],
+  cvs:[['noCvs','git-branch','当前文件未关联 CVS 仓库','']],
+  window:[['activeFile','file-code-2','当前源文件','']],
+  help:[['shortcuts','keyboard','快捷键…',''],['about','info','关于 Mini C++…','']]
+};
+const names={edit:'编辑器',debug:'断点调试',error:'编译报错',icons:'图标稿'};
+const work=makeWorkbench($('[data-workbench]'));
+const dlg=$('[data-dialog]'), pop=$('[data-dropdown]');
+let menu='', dialog='', returnTo=null, tip=null, tipTimer=0, runTimer=0, notice='';
+const say = (msg) => { $('[data-announce]').textContent=msg; };
+function persist() {
+  const modelContent={scene:names[state.scene],standard:'C++'+state.std,optimizeO2:state.o2};
+  // Only review choices are saved; text and file names entered in dialogs stay local.
+  const privateContent={scene:state.scene,standard:state.std,o2:state.o2,step:state.step};
+  try { window.openai?.setWidgetState?.({modelContent,privateContent})?.catch?.(()=>{}); } catch { /* optional host */ }
+}
+function fromHost(saved) {
+  const p=saved?.privateContent; if(!p || typeof p!=='object') return;
+  clearTimeout(runTimer); closeMenu(); closeDialog(false); notice='';
+  if (['98','11','14'].includes(p.standard)) state.std=p.standard;
+  if (typeof p.o2==='boolean') state.o2=p.o2;
+  setScene(Object.hasOwn(names,p.scene)?p.scene:'edit',false);
+  if (state.scene==='debug' && Number.isInteger(p.step)) state.step=Math.max(0,Math.min(stops.length-1,p.step));
+  paint();
+}
+function placeFloat(el,anchor,above=false) {
+  const a=anchor.getBoundingClientRect(), r=root.getBoundingClientRect();
+  const x=Math.max(4,Math.min(r.width-el.offsetWidth-4,a.left-r.left));
+  const up=a.top-r.top-el.offsetHeight-5, down=a.bottom-r.top+5;
+  const y=above && up>=2 || down+el.offsetHeight>r.height && up>=2 ? up : down;
+  el.style.left=x+'px'; el.style.top=y+'px';
+}
+function clearTip(){clearTimeout(tipTimer);tip?.remove();tip=null;}
+function showTip(node) {
+  clearTip(); if (!node || dialog && !dlg.contains(node) || menu) return;
+  tipTimer=setTimeout(()=>{if(!node.isConnected)return;tip=document.createElement('span');tip.className='mc-tip';tip.setAttribute('role','tooltip');tip.textContent=node.dataset.tip;root.append(tip);placeFloat(tip,node);},280);
+}
+function closeMenu() { menu='';pop.hidden=true;pop.replaceChildren(); $$('[data-menu]').forEach(b=>b.setAttribute('aria-expanded','false')); }
+function openMenu(node) {
+  if(menu===node.dataset.menu) { closeMenu(); return; }
+  closeMenu(); clearTip(); work.hoverClear(); menu=node.dataset.menu;
+  const disabled=a=>a==='noCvs'||['continue','pause','step','stop'].includes(a) && (state.scene!=='debug' || (a==='pause'?!state.running:a==='stop'?false:state.running));
+  pop.innerHTML=menus[menu].map(item=>item ? `<button type="button" data-act="${item[0]}" ${disabled(item[0])?'disabled':''}>${icon(item[1])}<span>${item[0]==='activeFile'?esc(fileName()):item[2]}</span><kbd>${item[0]==='toggleO2'?(state.o2?'开':'关'):item[3]}</kbd></button>` : '<hr>').join('');
+  pop.hidden=false; node.setAttribute('aria-expanded','true'); const a=node.getBoundingClientRect(), r=node.closest('.mc-menustrip').getBoundingClientRect();
+  pop.style.left=Math.max(0,Math.min(a.left-r.left,r.width-pop.offsetWidth))+'px';pop.style.top=(a.bottom-r.top)+'px';icons();
+}
+function closeDialog(restore=true) {
+  if(!dialog) return; dialog=''; clearTip(); dlg.hidden=true; dlg.replaceChildren();
+  if(restore && returnTo?.isConnected) returnTo.focus({preventScroll:true}); returnTo=null;
+}
+function sheet(id,title,contents,focusSel) {
+  if(!dialog) returnTo=root.contains(document.activeElement)?document.activeElement:null;
+  dialog=id; clearTip(); work.hoverClear(); closeMenu();
+  dlg.innerHTML=`<section class="mc-dialog" role="dialog" aria-modal="true" aria-label="${esc(title)}"><header><h2>${title}</h2><button type="button" class="mc-quiet" data-dlg="close" aria-label="关闭对话框">${icon('x')}</button></header>${contents}</section>`;
+  const actionGlyphs={confirmFile:'check',close:'x',undoReplace:'undo-2',replaceAll:'replace',demoReset:'rotate-ccw',sampleDebug:'bug',applyDemo:{undo:'undo-2',redo:'redo-2',selectAll:'text-select',format:'align-left',indent:'indent-increase',outdent:'indent-decrease',newline:'corner-down-left'}[id]};
+  dlg.querySelector('header button').dataset.tip='关闭';
+  for(const b of dlg.querySelectorAll('.mc-dialog-actions button')){const hint=b.textContent.trim(),ic=actionGlyphs[b.dataset.dlg];if(!ic)continue;b.setAttribute('aria-label',hint);b.dataset.tip=hint;b.className='mc-gbtn';b.innerHTML=icon(ic);}
+  dlg.hidden=false; icons(); dlg.querySelector(focusSel||'button').focus({preventScroll:true});
+}
+function drawIdentity(){
+  const mark='<span class="mc-mark" aria-hidden="true"><b></b><i></i><i></i></span>';
+  $('[data-sizes]').innerHTML=[48,32,24,16].map(n=>`<span style="--sw:${n}px">${mark.replace('class="mc-mark"','class="mc-mark" style="--mark-size:var(--sw)"')}${n} px</span>`).join('');
+  $('[data-spec-actions]').innerHTML=changeSet.map(c=>`<div class="mc-glyph"><div class="mc-glyph-view" aria-hidden="true"><span>${icon(c[1])}</span><span>${icon(c[1])}</span></div><strong>${c[2]}</strong><small>${c[4]}</small></div>`).join('');
+}
+function drawTools(){
+  const groups=[['filetools',[menus.file[0],menus.file[1],menus.file[3]]],['edittools',[menus.edit[0],menus.edit[1],...menus.search]],['buildtools',changeSet],['debugtools',[menus.run.find(v=>v?.[0]==='debug')]]];
+  groups.forEach(([key,items])=>{$(`[data-${key}]`).innerHTML=items.map(([a,ic,name,k])=>`<button class="mc-gbtn" type="button" data-act="${a}" aria-label="${name.replace('…','')}" data-tip="${name.replace('…','')}${k?' · '+k:''}">${icon(ic)}</button>`).join('');});
+}
+function status() {
+  const s=state; let ico='circle-check', text='就绪', pos='行 1，列 1';
+  if(s.scene==='debug'){ico=s.running?'play':'pause';text=s.running?'运行中 · 变量为最近采样值':'调试暂停 · -g -O0';const f=stops[s.step];pos=s.running?'采样：行 '+f.line:`行 ${f.line}，列 ${f.col}`;}
+  if(s.scene==='error'){const d=ceSamples[s.ce];ico='circle-alert';text='编译失败 · 1 个错误';pos=`行 ${s.targetLine}，列 ${s.targetLine===d.hintLine?d.hintCol:d.col}`;}
+  if(s.scene==='edit' && s.result!=='idle') text=({compiled:'编译成功',ran:'运行结束',builtRan:'编译并运行完成',rebuilt:'全部重新编译完成'})[s.result];
+  $('[data-status]').innerHTML=icon(ico)+esc(notice||text); $('[data-position]').textContent=pos;
+}
+function paint() {
+  clearTip(); const id=state.scene;
+  $$('[data-scene]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.scene===id)));
+  $('[data-window]').hidden=id==='icons'; $('[data-identity]').hidden=id!=='icons';
+  $('[data-titlefile]').textContent=fileName();
+  $('[data-case]').hidden=id!=='error';$('[data-case]').value=state.ce;
+  $('[data-std]').value=state.std; $('[data-o2]').checked=state.o2;
+  if(id!=='icons') {work.render();status();} else work.hoverClear();
+  icons();
+}
+function setScene(id,repaint=true) {
+  clearTimeout(runTimer); closeMenu(); closeDialog(false); clearTip(); notice='';
+  if(id==='icons') {state.scene='icons';state.running=false;}
+  else Object.assign(state,{scene:id,running:false,step:0,breakpoint:true,blank:false,file:'main.cpp',targetLine:11,ce:'semicolon',debugStd:state.std,lastStd:state.std,lastO2:state.o2,panel:id==='error'?'issues':'console',result:id==='error'?'idle':'builtRan',lastBuild:id==='error'?'compiled':'builtRan'});
+  if(repaint){paint();say(names[id]);persist();}
+}
+function finishDebug(message) {
+  clearTimeout(runTimer); state.scene='edit';state.running=false;state.result='ran';state.panel='console';notice=message||'调试结束 · 退出码 0';
+}
+function nextSample() {
+  if(state.scene!=='debug'||!state.running) return;
+  if(state.step<stops.length-1){state.step++;if(state.breakpoint && stops[state.step].line===10){state.running=false;notice='';}else runTimer=setTimeout(nextSample,720);} else finishDebug();
+  paint();persist();
+}
+function build(a) {
+  const hadBuild=state.result!=='idle';
+  if(a==='run' && (!hadBuild||state.scene==='error')) {notice=state.scene==='error'?'源代码未通过编译，未运行旧程序':'尚无可执行文件，请先编译';state.panel=state.scene==='error'?'issues':'console';paint();say(notice);return;}
+  clearTimeout(runTimer);state.running=false;
+  if(a!=='run'){state.lastStd=state.std;state.lastO2=state.o2;state.lastBuild=a==='rebuild'?'rebuilt':a==='buildRun'?'builtRan':'compiled';}
+  if(state.scene==='error'){state.panel='issues';notice='编译失败，未启动程序';}
+  else {state.scene='edit';state.result=({compile:'compiled',run:'ran',buildRun:'builtRan',rebuild:'rebuilt'})[a];state.panel=a==='run'||a==='buildRun'?'console':'log';}
+  paint();say($('[data-status]').textContent);persist();
+}
+const editOps=['undo','redo','find','replace','selectAll','indent','outdent','format','newline'];
+function act(a) {
+  closeMenu();clearTip();notice='';
+  if(['console','log','issues'].includes(a)){state.panel=a;paint();return;}
+  if(a==='activeFile')return;
+  if(a==='selectStd'){$('[data-std]').focus();try{$('[data-std]').showPicker?.();}catch{}return;}
+  if(a==='toggleO2'){$('[data-o2]').click();return;}
+  if(['sourceInfo','about','shortcuts'].includes(a)){
+    const tit={sourceInfo:'源文件属性',about:'关于 Mini C++',shortcuts:'快捷键'};
+    const body=a==='sourceInfo'?`<p><code>${esc(fileName())}</code></p><p>C++${state.std} · UTF-8 · 单文件</p>`:a==='about'?'<p>Mini C++ · 设计审查 R02</p>':`<div class="mc-keylist">${[...changeSet,...menus.search,menus.edit[6]].map(c=>`<div><span>${c[2]}</span><kbd>${c[3]}</kbd></div>`).join('')}</div>`;
+    sheet(a,tit[a],body);return;
+  }
+  if(['compile','run','buildRun','rebuild'].includes(a)) return build(a);
+  if(['new','open','saveAs'].includes(a)) return fileSheet(a);
+  if(editOps.includes(a)) return editingSheet(a);
+  if(a==='save') {notice='已保存（样稿）';paint();say(notice);return;}
+  if(a==='debug') {
+    if(state.scene==='error'){state.panel='issues'; notice='编译失败，无法启动调试';paint();return;}
+    if(state.blank){sheet('debugBlank','调试样例','<p>当前模板没有示例断点。</p><div class="mc-dialog-actions"><button type="button" class="mc-sm-btn" data-dlg="sampleDebug">打开求和调试样例</button></div>','[data-dlg="sampleDebug"]');return;}
+    return setScene('debug');
+  }
+  if(state.scene!=='debug') return;
+  if(a==='breakpoint') state.breakpoint=!state.breakpoint;
+  if(a==='step'&&!state.running){if(state.step<stops.length-1) state.step++; else finishDebug();}
+  if(a==='continue'&&!state.running){state.running=true;runTimer=setTimeout(nextSample,720);}
+  if(a==='pause'&&state.running){clearTimeout(runTimer);state.running=false;}
+  if(a==='stop'){clearTimeout(runTimer);state.scene='edit';state.running=false;state.panel='log';state.result='compiled';notice='已停止调试';}
+  paint();say($('[data-status]').textContent);persist();
+}
+function fileSheet(id) {
+  if(id==='open'){sheet(id,'打开源代码','<p>示例文件</p><button type="button" class="mc-sm-btn" data-dlg="openSample">'+icon('file-code-2')+' main.cpp</button>','[data-dlg="openSample"]');return;}
+  const title=id==='new'?'新建源代码':'另存为';
+  sheet(id,title,`<label>文件名<input type="text" data-filename autocomplete="off" maxlength="80" value="${id==='new'?'untitled.cpp':esc(fileName())}"></label><p>C++ 源文件（.cpp）</p><p data-file-warning role="alert" hidden></p><div class="mc-dialog-actions"><button class="mc-quiet" type="button" data-dlg="close">取消</button><button class="mc-tool mc-main" type="button" data-dlg="confirmFile">${id==='new'?'创建':'保存'}</button></div>`,'input');
+  const inp=dlg.querySelector('input');inp.setSelectionRange(0,Math.max(0,inp.value.lastIndexOf('.')));
+}
+function confirmFile(){
+  const inp=dlg.querySelector('[data-filename]'); if(!inp) return;
+  let name=inp.value.trim(); if(name && !name.includes('.')) name+='.cpp';
+  if(!/^[\p{L}\p{N}_-][\p{L}\p{N}_ .-]{0,70}\.cpp$/iu.test(name)||/^(con|prn|aux|nul|com[1-9]|lpt[1-9])\./i.test(name)) {
+    const w=dlg.querySelector('[data-file-warning]');w.hidden=false;w.textContent='请输入有效的 .cpp 文件名，不含目录。';inp.focus();return;
+  }
+  const fresh=dialog==='new';closeDialog(false);clearTimeout(runTimer);
+  if(fresh) Object.assign(state,{blank:true,scene:'edit',running:false,step:0,result:'idle',lastBuild:'idle',panel:'console',file:name});
+  else {state.file=name;state.running=false;}
+  notice=fresh?'已新建源代码（样稿）':'已另存为（样稿）';paint();say(notice);persist();
+}
+const specimen=['if (x > 0) {','sum += x;','cout << sum;', '}'];
+let draft=null;
+const inv = {indent:'增加缩进',outdent:'减少缩进',format:'自动缩进选区',newline:'换行并继承缩进',selectAll:'全选',undo:'撤销',redo:'重做'};
+function editingSheet(id){
+  const search=id==='find'||id==='replace';
+  if(search){draft={text:specimen.join('\n'),prev:null};
+    sheet(id,id==='find'?'查找':'查找和替换',`<label>查找<input type="text" data-find value="sum" maxlength="80"></label>${id==='replace'?'<label>替换为<input type="text" data-replace value="total" maxlength="80"></label>':''}<p data-match></p><pre class="mc-example" data-code-preview></pre><div class="mc-dialog-actions">${id==='replace'?'<button type="button" class="mc-quiet" data-dlg="undoReplace" disabled>撤销</button><button type="button" class="mc-tool mc-main" data-dlg="replaceAll">全部替换</button>':''}<button type="button" class="mc-sm-btn" data-dlg="close">关闭</button></div>`,'[data-find]');findPreview();return;
+  }
+  const indented=['if (x > 0) {','    sum += x;', '    cout << sum;', '}'];
+  const cases={
+    indent:[specimen.slice(1,3).join('\n'),indented.slice(1,3).join('\n'),'Tab'],
+    outdent:[indented.slice(1,3).join('\n'),specimen.slice(1,3).join('\n'),'Shift+Tab'],
+    format:[specimen.join('\n'),indented.join('\n'),'Ctrl+Tab'],
+    newline:['    if (x > 0) {▏','    if (x > 0) {\n        ▏','Enter'],
+    selectAll:[specimen.join('\n'),specimen.join('\n'),'Ctrl+A'],
+    undo:['    sum += value;', '    sum += x;', 'Ctrl+Z'],redo:['    sum += x;', '    sum += value;', 'Ctrl+Y']
+  };
+  const [before,after,key]=cases[id];draft={before,after,applied:false};
+  sheet(id,inv[id],`<p>编辑片段 · <kbd>${key}</kbd></p><pre class="mc-example" data-mod></pre><div class="mc-dialog-actions"><button type="button" class="mc-sm-btn" data-dlg="demoReset">还原片段</button><button type="button" class="mc-tool mc-main" data-dlg="applyDemo">${inv[id]}</button></div>`,'[data-dlg="applyDemo"]');
+  dlg.querySelector('[data-mod]').textContent=before;
+}
+function applyDemo(apply){
+  draft.applied=apply;const el=dlg.querySelector('[data-mod]');el.textContent=apply?draft.after:draft.before;
+  el.dataset.selected=String(dialog==='selectAll'&&apply||['indent','outdent','format'].includes(dialog));
+  dlg.querySelector('[data-dlg="applyDemo"]').disabled=apply;
+}
+function findPreview(message=''){
+  if(!dlg.querySelector('[data-find]'))return;
+  const f=dlg.querySelector('[data-find]').value, pieces=f?draft.text.split(f):[draft.text];
+  dlg.querySelector('[data-match]').textContent=message||`编辑片段 · ${pieces.length-1} 处匹配`;
+  dlg.querySelector('[data-code-preview]').innerHTML=pieces.map(esc).join('<mark>'+esc(f)+'</mark>');
+  const r=dlg.querySelector('[data-dlg="replaceAll"]');if(r)r.disabled=pieces.length<2;
+  const u=dlg.querySelector('[data-dlg="undoReplace"]');if(u)u.disabled=draft.prev===null;
+}
+function dlgAct(a){
+  if(a==='close')return closeDialog();
+  if(a==='sampleDebug'||a==='openSample')return setScene(a==='sampleDebug'?'debug':'edit');
+  if(a==='confirmFile')return confirmFile();
+  if(a==='applyDemo'||a==='demoReset')return applyDemo(a==='applyDemo');
+  if(a==='undoReplace'&&draft.prev!==null){draft.text=draft.prev;draft.prev=null;return findPreview();}
+  if(a==='replaceAll'){const f=dlg.querySelector('[data-find]').value;if(!f)return;const bits=draft.text.split(f);draft.prev=draft.text;draft.text=bits.join(dlg.querySelector('[data-replace]').value);findPreview(`已替换 ${bits.length-1} 处`);}
+}
+root.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b){if(e.target===dlg)closeDialog();else if(!e.target.closest('[data-dropdown]'))closeMenu();return;}
+  if(b.dataset.dlg)return dlgAct(b.dataset.dlg);
+  if(b.dataset.scene)return setScene(b.dataset.scene);
+  if(b.dataset.menu)return openMenu(b);
+  if(b.dataset.act)return act(b.dataset.act);
+  closeMenu();
+  if(b.dataset.panel){state.panel=b.dataset.panel;notice='';paint();return;}
+  if(b.dataset.jump){state.targetLine=Number(b.dataset.jump);paint();const row=$(`[data-code-line="${state.targetLine}"]`);row?.scrollIntoView({block:'nearest',behavior:'instant'});say($('[data-position]').textContent);}
+});
+root.addEventListener('input',e=>{if(e.target.matches('[data-find]'))findPreview();});
+root.addEventListener('change',e=>{
+  if(e.target.matches('[data-case]')&&Object.hasOwn(ceSamples,e.target.value)){state.ce=e.target.value;state.targetLine=ceSamples[state.ce].line;state.panel='issues';notice='';paint();return;}
+  if(e.target.matches('[data-std]')) state.std=e.target.value;
+  else if(e.target.matches('[data-o2]')) state.o2=e.target.checked; else return;
+  notice=`下次构建：C++${state.std} · ${state.o2?'-O2':'-O0'}`;status();icons();say(notice);persist();
+});
+root.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){clearTip();work.hoverClear();if(dialog)closeDialog();else if(menu){const old=menu;closeMenu();$(`[data-menu="${old}"]`).focus();}return;}
+  if(dialog){
+    if(e.key==='Enter'&&e.target.matches('[data-filename]')){e.preventDefault();confirmFile();return;}
+    if(e.key==='Tab'){const cs=Array.from(dlg.querySelectorAll('button:not(:disabled),input'));if(e.shiftKey&&document.activeElement===cs[0]||!e.shiftKey&&document.activeElement===cs.at(-1)){e.preventDefault();(e.shiftKey?cs.at(-1):cs[0]).focus();}}
+    if(inv[dialog] && (dialog==='format'&&e.ctrlKey&&e.key==='Tab'||dialog==='newline'&&e.key==='Enter'&&e.target.dataset.dlg==='applyDemo'||dialog==='selectAll'&&e.ctrlKey&&e.key.toLowerCase()==='a')) {e.preventDefault();applyDemo(true);}return;
+  }
+  if(state.scene==='icons')return;
+  if(e.altKey&&!e.ctrlKey){const target=$$('[data-menu]').find(b=>b.getAttribute('aria-keyshortcuts').slice(-1)===e.key.toUpperCase());if(target){e.preventDefault();target.focus();openMenu(target);return;}}
+  if(menu && ['ArrowDown','ArrowUp'].includes(e.key)){const items=Array.from(pop.querySelectorAll('button:not(:disabled)'));if(items.length){e.preventDefault();let n=items.indexOf(document.activeElement)+(e.key==='ArrowDown'?1:-1);items[(n+items.length)%items.length].focus();}return;}
+  const byKey={F9:'compile',F10:'run',F11:'buildRun',F12:'rebuild'};
+  const byCtrl={n:'new',o:'open',s:e.shiftKey?'saveAs':'save',f:'find',h:'replace',z:'undo',y:'redo',a:'selectAll',tab:'format'};
+  const a=e.ctrlKey?byCtrl[e.key.toLowerCase()]:byKey[e.key];if(a){e.preventDefault();act(a);}
+});
+root.addEventListener('pointerover',e=>{const n=e.target.closest('[data-tip]');if(n&&!n.contains(e.relatedTarget))showTip(n);});
+root.addEventListener('pointerout',e=>{const n=e.target.closest('[data-tip]');if(n&&!n.contains(e.relatedTarget))clearTip();});
+root.addEventListener('focusin',e=>{const n=e.target.closest('[data-tip]');if(n&&e.target.matches(':focus-visible'))showTip(n);});
+root.addEventListener('focusout',clearTip);
+document.addEventListener('pointerdown',e=>{if(!root.contains(e.target)){closeMenu();work.hoverClear();clearTip();}});
+drawTools();drawIdentity();paint();
+if(window.openai?.widgetState)fromHost(window.openai.widgetState);
+window.addEventListener('openai:set_globals',e=>{if(e.detail?.globals?.widgetState)fromHost(e.detail.globals.widgetState);});
+if(globalThis.Tweak){
+  const opts={spacing:'标准'};
+  const update=()=>{root.dataset.density=opts.spacing==='紧凑'?'compact':'normal';};
+  const tweak=new Tweak({container:$('[data-window]'),onChange:update});
+  tweak.addSelect(opts,'spacing',{label:'代码行距',options:['标准','紧凑']});
+}
+
+})();
+</script>
+</main></body></html>

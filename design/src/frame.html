@@ -1,0 +1,62 @@
+<div id="mini-cpp-review" lang="zh-CN" aria-label="Mini C++ 界面与图标审查">
+  <header class="mc-reviewbar">
+    <div class="mc-reviewtag"><span class="mc-rid">R02</span><span>设计审查</span></div>
+    <nav class="mc-scenes" aria-label="审查场景">
+      <button type="button" data-scene="edit" aria-pressed="true">编辑器</button>
+      <button type="button" data-scene="debug" aria-pressed="false">断点调试</button>
+      <button type="button" data-scene="error" aria-pressed="false">编译报错</button>
+      <button type="button" data-scene="icons" aria-pressed="false">图标稿</button>
+    </nav>
+    <select class="mc-case" data-case aria-label="报错样例" hidden><option value="semicolon">样例：漏写分号</option><option value="name">样例：变量名误写</option></select>
+    <span class="mc-reviewmeta">交互样稿</span>
+  </header>
+  <section class="mc-window" aria-label="Mini C++ 单文件工作台" data-window>
+    <header class="mc-titlebar">
+      <div class="mc-brand"><span class="mc-mark" aria-hidden="true"><b></b><i></i><i></i></span><span class="mc-titlefile" data-titlefile>main.cpp</span><span class="mc-title-dash" aria-hidden="true">-</span><strong>Mini C++</strong></div>
+      <div class="mc-caption" aria-hidden="true"><i data-lucide="minus"></i><i data-lucide="square"></i><i data-lucide="x"></i></div>
+    </header>
+    <nav class="mc-menustrip" aria-label="应用菜单">
+      <div class="mc-menus">
+        <button type="button" data-menu="file" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+F">文件</button>
+        <button type="button" data-menu="edit" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+E">编辑</button>
+        <button type="button" data-menu="search" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+S">搜索</button>
+        <button type="button" data-menu="view" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+V">视图</button>
+        <button type="button" data-menu="project" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+P">项目</button>
+        <button type="button" data-menu="run" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+R">运行</button>
+        <button type="button" data-menu="tools" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+T">工具</button>
+        <button type="button" data-menu="cvs" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+C">CVS</button>
+        <button type="button" data-menu="window" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+W">窗口</button>
+        <button type="button" data-menu="help" aria-haspopup="true" aria-expanded="false" aria-keyshortcuts="Alt+H">帮助</button>
+      </div>
+      <div class="mc-dropdown" data-dropdown hidden></div>
+    </nav>
+    <div class="mc-toolbar" aria-label="工具栏">
+      <div class="mc-cluster" role="group" aria-label="文件操作" data-filetools></div>
+      <div class="mc-cluster" role="group" aria-label="编辑操作" data-edittools></div>
+      <div class="mc-cluster mc-builds" role="group" aria-label="四个构建操作" data-buildtools></div>
+      <div class="mc-cluster" role="group" aria-label="调试操作" data-debugtools></div>
+      <div class="mc-config" role="group" aria-label="下次构建设置">
+        <label class="mc-selectbox"><span class="mc-sr">C++ 标准</span><select data-std aria-label="C++ 标准"><option value="98">C++98</option><option value="11">C++11</option><option value="14" selected>C++14</option></select><i data-lucide="chevron-down" aria-hidden="true"></i></label>
+        <label class="mc-switch" data-tip="下次普通构建使用 -O2"><input type="checkbox" data-o2 aria-label="开启 O2 优化"><span class="mc-track" aria-hidden="true"></span><span>O2</span></label>
+      </div>
+    </div>
+    <div data-workbench></div>
+    <footer class="mc-status"><span class="mc-footstate" data-status></span><span class="mc-statusinfo"><span data-position></span><span>空格: 4</span><span>UTF-8</span><span>CRLF</span></span></footer>
+  </section>
+  <section class="mc-identity" data-identity hidden aria-label="Mini C++ 图标审查稿">
+    <header class="mc-id-head"><div class="mc-brand"><span class="mc-mark" aria-hidden="true"><b></b><i></i><i></i></span><strong>Mini C++</strong></div><span>图标规范 <i>/</i> 02</span></header>
+    <div class="mc-id-main">
+      <div class="mc-id-intro"><span class="mc-index">01 / APP</span><h2>应用图标</h2></div>
+      <div class="mc-id-spec">
+        <div class="mc-swatch mc-swatch-light"><span class="mc-mark" role="img" aria-label="浅色背景上的 Mini C++ 图标"><b></b><i></i><i></i></span><span>浅色背景</span></div>
+        <div class="mc-swatch mc-swatch-dark"><span class="mc-mark" role="img" aria-label="深色背景上的 Mini C++ 图标"><b></b><i></i><i></i></span><span>深色背景</span></div>
+        <div class="mc-scales"><div data-sizes></div><span>原始像素尺寸</span></div>
+      </div>
+      <div class="mc-id-intro"><span class="mc-index">02 / TOOLBAR</span><h2>构建工具栏</h2></div>
+      <div class="mc-id-actions" data-spec-actions></div>
+      <div class="mc-id-fine"><span>24 × 24 网格</span><span>2 px 线宽</span><span>圆角端点</span></div>
+    </div>
+  </section>
+  <div class="mc-dialogstage" data-dialog hidden></div>
+  <div class="mc-sr" data-announce role="status" aria-live="polite"></div>
+</div>
