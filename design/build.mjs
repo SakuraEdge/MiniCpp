@@ -18,9 +18,13 @@ if(opts.includes('--import-icons')) {
 }
 const classic=classicArtwork();
 await Promise.all(Object.entries(classic.files).map(([file,svg])=>writeFile(path.join(dir,'icons',file),svg)));
+const cppRasters=Object.fromEntries(await Promise.all([16,24,32,48,128].map(async size=>{
+  const png=await readFile(path.join(dir,'icons',`cpp-file-${size}.png`));
+  return [size,'data:'+'image/png;base64,'+png.toString('base64')];
+})));
 const subset=JSON.stringify(JSON.parse(await read('vendor/lucide-subset.json')));
 const resources=`<style>\n${presentation}\n${workStyle}\n${termStyle}\n${classic.css}\n</style>`;
-const fragment=`${markup}\n${resources}\n<script>\n(() => {\n'use strict';\nconst classicGlyphs=${JSON.stringify(classic.html)};\n${term}\n${work}\n${controller}\n})();\n</script>\n`;
+const fragment=`${markup}\n${resources}\n<script>\n(() => {\n'use strict';\nconst classicGlyphs=${JSON.stringify(classic.html)};\nconst cppRasters=${JSON.stringify(cppRasters)};\n${term}\n${work}\n${controller}\n})();\n</script>\n`;
 if(opts.includes('--inline')) {
   const p=opts[opts.indexOf('--inline')+1];
   if(!p || !path.isAbsolute(p)) throw new Error('Provide an absolute path for the inline preview.');
@@ -35,6 +39,6 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
 }}};`;
 const reviewId=markup.match(/class="mc-rid">(R\d+)</)[1];
 const favicon='data:'+'image/svg+xml,'+encodeURIComponent(logo);
-const standalone=`<!doctype html>\n<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Mini C++ · 设计审查 ${reviewId}</title><link rel="icon" href="${favicon}"><style>html{color-scheme:light dark}body{margin:0;background:light-dark(#eef2f0,#131816);padding:clamp(10px,3.8vw,50px) clamp(8px,3vw,40px)}main{max-width:1152px;margin:0 auto}@media(max-width:570px){body{padding:9px 4px}}</style></head><body><main><script>(()=>{${adapter}})()</script>\n${fragment}</main></body></html>\n`;
+const standalone=`<!doctype html>\n<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Mini C++ · 设计审查 ${reviewId}</title><link rel="icon" href="${favicon}"><style>html{color-scheme:light dark}body{margin:0;background:light-dark(#f2f2f2,#181818);padding:clamp(10px,3.8vw,50px) clamp(8px,3vw,40px)}main{max-width:1152px;margin:0 auto}@media(max-width:570px){body{padding:9px 4px}}</style></head><body><main><script>(()=>{${adapter}})()</script>\n${fragment}</main></body></html>\n`;
 await writeFile(path.join(dir,'review.html'),standalone);
 console.log('Offline design:',Buffer.byteLength(standalone),'bytes. Inline design:',Buffer.byteLength(fragment),'bytes.');

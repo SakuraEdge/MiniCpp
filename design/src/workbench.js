@@ -109,7 +109,7 @@ function makeWorkbench(host) {
   function render() {
     const hot=host.querySelector('.wb-hot');const anchor=hot && state.running?`[data-var="${hot.dataset.var}"][data-line-ref="${hot.dataset.lineRef}"]`:null;
     hoverClear(); const debug=state.scene==='debug';
-    host.innerHTML=`<div class="wb-filebar"><div class="wb-filetab">${icon('file-code-2')}<strong>${esc(fileName())}</strong></div><button type="button" class="wb-plus" data-act="new" data-tip="新建源代码 · Ctrl+N" aria-label="新建源代码">${icon('plus')}</button><span class="wb-filekind">单文件</span></div>
+    host.innerHTML=`<div class="wb-filebar"><div class="wb-filetab">${icon('cpp-file')}<strong>${esc(fileName())}</strong></div><button type="button" class="wb-plus" data-act="new" data-tip="新建源代码 · Ctrl+N" aria-label="新建源代码">${icon('plus')}</button><span class="wb-filekind">单文件</span></div>
       <div class="wb-well${debug?' wb-split':''}"><section class="wb-editor" aria-label="${esc(fileName())} 源码示例">${lines().map((t,i)=>drawLine(t,i+1)).join('')}</section>${debug?inspector():''}</div>${output()}`;
     if(anchor) inspect(host.querySelector(anchor));
   }

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-labelledby="title">
+  <title id="title">Mini C++ 源文件 · CPP</title>
+  <path fill="#cecece" d="M5 4h32v42H5z"/>
+  <path fill="#62666a" d="M3 2h33v43H3z"/>
+  <path fill="#fdfdfd" d="M4.5 3.5h30v40h-30z"/>
+  <path fill="#ebebeb" d="M4.5 3.5h2.8v40H4.5zm2.8 37.7h27.2v2.3H7.3z"/>
+  <g fill="#929496">
+    <path d="M9 8h9v1.6H9zm11 0h8v1.6h-8zm-8 4h5v1.6h-5zm7 0h11v1.6H19zM14 16h8v1.6h-8zm10 0h4v1.6h-4zM9 20h6v1.6H9zm8 0h7v1.6h-7z"/>
+  </g>
+  <path fill="#234461" d="M10 25h37v17H10z"/>
+  <path fill="#3b6187" d="M11 26h35v15H11z"/>
+  <g fill="#fff" fill-rule="evenodd">
+    <path d="M23.4 28.5h-4.7a4.6 4.6 0 0 0-4.6 4.6v.9a4.5 4.5 0 0 0 4.6 4.5h4.7v-2.1h-4.5a2.4 2.4 0 0 1-2.5-2.5v-.8a2.4 2.4 0 0 1 2.5-2.5h4.5z"/>
+    <path id="p" d="M25.4 28.5h4.8a3.4 3.4 0 1 1 0 6.8h-2.5v3.2h-2.3zm2.3 2v2.8h2.4a1.4 1.4 0 0 0 0-2.8z"/>
+    <use href="#p" x="9.7"/>
+  </g>
+</svg>

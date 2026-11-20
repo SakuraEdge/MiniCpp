@@ -2,22 +2,23 @@ const root = document.getElementById('mini-cpp-review');
 const $ = (sel) => root.querySelector(sel);
 const $$ = (sel) => Array.from(root.querySelectorAll(sel));
 const esc = (s) => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const icon = (id) => classicGlyphs[id] || `<i data-lucide="${id}" aria-hidden="true"></i>`;
+const cppIcon=(size=16)=>`<img data-cpp-icon alt="" draggable="false" width="${size}" height="${size}" src="${cppRasters[size]||cppRasters[128]}">`;
+const icon = (id) => id==='cpp-file'?cppIcon():classicGlyphs[id] || `<i data-lucide="${id}" aria-hidden="true"></i>`;
 const icons = () => { if (globalThis.lucide?.createIcons) globalThis.lucide.createIcons({attrs:{width:16,height:16}}); };
 const fileName = () => state.file;
 const defaultState = {scene:'edit',std:'14',o2:false,debugStd:'14',lastStd:'14',lastO2:false,step:0,running:false,breakpoint:true,targetLine:11,ce:'semicolon',panel:'console',result:'compiled',lastBuild:'compiled',file:'main.cpp',blank:false,runCase:'prefix',runPhase:'idle',record:null};
-const state = {...defaultState};
+const state = {...defaultState,followOS:false};
 const changeSet = [ ['compile','classic-compile','编译','F9','生成当前源文件的程序'], ['run','classic-run','运行','F10','运行已有程序，不编译'], ['buildRun','classic-buildRun','编译并运行','F11','编译成功后再运行'], ['rebuild','classic-rebuild','全部重新编译','F12','清理旧产物并完整编译'] ];
 const menus = {
   file:[['new','file-plus-2','新建源代码','Ctrl+N'],['open','folder-open','打开源代码…','Ctrl+O'],null,['save','save','保存','Ctrl+S'],['saveAs','file-pen-line','另存为…','Ctrl+Shift+S']],
   edit:[['undo','undo-2','撤销','Ctrl+Z'],['redo','redo-2','重做','Ctrl+Y'],['selectAll','text-select','全选','Ctrl+A'],null,['indent','indent-increase','增加缩进','Tab'],['outdent','indent-decrease','减少缩进','Shift+Tab'],['format','align-left','自动缩进选区','Ctrl+Tab'],['newline','corner-down-left','换行并继承缩进','Enter']],
   search:[['find','search','查找…','Ctrl+F'],['replace','replace','替换…','Ctrl+H']],
-  view:[['console','square-terminal','运行输出',''],['log','list','编译日志',''],['issues','circle-alert','问题','']],
-  project:[['sourceInfo','file-code-2','当前源文件属性…','']],
+  view:[['console','square-terminal','运行输出',''],['log','list','编译日志',''],['issues','circle-alert','问题',''],null,['followOS','monitor','跟随系统外观','']],
+  project:[['sourceInfo','cpp-file','当前源文件属性…','']],
   run:[...changeSet,null,['debug','bug','开始调试',''],['continue','play','继续',''],['pause','pause','暂停',''],['step','step-forward','单步',''],['stop','square','停止调试','']],
   tools:[['selectStd','settings-2','语言标准…',''],['toggleO2','gauge','O2 优化','']],
   cvs:[['noCvs','git-branch','当前文件未关联 CVS 仓库','']],
-  window:[['activeFile','file-code-2','当前源文件','']],
+  window:[['activeFile','cpp-file','当前源文件','']],
   help:[['shortcuts','keyboard','快捷键…',''],['about','info','关于 Mini C++…','']]
 };
 const names={edit:'编辑器',debug:'断点调试',error:'编译报错',icons:'图标稿'};
@@ -36,7 +37,7 @@ function applyRunCase(id){Object.assign(state,{runCase:id,runPhase:'idle',record
 function persist() {
   const modelContent={scene:names[state.scene],standard:'C++'+state.std,optimizeO2:state.o2};
   // Only review choices are saved; text and file names entered in dialogs stay local.
-  const privateContent={scene:state.scene,standard:state.std,o2:state.o2,step:state.step,runCase:state.runCase};
+  const privateContent={scene:state.scene,standard:state.std,o2:state.o2,step:state.step,runCase:state.runCase,followOS:state.followOS};
   savedSignature=JSON.stringify(privateContent);
   try { window.openai?.setWidgetState?.({modelContent,privateContent})?.catch?.(()=>{}); } catch { /* optional host */ }
 }
@@ -45,6 +46,7 @@ function fromHost(saved) {
   clearTimeout(runTimer); closeMenu(); closeDialog(false); notice='';
   if (['98','11','14'].includes(p.standard)) state.std=p.standard;
   if (typeof p.o2==='boolean') state.o2=p.o2;
+  if (typeof p.followOS==='boolean') state.followOS=p.followOS;
   setScene(Object.hasOwn(names,p.scene)?p.scene:'edit',false);
   if(state.scene==='edit'&&Object.hasOwn(caseFiles,p.runCase))applyRunCase(p.runCase);
   if (state.scene==='debug' && Number.isInteger(p.step)) state.step=Math.max(0,Math.min(stops.length-1,p.step));
@@ -67,7 +69,8 @@ function openMenu(node) {
   if(menu===node.dataset.menu) { closeMenu(); return; }
   closeMenu(); clearTip(); work.hoverClear(); menu=node.dataset.menu;
   const disabled=a=>a==='noCvs'||['continue','pause','step','stop'].includes(a) && (state.scene!=='debug' || (a==='pause'?!state.running:a==='stop'?false:state.running));
-  pop.innerHTML=menus[menu].map(item=>item ? `<button type="button" data-act="${item[0]}" ${disabled(item[0])?'disabled':''}>${icon(item[1])}<span>${item[0]==='activeFile'?esc(fileName()):item[2]}</span><kbd>${item[0]==='toggleO2'?(state.o2?'开':'关'):item[3]}</kbd></button>` : '<hr>').join('');
+  const toggleValue=a=>a==='followOS'?state.followOS:a==='toggleO2'?state.o2:null;
+  pop.innerHTML=menus[menu].map(item=>{if(!item)return '<hr>';const [id,glyph,label,key]=item,toggle=toggleValue(id);return `<button type="button" data-act="${id}" ${disabled(id)?'disabled':''} ${toggle===null?'':`aria-pressed="${toggle}"`}>${icon(glyph)}<span>${id==='activeFile'?esc(fileName()):label}</span><kbd>${toggle===null?key:toggle?'开':'关'}</kbd></button>`;}).join('');
   pop.hidden=false; node.setAttribute('aria-expanded','true'); const a=node.getBoundingClientRect(), r=node.closest('.mc-menustrip').getBoundingClientRect();
   pop.style.left=Math.max(0,Math.min(a.left-r.left,r.width-pop.offsetWidth))+'px';pop.style.top=(a.bottom-r.top)+'px';icons();
 }
@@ -86,6 +89,8 @@ function sheet(id,title,contents,focusSel) {
 }
 function drawIdentity(){
   const mark='<span class="mc-mark" aria-hidden="true"><b></b><i></i><i></i></span>';
+  $$('[data-cpp-hero]').forEach(el=>{el.innerHTML=cppIcon(68);});
+  $('[data-cpp-sizes]').innerHTML=[48,32,24,16].map(n=>`<span>${cppIcon(n)}${n} px</span>`).join('');
   $('[data-sizes]').innerHTML=[48,32,24,16].map(n=>`<span style="--sw:${n}px">${mark.replace('class="mc-mark"','class="mc-mark" style="--mark-size:var(--sw)"')}${n} px</span>`).join('');
   $('[data-spec-actions]').innerHTML=changeSet.map(c=>`<div class="mc-glyph"><div class="mc-glyph-view" aria-hidden="true"><span>${icon(c[1])}</span><span>${icon(c[1])}</span></div><strong>${c[2]}</strong><small>${c[4]}</small></div>`).join('');
 }
@@ -104,6 +109,7 @@ function status() {
 }
 function paint() {
   clearTip(); const id=state.scene;
+  root.dataset.followOs=String(state.followOS);
   $$('[data-scene]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.scene===id)));
   $('[data-window]').hidden=id==='icons'; $('[data-identity]').hidden=id!=='icons';
   $('[data-titlefile]').textContent=fileName();
@@ -147,9 +153,10 @@ function act(a) {
   if(a==='activeFile')return;
   if(a==='selectStd'){$('[data-std]').focus();try{$('[data-std]').showPicker?.();}catch{}return;}
   if(a==='toggleO2'){$('[data-o2]').click();return;}
+  if(a==='followOS'){state.followOS=!state.followOS;paint();persist();return;}
   if(['sourceInfo','about','shortcuts'].includes(a)){
     const tit={sourceInfo:'源文件属性',about:'关于 Mini C++',shortcuts:'快捷键'};
-    const body=a==='sourceInfo'?`<p><code>${esc(fileName())}</code></p><p>C++${state.std} · UTF-8 · 单文件</p>`:a==='about'?'<p>Mini C++ · 设计审查 R03</p>':`<div class="mc-keylist">${[...changeSet,...menus.search,menus.edit[6]].map(c=>`<div><span>${c[2]}</span><kbd>${c[3]}</kbd></div>`).join('')}</div>`;
+    const body=a==='sourceInfo'?`<p class="mc-source-id">${cppIcon(24)}<code>${esc(fileName())}</code></p><p>C++${state.std} · UTF-8 · 单文件</p>`:a==='about'?`<p>Mini C++ · 设计审查 ${$('.mc-rid').textContent}</p>`:`<div class="mc-keylist">${[...changeSet,...menus.search,menus.edit[6]].map(c=>`<div><span>${c[2]}</span><kbd>${c[3]}</kbd></div>`).join('')}</div>`;
     sheet(a,tit[a],body);return;
   }
   if(['compile','run','buildRun','rebuild'].includes(a)) return build(a);
@@ -170,7 +177,7 @@ function act(a) {
   paint();say($('[data-status]').textContent);persist();
 }
 function fileSheet(id) {
-  if(id==='open'){sheet(id,'打开源代码','<p>示例文件</p><button type="button" class="mc-sm-btn" data-dlg="openSample">'+icon('file-code-2')+' main.cpp</button>','[data-dlg="openSample"]');return;}
+  if(id==='open'){sheet(id,'打开源代码','<p>示例文件</p><button type="button" class="mc-sm-btn" data-dlg="openSample">'+cppIcon(24)+' main.cpp</button>','[data-dlg="openSample"]');return;}
   const title=id==='new'?'新建源代码':'另存为';
   sheet(id,title,`<label>文件名<input type="text" data-filename autocomplete="off" maxlength="80" value="${id==='new'?'untitled.cpp':esc(fileName())}"></label><p>C++ 源文件（.cpp）</p><p data-file-warning role="alert" hidden></p><div class="mc-dialog-actions"><button class="mc-quiet" type="button" data-dlg="close">取消</button><button class="mc-tool mc-main" type="button" data-dlg="confirmFile">${id==='new'?'创建':'保存'}</button></div>`,'input');
   const inp=dlg.querySelector('input');inp.setSelectionRange(0,Math.max(0,inp.value.lastIndexOf('.')));

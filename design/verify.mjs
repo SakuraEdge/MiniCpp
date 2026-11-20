@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 import assert from 'node:assert/strict';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile } from 'node:fs/promises';
 const require=createRequire(import.meta.url);
 let chromium;try{({chromium}=require('playwright-core'));}catch{({chromium}=require('../.review-tools/node_modules/playwright-core'));}
 const dir=path.dirname(fileURLToPath(import.meta.url));
@@ -31,6 +31,8 @@ try {
   const rows=sel=>q(sel).evaluateAll(els=>els.map(el=>[el.dataset.termRow||el.dataset.recordRow,el.querySelector('code')?.textContent??el.textContent]));
   const noRecord=async()=>{assert.equal(await q('[data-run-record],[data-file-done]').count(),0);await q('[data-run-pending]').waitFor();};
   assert.deepEqual(await q('[data-menu]').allTextContents(),['文件','编辑','搜索','视图','项目','运行','工具','CVS','窗口','帮助']);
+  const smallIcon=q('.wb-filetab [data-cpp-icon]');await smallIcon.evaluate(img=>img.decode());assert.equal(await smallIcon.evaluate(img=>img.naturalWidth),16);
+  await click('[data-menu="file"]');await act('open');await q('[data-dlg="openSample"] [data-cpp-icon]').evaluate(img=>img.decode());await page.keyboard.press('Escape');
   const glyphs=q('[data-buildtools] button');assert.deepEqual(await glyphs.allTextContents(),['','','','']);
   assert.deepEqual(await glyphs.locator('[data-classic]').evaluateAll(es=>es.map(e=>e.dataset.classic)),['compile','run','buildRun','rebuild']);assert.equal(await glyphs.locator('svg').count(),0);
   assert.deepEqual(await glyphs.evaluateAll(bs=>bs.map(b=>[b.offsetWidth,b.offsetHeight])),Array(4).fill([28,28]));
@@ -72,24 +74,29 @@ try {
   await click('[data-menu="edit"]');await act('format');await click('[data-dlg="applyDemo"]');await has('[data-mod]',/\n    sum/);await click('.mc-dialog header [data-dlg="close"]');
   await act('new');await q('[data-filename]').fill('round1.cpp');await click('[data-dlg="confirmFile"]');await has('.wb-filetab',/round1.cpp/);assert.equal(await q('.wb-row').count(),5);
   await act('run');await has('[data-status]',/先编译/);assert.equal(await q('[data-terminal]').isVisible(),false);await act('buildRun');await done();await has('.wb-output',/无输入输出/);await click('[data-term-close]');
-  await scene('icons');await noMissing();assert.equal(await q('[data-spec-actions] .mc-glyph').count(),4);await capture('icons');
+  await scene('icons');await noMissing();assert.equal(await q('[data-spec-actions] .mc-glyph').count(),4);
+  assert.deepEqual(await q('[data-cpp-sizes] img').evaluateAll(els=>Promise.all(els.map(async el=>{await el.decode();return [el.width,el.naturalWidth];}))),[[48,48],[32,32],[24,24],[16,16]]);
+  await capture('icons');await q('[data-cpp-spec]').screenshot({path:path.join(img,'cpp-file.png')});
   for(const width of [1024,736,590,420,360,320]){
     await page.setViewportSize({width,height:900});
     for(const id of ['debug','error','icons','edit']){await scene(id);await assertFit();await noMissing();}
   }
   await act('run');await noRecord();await assertFit();await submit('1');await submit('5');await done();await click('[data-term-close]');
-  await page.setViewportSize({width:1024,height:800});await page.emulateMedia({colorScheme:'dark'});await scene('debug');await q('#mini-cpp-review').screenshot({path:path.join(qa,'dark.png')});
+  await page.setViewportSize({width:1024,height:800});await page.emulateMedia({colorScheme:'dark'});await scene('debug');
+  const barColor=()=>q('.mc-titlebar').evaluate(el=>getComputedStyle(el).backgroundColor);
+  const neutralChrome=async()=>{for(const sel of ['.mc-titlebar','.mc-menustrip','.mc-toolbar','.mc-status','.wb-filebar','.wb-output-head','.wb-side']){const rgb=await q(sel).evaluate(el=>getComputedStyle(el).backgroundColor.match(/\d+/g).slice(0,3).map(Number));assert.ok(Math.max(...rgb)-Math.min(...rgb)<=3,`Unexpected tint on ${sel}: ${rgb}`);}};
+  assert.equal(await barColor(),'rgb(242, 242, 242)');await neutralChrome();await click('[data-menu="view"]');await act('followOS');assert.equal(await barColor(),'rgb(32, 32, 32)');await neutralChrome();
+  await q('#mini-cpp-review').screenshot({path:path.join(qa,'dark.png')});
   await page.setViewportSize({width:320,height:900});await scene('icons');await q('#mini-cpp-review').screenshot({path:path.join(qa,'narrow-icons.png')});
-  // Export Windows icon artwork from the vector at its actual sizes, with alpha.
-  const logo=await readFile(path.join(dir,'icons/mini-cpp.svg'),'utf8'), entries=[];
-  await page.setViewportSize({width:320,height:320});
-  for(const size of [16,24,32,48,64,128,256]) {
-    await page.setContent(`<style>html,body{margin:0;background:transparent}svg{display:block;width:${size}px;height:${size}px}</style>${logo}`);
-    const png=await page.locator('svg').screenshot({omitBackground:true});entries.push({size,png});
-    if(size===128)await writeFile(path.join(dir,'icons/mini-cpp-128.png'),png);
+  for(const name of ['mini-cpp','cpp-file']){
+    const ico=await readFile(path.join(dir,'icons',name+'.ico')),sizes=[16,24,32,48,64,128,256];
+    assert.equal(ico.readUInt16LE(2),1);assert.equal(ico.readUInt16LE(4),sizes.length);
+    for(const [i,size] of sizes.entries()){
+      const p=6+i*16,len=ico.readUInt32LE(p+8),off=ico.readUInt32LE(p+12),payload=ico.subarray(off,off+len);
+      assert.equal(ico[p]||256,size);assert.equal(ico[p+1]||256,size);assert.equal(payload.length,len);
+      assert.equal(payload.readUInt32BE(16),size);assert.equal(payload.readUInt32BE(20),size);assert.equal(payload[25],6,'RGBA transparency');
+      if((name==='cpp-file'&&size<=48)||size===128)assert.deepEqual(payload,await readFile(path.join(dir,'icons',`${name}-${size}.png`)));
+    }
   }
-  const hdr=Buffer.alloc(6+16*entries.length);hdr.writeUInt16LE(1,2);hdr.writeUInt16LE(entries.length,4);
-  let offset=hdr.length;for(const [{size,png},i] of entries.map((v,i)=>[v,i])){const p=6+i*16;hdr[p]=hdr[p+1]=size%256;hdr.writeUInt16LE(1,p+4);hdr.writeUInt16LE(32,p+6);hdr.writeUInt32LE(png.length,p+8);hdr.writeUInt32LE(offset,p+12);offset+=png.length;}
-  await writeFile(path.join(dir,'icons/mini-cpp.ico'),Buffer.concat([hdr,...entries.map(e=>e.png)]));
-  assert.deepEqual(errors,[]);console.log('PASS: classic build glyphs, isolated interactive console, ordered I/O, exit-only publishing, truncation and file I/O, cancel, CE, debug, editor, settings and responsive layout.');
+  assert.deepEqual(errors,[]);console.log('PASS: neutral chrome in both appearances, source-file and app icons, seven Windows icon sizes, build glyphs, console I/O, CE, debug, editor, settings, and responsive layout.');
 }finally {await browser.close();}

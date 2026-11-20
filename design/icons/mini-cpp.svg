@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-labelledby="title">
   <title id="title">Mini C++</title>
-  <rect width="64" height="64" rx="14" fill="#11654f"/>
+  <rect width="64" height="64" rx="14" fill="#456982"/>
   <g fill="#fff">
     <path d="M39 13H22L11 24v16l11 11h17v-8H25l-6-6V27l6-6h14z"/>
     <path d="M32 26h4v4h4v4h-4v4h-4v-4h-4v-4h4zm15 0h4v4h4v4h-4v4h-4v-4h-4v-4h4z"/>

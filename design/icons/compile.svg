@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" width="18" height="18" role="img" aria-labelledby="title" shape-rendering="crispEdges">
   <title id="title">编译</title>
-  <style>svg{--edge:#36443e;--orange:#e89c63;--green:#96bc61;--blue:#72b5d5;--yellow:#edcf66;--bar:#dcad54;--screen:#e9ede9}@media(prefers-color-scheme:dark){svg{--edge:#c6d4cd;--orange:#eda872;--green:#b2cf8a;--blue:#8fc8e3;--yellow:#eed584;--bar:#e7bc69;--screen:#414b46}}</style>
+  <style>svg{--edge:#424446;--orange:#dfa477;--mist:#bbcad3;--blue:#84adc5;--yellow:#e1ca7d;--bar:#d6b46e;--screen:#efefef}@media(prefers-color-scheme:dark){svg{--edge:#cecece;--orange:#e7b089;--mist:#c7d1da;--blue:#a1c1d4;--yellow:#e5d18e;--bar:#e4c481;--screen:#474747}}</style>
   <rect x="0" y="0" width="8" height="8" fill="var(--edge)"/>
   <rect x="1" y="1" width="6" height="6" fill="var(--orange)"/>
   <rect x="10" y="0" width="8" height="8" fill="var(--edge)"/>
-  <rect x="11" y="1" width="6" height="6" fill="var(--green)"/>
+  <rect x="11" y="1" width="6" height="6" fill="var(--mist)"/>
   <rect x="0" y="10" width="8" height="8" fill="var(--edge)"/>
   <rect x="1" y="11" width="6" height="6" fill="var(--blue)"/>
   <rect x="10" y="10" width="8" height="8" fill="var(--edge)"/>

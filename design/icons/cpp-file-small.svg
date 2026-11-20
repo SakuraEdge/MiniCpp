@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" role="img" aria-labelledby="title" shape-rendering="crispEdges">
+  <title id="title">CPP 源文件 · 16 像素</title>
+  <path fill="#65686a" d="M1 0h11v16H1z"/>
+  <path fill="#fdfdfd" d="M2 1h9v14H2z"/>
+  <path fill="#959799" d="M3 3h6v1H3zm1 2h3v1H4zm4 0h2v1H8z"/>
+  <path fill="#365b80" d="M2 8h14v7H2z"/>
+  <path fill="#fff" fill-rule="evenodd" d="M4 9h3v1H5v3h2v1H4zm4 0h3v3H9v2H8zm1 1v1h1v-1zm3-1h3v3h-2v2h-1zm1 1v1h1v-1z"/>
+</svg>
