@@ -1,8 +1,9 @@
 [CmdletBinding()]
-param()
+param([string]$AppDir)
 $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-$out = [IO.Directory]::CreateDirectory((Join-Path $root 'dist/MiniCpp')).FullName
+if (!$AppDir) { $AppDir = Join-Path $root 'dist/MiniCpp' }
+$out = [IO.Directory]::CreateDirectory($AppDir).FullName
 $assets = [IO.Directory]::CreateDirectory((Join-Path $out 'assets')).FullName
 $cache = [IO.Directory]::CreateDirectory((Join-Path $root '.build-cache')).FullName
 $pkg = Join-Path $cache 'scintilla-3.6.3.nupkg'
@@ -26,7 +27,8 @@ if ($LASTEXITCODE -ne 0) { throw 'Console host compilation failed.' }
 & $csc @common '/target:winexe' '/r:System.Drawing.dll' '/r:System.Windows.Forms.dll' "/r:$out/ScintillaNET.dll" "/win32icon:$root/design/icons/mini-cpp.ico" "/win32manifest:$root/src/MiniCpp/app.manifest" "/out:$out/MiniCpp.exe" @shared @gui
 if ($LASTEXITCODE -ne 0) { throw 'IDE compilation failed.' }
 Get-ChildItem -LiteralPath (Join-Path $root 'src/Assets') -Filter '*.png' | ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $assets -Force }
-foreach ($name in 'mini-cpp.ico','cpp-file.ico','cpp-file-16.png') { Copy-Item -LiteralPath (Join-Path $root "design/icons/$name") -Destination $assets -Force }
+foreach ($name in 'mini-cpp.ico','cpp-file.ico','cpp-file-48.png') { Copy-Item -LiteralPath (Join-Path $root "design/icons/$name") -Destination $assets -Force }
+Copy-Item -LiteralPath (Join-Path $root 'src/MiniCpp/MiniCpp.exe.config') -Destination $out -Force
 $licenses = [IO.Directory]::CreateDirectory((Join-Path $out 'LICENSES')).FullName
 Get-ChildItem -LiteralPath (Join-Path $root 'LICENSES') -File | ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $licenses -Force }
 Copy-Item -LiteralPath (Join-Path $root 'design/vendor/LUCIDE-LICENSE.txt') -Destination $licenses -Force

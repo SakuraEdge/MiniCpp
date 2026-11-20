@@ -24,12 +24,11 @@ namespace MiniCpp {
         void UpdateDoc(SourceDocument d,int view){if(!closing&&current==d){RefreshDoc();if(view>=0)View(view);}}
         async void StartBuild(bool run,bool rebuild,bool withDebugger){
             if(!Ready())return;var d=current;
-            if(d.Encoding.CodePage==54936){if(MessageBox.Show(this,"当前文件是 GB18030 编码。转换为 UTF-8 并保存后再编译？","源文件编码",MessageBoxButtons.OKCancel,MessageBoxIcon.Question)!=DialogResult.OK)return;var old=d.Encoding;d.Encoding=Native.Utf8;if(!Save(d,false,false)){d.Encoding=old;return;}}
             if(!Save(d,false,true))return;BeginWork(d);bool handedToDebugger=false;
             try{if(!withDebugger)d.BuildFailed=true;d.Status=withDebugger?"正在编译调试副本…":"正在编译…";d.LogText=d.Status;UpdateDoc(d,1);
                 var result=await Compiler.BuildAsync(d.FullPath,d.Standard,d.O2,withDebugger,rebuild,bin,jobToken.Token);if(closing)return;
                 d.LogText=result.Log;d.Problems=result.Diagnostics;if(!withDebugger){d.BuildFailed=!result.Success;if(result.Success)d.BuiltSource=d.Edit.Text;}
-                if(!result.Success){d.Status="编译失败";UpdateDoc(d,2);return;}d.Status="编译成功";UpdateDoc(d,1);
+                if(!result.Success){d.Status="编译失败";if(current==d&&horizontal.Panel2Collapsed)SetOutputVisible(true,false);UpdateDoc(d,2);return;}d.Status="编译成功";UpdateDoc(d,1);
                 if(withDebugger){await StartDebugger(d,result.Executable);handedToDebugger=debug!=null;}
                 else if(run)await RunProgram(d,result.Executable);
             }catch(OperationCanceledException){d.Status="已停止编译或运行";}
@@ -41,7 +40,7 @@ namespace MiniCpp {
         async void RunOnly(){if(!Ready())return;var d=current;var exe=d.FullPath==null?null:Compiler.ArtifactPath(d.FullPath,false);if(d.BuildFailed||exe==null||!File.Exists(exe)){Say(d.BuildFailed?"上次编译失败，未运行旧程序":"尚无可执行文件，请先编译");return;}BeginWork(d);try{await RunProgram(d,exe);}catch(OperationCanceledException){d.Status="运行已停止";d.RunText="运行已中止。";}catch(Exception ex){d.Status="运行失败";Error(ex.Message);}finally{EndWork(d);}}
         void StartOrContinue(){if(debug==null){StartBuild(false,false,true);return;}DebugCmd(true);}
         async Task StartDebugger(SourceDocument d,string exe){var g=new DebugSession(bin,exe,d.FullPath){LiveSampling=prefs.Sampling};debug=g;snapshot=null;debuggerRunning=false;locals.Items.Clear();vertical.Panel2Collapsed=false;
-            vertical.SplitterDistance=Math.Max(220,vertical.Width-Math.Min(315,vertical.Width/3));stateLabel.Text="调试器 · 正在启动";frameLabel.Text="";d.RunText="";d.Status="正在启动 GDB";UpdateDoc(d,0);
+            vertical.SplitterDistance=Math.Max(Px(160),vertical.Width-Math.Min(Px(315),vertical.Width/3));stateLabel.Text="调试器 · 正在启动";frameLabel.Text="";d.RunText="";d.Status="正在启动 GDB";UpdateDoc(d,0);
             g.Log+=msg=>OnUi(()=>{if(debug!=g)return;if(d.LogText.Length<131072)d.LogText+="\r\n"+msg;if(current==d&&selectedView==1)log.Text=d.LogText;});
             g.Running+=()=>OnUi(()=>{if(debug!=g)return;debuggerRunning=true;d.Execution(0);d.Status="调试运行中";stateLabel.Text=snapshot==null?"调试器 · 运行中":"调试器 · 运行中 / 最近快照";if(current==d)RefreshStatus();});
             g.Stopped+=value=>OnUi(()=>{if(debug!=g)return;snapshot=value;debuggerRunning=value.Sample;d.Status=value.Sample?"调试运行中":"调试暂停";

@@ -9,11 +9,11 @@ using System.Xml.Linq;
 namespace MiniCpp {
     internal static class Ui {
         public static readonly Color Ink=Color.FromArgb(37,37,37),Muted=Color.FromArgb(98,98,98),Soft=Color.FromArgb(247,247,247),Line=Color.FromArgb(222,222,222),Accent=Color.FromArgb(70,108,145);
-        public static readonly Font TextFont=new Font("Microsoft YaHei UI",9F),Mono=new Font("Consolas",10F);
+        public static readonly Font TextFont=new Font("Microsoft YaHei UI",10F),Mono=new Font("Consolas",11F);
         public static readonly string Assets=Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"assets"); static readonly Dictionary<string,Image> images=new Dictionary<string,Image>();
         public static Image Art(string name){Image img;if(!images.TryGetValue(name,out img)){using(var src=Image.FromFile(Path.Combine(Assets,name+".png")))img=new Bitmap(src);images.Add(name,img);}return img;}
         public static ToolStrip Strip(Color bg,bool overflow){return new ToolStrip{GripStyle=ToolStripGripStyle.Hidden,CanOverflow=overflow,BackColor=bg,ForeColor=Ink,Renderer=new FlatStrip(),Font=TextFont,ImageScalingSize=new Size(18,18),Padding=new Padding(7,2,6,2),AutoSize=false,Height=35,TabStop=true};}
-        public static ToolStripButton Button(string art,string hint,Action action){var b=new ToolStripButton{Image=Art(art),ToolTipText=hint,AccessibleName=hint,DisplayStyle=ToolStripItemDisplayStyle.Image,AutoSize=false,Width=29,Height=26,Margin=new Padding(0),ImageTransparentColor=Color.Transparent};b.Click+=(s,e)=>action();return b;}
+        public static ToolStripButton Button(string art,string hint,Action action){var b=new ToolStripButton{Name=art,Image=Art(art),ToolTipText=hint,AccessibleName=hint,DisplayStyle=ToolStripItemDisplayStyle.Image,AutoSize=false,Width=38,Height=36,Margin=Padding.Empty,ImageTransparentColor=Color.Transparent};b.Click+=(s,e)=>action();return b;}
         public static TextBox Viewer(){return new TextBox{Multiline=true,ReadOnly=true,BackColor=Color.White,ForeColor=Ink,BorderStyle=BorderStyle.None,Font=Mono,Dock=DockStyle.Fill,ScrollBars=ScrollBars.Both,WordWrap=false};}
         public static Label Caption(string text){return new Label{Text=text,AutoSize=true,ForeColor=Muted,Font=TextFont,Margin=new Padding(0,3,6,2)};}
         public static string Shortcut(Keys key){return new KeysConverter().ConvertToString(key);}
@@ -24,10 +24,10 @@ namespace MiniCpp {
         protected override void OnRenderButtonBackground(ToolStripItemRenderEventArgs e){var b=e.Item as ToolStripButton;bool tab=b!=null&&b.Tag is SourceDocument;Color bg=b!=null&&b.Checked?(tab?Color.White:Color.FromArgb(233,239,244)):e.Item.Selected?Color.FromArgb(237,237,237):e.ToolStrip.BackColor;using(var brush=new SolidBrush(bg))e.Graphics.FillRectangle(brush,new Rectangle(Point.Empty,e.Item.Size));if(tab&&b.Checked)using(var p=new Pen(Ui.Accent,2))e.Graphics.DrawLine(p,0,1,b.Width,1);}
     }
     internal sealed class Preferences {
-        public string Bin="",Standard="14";public bool O2,Sampling=true;
+        public string Bin="",Standard="14";public bool O2,Sampling=true,OutputCollapsed,LargeTools;public int OutputPercent=26;
         static string FileName{get{return Path.Combine(Native.DataDir,"preferences.xml");}}
-        public static Preferences Load(){var p=new Preferences();try{if(File.Exists(FileName)){var x=XElement.Load(FileName);p.Bin=(string)x.Attribute("bin")??"";var std=(string)x.Attribute("standard");if(Compiler.Standards.Contains(std))p.Standard=std;p.O2=(bool?)x.Attribute("o2")??false;p.Sampling=(bool?)x.Attribute("sampling")??true;}}catch{}return p;}
-        public void Save(){try{Directory.CreateDirectory(Native.DataDir);new XElement("MiniCpp",new XAttribute("bin",Bin),new XAttribute("standard",Standard),new XAttribute("o2",O2),new XAttribute("sampling",Sampling)).Save(FileName);}catch(IOException){}catch(UnauthorizedAccessException){}}
+        public static Preferences Load(){var p=new Preferences();try{if(File.Exists(FileName)){var x=XElement.Load(FileName);p.Bin=(string)x.Attribute("bin")??"";var std=(string)x.Attribute("standard");if(Compiler.Standards.Contains(std))p.Standard=std;p.O2=(bool?)x.Attribute("o2")??false;p.Sampling=(bool?)x.Attribute("sampling")??true;p.OutputCollapsed=(bool?)x.Attribute("outputCollapsed")??false;p.OutputPercent=Math.Max(1,Math.Min(99,(int?)x.Attribute("outputPercent")??26));p.LargeTools=(bool?)x.Attribute("largeTools")??false;}}catch{}return p;}
+        public void Save(){try{Directory.CreateDirectory(Native.DataDir);new XElement("MiniCpp",new XAttribute("bin",Bin),new XAttribute("standard",Standard),new XAttribute("o2",O2),new XAttribute("sampling",Sampling),new XAttribute("largeTools",LargeTools),new XAttribute("outputPercent",OutputPercent),new XAttribute("outputCollapsed",OutputCollapsed)).Save(FileName);}catch(IOException){}catch(UnauthorizedAccessException){}}
     }
     internal sealed class FindDialog:Form {
         readonly Func<SourceDocument> source;readonly TextBox term=new TextBox(),replacement=new TextBox();readonly CheckBox match=new CheckBox{Text="区分大小写",AutoSize=true};readonly Label result=Ui.Caption("");

@@ -1,8 +1,9 @@
 [CmdletBinding()]
-param()
+param([string]$AppDir)
 $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-$out = [IO.Directory]::CreateDirectory((Join-Path $root 'dist/MiniCpp')).FullName
+if (!$AppDir) { $AppDir = Join-Path $root 'dist/MiniCpp' }
+$out = [IO.Directory]::CreateDirectory($AppDir).FullName
 $target = Join-Path $out 'w64devkit'
 if (Test-Path -LiteralPath $target) {
     if ((Test-Path -LiteralPath (Join-Path $target 'bin/g++.exe')) -and (Test-Path -LiteralPath (Join-Path $target 'bin/gdb.exe')) -and ((Get-Content -Raw -LiteralPath (Join-Path $target 'VERSION.txt')).Trim() -eq '2.11.0')) { Write-Output 'w64devkit 2.11.0 is already present.'; return }
@@ -16,6 +17,6 @@ if (!(Test-Path -LiteralPath $file)) {
 }
 if ((Get-FileHash -Algorithm SHA256 -LiteralPath $file).Hash -ne '54C2BB9962E8A30C8270E34C5EFC3D5FEE579F53087FA7D435B95FBBA2AF7B2B') { throw 'Toolchain checksum mismatch.' }
 Push-Location -LiteralPath $out
-try { $p = Start-Process -FilePath $file -ArgumentList '-y' -WorkingDirectory $out -WindowStyle Hidden -Wait -PassThru; if ($p.ExitCode -ne 0) { throw "Extraction failed: $($p.ExitCode)" } } finally { Pop-Location }
+try { $p = Start-Process -FilePath $file -ArgumentList @('-y',('"-o{0}"' -f $out)) -WorkingDirectory $out -WindowStyle Hidden -Wait -PassThru; if ($p.ExitCode -ne 0) { throw "Extraction failed: $($p.ExitCode)" } } finally { Pop-Location }
 if (!(Test-Path -LiteralPath (Join-Path $target 'bin/g++.exe'))) { throw 'Expected compiler was not extracted.' }
 Write-Output "Toolchain: $target"
