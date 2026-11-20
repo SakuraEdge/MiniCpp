@@ -24,7 +24,7 @@ $gui = @(Get-ChildItem -LiteralPath (Join-Path $root 'src/MiniCpp') -Filter '*.c
 $console = @(Get-ChildItem -LiteralPath (Join-Path $root 'src/ConsoleHost') -Filter '*.cs' | ForEach-Object FullName)
 & $csc @common '/target:exe' "/out:$out/MiniCpp.Console.exe" @shared @console
 if ($LASTEXITCODE -ne 0) { throw 'Console host compilation failed.' }
-& $csc @common '/target:winexe' '/r:System.Drawing.dll' '/r:System.Windows.Forms.dll' "/r:$out/ScintillaNET.dll" "/win32icon:$root/design/icons/mini-cpp.ico" "/win32manifest:$root/src/MiniCpp/app.manifest" "/out:$out/MiniCpp.exe" @shared @gui
+& $csc @common '/target:winexe' '/r:System.Drawing.dll' '/r:System.Windows.Forms.dll' '/r:System.Runtime.Serialization.dll' '/r:System.Net.Http.dll' "/r:$out/ScintillaNET.dll" "/win32icon:$root/design/icons/mini-cpp.ico" "/win32manifest:$root/src/MiniCpp/app.manifest" "/out:$out/MiniCpp.exe" @shared @gui
 if ($LASTEXITCODE -ne 0) { throw 'IDE compilation failed.' }
 Get-ChildItem -LiteralPath (Join-Path $root 'src/Assets') -Filter '*.png' | ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $assets -Force }
 foreach ($name in 'mini-cpp.ico','cpp-file.ico','cpp-file-48.png') { Copy-Item -LiteralPath (Join-Path $root "design/icons/$name") -Destination $assets -Force }

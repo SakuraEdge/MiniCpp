@@ -28,16 +28,21 @@ namespace MiniCpp {
             e.Styles[Style.LineNumber].ForeColor=Color.DimGray;e.Styles[Style.LineNumber].BackColor=Color.FromArgb(249,249,249);
             e.SetKeywords(0,"alignas alignof and asm auto bool break case catch char char16_t char32_t class const constexpr continue decltype default delete do double else enum explicit export extern false float for friend goto if inline int long mutable namespace new noexcept nullptr operator private protected public register reinterpret_cast return short signed sizeof static static_assert static_cast struct switch template this thread_local throw true try typedef typename union unsigned using virtual void volatile wchar_t while");
             e.SetKeywords(1,"std main cin cout cerr endl vector array string pair map set multiset unordered_map queue deque priority_queue stack sort lower_bound upper_bound min max printf scanf");e.SetProperty("lexer.cpp.track.preprocessor","0");e.SetSelectionBackColor(true,Color.FromArgb(210,225,238));
-            e.Margins[0].Type=MarginType.Symbol;e.Margins[0].Width=17;e.Margins[0].Mask=1;e.Margins[0].Sensitive=true;
-            e.Margins[1].Type=MarginType.Symbol;e.Margins[1].Width=14;e.Margins[1].Mask=2;
-            e.Margins[2].Type=MarginType.Number;e.Margins[2].Width=37;
+            e.Margins[0].Type=MarginType.Symbol;e.Margins[0].Mask=3;e.Margins[0].Sensitive=true;
+            e.Margins[1].Type=MarginType.Number;e.Margins[1].Mask=0;e.Margins[1].Sensitive=true;
+            e.Margins[2].Width=0;
             Marker(0,MarkerSymbol.Circle,Color.FromArgb(177,66,65));Marker(1,MarkerSymbol.ShortArrow,Color.FromArgb(154,103,26));Marker(2,MarkerSymbol.Background,Color.FromArgb(255,244,217));
-            e.MouseDwellTime=350;e.MarginClick+=delegate(object s,MarginClickEventArgs a){if(a.Margin==0)ToggleBreak(e.LineFromPosition(a.Position));};
+            e.MouseDwellTime=350;e.MarginClick+=delegate(object s,MarginClickEventArgs a){if((a.Margin==0||a.Margin==1)&&a.Position>=0)ToggleBreak(e.LineFromPosition(a.Position));};
+            e.TextChanged+=(s,a)=>SizeGutter(false);e.ZoomChanged+=(s,a)=>SizeGutter(true);
             e.DwellStart+=delegate(object s,DwellEventArgs a){if(a.Position<0||VariableTip==null)return;int lo=e.WordStartPosition(a.Position,true),hi=e.WordEndPosition(a.Position,true);if(lo>=hi||a.Position>=hi)return;string val=VariableTip(e.GetTextRange(lo,hi-lo));if(!string.IsNullOrEmpty(val))e.CallTipShow(lo,val);};e.DwellEnd+=(s,a)=>e.CallTipCancel();
             e.EolMode=text.Contains("\r\n")?Eol.CrLf:text.Contains("\n")?Eol.Lf:Eol.CrLf;e.Text=text;e.EmptyUndoBuffer();e.SetSavePoint();if(slot>0)e.GotoPosition(e.Lines[Math.Min(3,e.Lines.Count-1)].EndPosition);
             e.SavePointLeft+=(s,a)=>{if(Changed!=null)Changed();};e.SavePointReached+=(s,a)=>{if(Changed!=null)Changed();};e.UpdateUI+=(s,a)=>{if(CursorChanged!=null)CursorChanged();};
             e.InsertCheck+=delegate(object s,InsertCheckEventArgs a){if(a.Text!="\n"&&a.Text!="\r"&&a.Text!="\r\n")return;int n=e.LineFromPosition(a.Position),lo=e.Lines[n].Position;string left=e.GetTextRange(lo,a.Position-lo);int spaces=Indent(left);if(left.TrimEnd().EndsWith("{")&&IsCode(Math.Max(lo,a.Position-1)))spaces+=4;a.Text+=new string(' ',Math.Min(2048,spaces));};
         }
+        int gutterDpi=96,gutterDigits,editorPoints=-1;
+        public void ApplyDisplay(int dpi,int points){gutterDpi=dpi;if(editorPoints!=points){for(int i=0;i<Edit.Styles.Count;i++)Edit.Styles[i].Size=points;editorPoints=points;}SizeGutter(true);}
+        void SizeGutter(bool refresh){int digits=Math.Max(1,Edit.Lines.Count.ToString().Length);if(!refresh&&digits==gutterDigits)return;gutterDigits=digits;
+            Edit.Margins[0].Width=(int)Math.Round(14*gutterDpi/96.0);Edit.Margins[1].Width=Edit.TextWidth(Style.LineNumber,new string('9',digits))+(int)Math.Round(6*gutterDpi/96.0);}
         static int Indent(string s){int k=0;foreach(char c in s){if(c==' ')k++;else if(c=='\t')k+=4-k%4;else break;}return k;}
         bool IsCode(int p){int v=Edit.GetStyleAt(p);return v!=1&&v!=2&&v!=3&&v!=6&&v!=7&&v!=12&&v!=13&&v!=15&&v!=17&&v!=18&&v!=20;}
         void Marker(int n,MarkerSymbol sym,Color c){Edit.Markers[n].Symbol=sym;Edit.Markers[n].SetBackColor(c);Edit.Markers[n].SetForeColor(c);}

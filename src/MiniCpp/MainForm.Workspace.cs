@@ -28,20 +28,24 @@ namespace MiniCpp {
             DpiChanged+=(s,e)=>{if(workspaceReady)BeginInvoke((MethodInvoker)ApplyMetrics);};
         }
         void ApplyMetrics(){if(!workspaceReady||closing)return;positioning=true;
-            try{int icon=prefs.LargeTools?32:26,hit=prefs.LargeTools?48:40;
-                tools.SuspendLayout();tools.ImageScalingSize=new Size(Px(icon),Px(icon));tools.Height=Px(hit+6);tools.Padding=new Padding(Px(5),Px(2),Px(5),Px(2));SizeIconButtons(tools,hit,hit);
-                language.Width=Px(94);tools.ResumeLayout();FitToolbar();
-                tabs.ImageScalingSize=new Size(Px(19),Px(19));tabs.Height=Px(36);SizeIconButtons(tabs,32,28);
-                outputTabs.ImageScalingSize=new Size(Px(19),Px(19));outputTabs.Height=Px(34);SizeIconButtons(outputTabs,36,29);output.Padding=new Padding(Px(10),Px(5),Px(10),Px(4));
+            try{int icon=prefs.LargeTools?24:19,hit=prefs.LargeTools?40:36;ApplyTextSizes();int line=TextRenderer.MeasureText("C++17",tools.Font).Height;
+                tools.SuspendLayout();tools.ImageScalingSize=new Size(Px(icon),Px(icon));tools.Height=Math.Max(Px(hit+2),line+Px(12));tools.Padding=new Padding(Px(5),Px(1),Px(5),Px(1));SizeIconButtons(tools,hit,hit-2);
+                int ctrlH=Math.Max(Px(26),line+Px(6));language.Size=new Size(Math.Max(Px(74),TextRenderer.MeasureText("C++17",tools.Font).Width+Px(24)),ctrlH);optimize.Size=new Size(TextRenderer.MeasureText("O2",tools.Font).Width+Px(39),ctrlH);language.Margin=optimize.Margin=new Padding(Px(2),0,Px(2),0);tools.ResumeLayout();FitToolbar();
+                tabs.ImageScalingSize=new Size(Px(17),Px(17));tabs.Height=Math.Max(Px(32),line+Px(8));SizeIconButtons(tabs,32,28);
+                outputTabs.ImageScalingSize=new Size(Px(16),Px(16));outputTabs.Height=Math.Max(Px(32),line+Px(8));SizeIconButtons(outputTabs,34,27);output.Padding=new Padding(Px(10),Px(5),Px(10),Px(4));
                 if(restoreOutput.Owner!=null)restoreOutput.Owner.ImageScalingSize=new Size(Px(19),Px(19));
                 horizontal.SplitterWidth=Px(8);vertical.SplitterWidth=Px(6);
                 foreach(var d in docs)SizeEditor(d);
                 foreach(var strip in vertical.Panel2.Controls.OfType<ToolStrip>()){strip.ImageScalingSize=new Size(Px(22),Px(22));strip.Height=Px(38);SizeIconButtons(strip,36,32);}
             }finally{positioning=false;}LayoutOutput();}
-        void SizeEditor(SourceDocument d){d.Edit.Margins[0].Width=Px(20);d.Edit.Margins[1].Width=Px(16);d.Edit.Margins[2].Width=Px(44);}
+        void SizeEditor(SourceDocument d){d.ApplyDisplay(DeviceDpi,prefs.FontSizes[1]);}
+        void ShowFontSettings(){if(!FontSettings.Edit(this,prefs.FontSizes))return;ApplyMetrics();prefs.Save();}
+        void ApplyTextSizes(){int[] sizes=prefs.FontSizes;var ui=FontSettings.Get(sizes[0],false);menu.Font=tabs.Font=tools.Font=outputTabs.Font=ui;if(status.Owner!=null)status.Owner.Font=ui;
+            log.Font=FontSettings.Get(sizes[3],true);transcript.Font=FontSettings.Get(sizes[4],true);locals.Font=FontSettings.Get(sizes[5],true);stateLabel.Font=frameLabel.Font=FontSettings.Get(sizes[5],false);stateLabel.Height=stateLabel.Font.Height+Px(5);if(stateLabel.Parent!=null)stateLabel.Parent.Height=stateLabel.Height+frameLabel.Font.Height+Px(18);
+            issues.Font=FontSettings.Get(sizes[2],false);shownIssues=null;if(current!=null)RenderIssues(current.Problems);}
         static bool BuildIcon(string name){return name=="compile"||name=="run"||name=="compile-and-run"||name=="rebuild";}
         void FitToolbar(){if(!workspaceReady||fittingTools)return;fittingTools=true;
-            try{int hit=Px(prefs.LargeTools?48:40);bool narrow=tools.ClientSize.Width<13*hit+Px(210);bool small=tools.ClientSize.Width<7*hit+Px(205);
+            try{int hit=Px(prefs.LargeTools?40:36),reserve=language.Width+optimize.Width+Px(58);bool narrow=tools.ClientSize.Width<13*hit+reserve;bool small=tools.ClientSize.Width<7*hit+reserve;
                 tools.SuspendLayout();foreach(ToolStripItem item in tools.Items){if(item is ToolStripSeparator){item.Available=!narrow;continue;}
                     if(item==language||item==optimize||BuildIcon(item.Name))item.Overflow=ToolStripItemOverflow.Never;
                     else if(narrow&&(small||item.Name!="save"&&item.Name!="folder-open"))item.Overflow=ToolStripItemOverflow.Always;
@@ -64,7 +68,7 @@ namespace MiniCpp {
             issues.MouseDown+=(s,e)=>{if(e.Button==MouseButtons.Right)issues.Select(issues.GetCharIndexFromPosition(e.Location),0);};
             var ctx=new ContextMenuStrip();ctx.Items.Add("定位建议检查处",null,(s,e)=>JumpIssue(true));ctx.Items.Add("定位编译器报告位置",null,(s,e)=>JumpIssue(false));issues.ContextMenuStrip=ctx;
         }
-        void IssueText(string text,Color color){issues.SelectionStart=issues.TextLength;issues.SelectionColor=color;issues.AppendText(text);}
+        void IssueText(string text,Color color){issues.Select(issues.TextLength,0);issues.SelectionFont=issues.Font;issues.SelectionColor=color;issues.SelectedText=text;}
         void RenderIssues(List<Diagnostic> problems){if(shownIssues==problems&&issueStarts.Count==problems.Count)return;shownIssues=problems;issues.Clear();issueStarts.Clear();
             foreach(var d in problems){issueStarts.Add(issues.TextLength);int line=d.HintLine>0?d.HintLine:d.Line,col=d.HintColumn>0?d.HintColumn:d.Column;
                 string level=d.Severity=="note"?"说明":d.Severity=="warning"?"警告":"错误";
