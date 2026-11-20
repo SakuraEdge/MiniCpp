@@ -1,14 +1,14 @@
 // One pixel grid supplies the in-review artwork and the four standalone icon files.
 const size=18;
-const palette={edge:['#424446','#cecece'],orange:['#dfa477','#e7b089'],mist:['#bbcad3','#c7d1da'],blue:['#84adc5','#a1c1d4'],yellow:['#e1ca7d','#e5d18e'],bar:['#d6b46e','#e4c481'],screen:['#efefef','#474747']};
-const cells=[[0,0],[10,0],[0,10],[10,10]], colors=['orange','mist','blue','yellow'];
+const palette={edge:['#494b4d','#d0d1d2'],paper:['#fbfbfb','#292a2b'],tile:['#c4c6c8','#787a7c'],key:['#8295a4','#9cabb6'],strip:['#e1e1e1','#515253']};
+const cells=[[0,0],[10,0],[0,10],[10,10]];
 const rect=(x,y,w,h,fill,ring=false)=>({x,y,w,h,fill,ring});
-const grid=filled=>cells.flatMap(([x,y],i)=>filled?[rect(x,y,8,8,'edge'),rect(x+1,y+1,6,6,colors[i])]:[rect(x,y,8,8,'edge',true)]);
-const windowTop=[rect(1,1,16,16,'edge'),rect(2,2,14,3,'bar')];
+const grid=filled=>cells.flatMap(([x,y],i)=>filled?[rect(x,y,8,8,'edge'),rect(x+1,y+1,6,6,'paper'),rect(x+2,y+2,4,4,i===0?'key':'tile')]:[rect(x,y,8,8,'edge',true)]);
+const windowTop=[rect(1,1,16,16,'edge'),rect(2,2,14,14,'paper'),rect(2,2,14,2,'strip'),rect(2,4,14,1,'edge')];
 const shapes={
   compile:{file:'compile',title:'编译',rects:grid(true)},
-  run:{file:'run',title:'运行',rects:[...windowTop,rect(2,6,14,10,'screen')]},
-  buildRun:{file:'compile-and-run',title:'编译并运行',rects:[...windowTop,rect(2,6,7,4,'orange'),rect(10,6,6,4,'mist'),rect(2,11,7,5,'blue'),rect(10,11,6,5,'yellow')]},
+  run:{file:'run',title:'运行',rects:[...windowTop,rect(4,12,4,1,'key')]},
+  buildRun:{file:'compile-and-run',title:'编译并运行',rects:[...windowTop,rect(4,7,4,3,'key'),rect(10,7,4,3,'tile'),rect(4,12,4,3,'tile'),rect(10,12,4,3,'tile')]},
   rebuild:{file:'rebuild',title:'全部重新编译',rects:grid(false)}
 };
 export function classicArtwork(){

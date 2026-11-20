@@ -53,7 +53,8 @@ try {
   await click('[data-jump="11"]');await has('[data-position]',/行 11，列 5/);await act('buildRun');await has('.wb-diag',/中文建议/);assert.equal(await q('[data-terminal]').isVisible(),false);
   await q('[data-case]').selectOption('name');await has('.wb-diag-line',/10:16\s*error: 'xx' was not declared/);await has('.wb-unknown',/xx/);
   await scene('edit');await capture('editor');assert.equal(await q('.wb-side').count(),0);
-  for(const std of ['98','11','14']){await q('[data-std]').selectOption(std);await q('[data-o2]').check();await act('compile');await has('.wb-log',new RegExp('g\\+\\+ -std=c\\+\\+'+std+' -O2'));}
+  assert.deepEqual(await q('[data-std] option').allTextContents(),['C++98','C++11','C++14','C++17']);
+  for(const std of ['98','11','14','17']){await q('[data-std]').selectOption(std);await q('[data-o2]').check();await act('compile');await has('.wb-log',new RegExp('g\\+\\+ -std=c\\+\\+'+std+' -O2'));}
   await q('[data-o2]').uncheck();await act('run');await noRecord();await noMissing();assert.equal(await q('[data-term-input]').inputValue(),'');
   await submit('bad');await has('[data-term-hint]',/整数/);assert.deepEqual(await rows('[data-term-row]'),[]);
   await submit('3');await submit('3');await submit('8');await noRecord();
@@ -72,8 +73,28 @@ try {
   await q('[data-run-case]').selectOption('file');await has('.wb-editor',/fstream/);await act('buildRun');await noRecord();await done();await has('[data-file-done]',/^已完成文件输入输出$/);assert.equal(await q('[data-term-row],[data-record-row]').count(),0);await click('[data-term-close]');await q('.wb-output').screenshot({path:path.join(img,'file-io.png')});
   await click('[data-menu="search"]');await noMissing();await act('replace');await has('[data-match]',/2 处/);await click('[data-dlg="replaceAll"]');await has('[data-match]',/已替换 2 处/);await has('[data-code-preview]',/total/);await click('[data-dlg="undoReplace"]');await has('[data-code-preview]',/sum/);await click('.mc-dialog header [data-dlg="close"]');
   await click('[data-menu="edit"]');await act('format');await click('[data-dlg="applyDemo"]');await has('[data-mod]',/\n    sum/);await click('.mc-dialog header [data-dlg="close"]');
-  await act('new');await q('[data-filename]').fill('round1.cpp');await click('[data-dlg="confirmFile"]');await has('.wb-filetab',/round1.cpp/);assert.equal(await q('.wb-row').count(),5);
-  await act('run');await has('[data-status]',/先编译/);assert.equal(await q('[data-terminal]').isVisible(),false);await act('buildRun');await done();await has('.wb-output',/无输入输出/);await click('[data-term-close]');
+  const draft=q('[data-draft-code]'),file=q('[data-filename]'),location=q('[data-save-location]'),folder=q('[data-save-folder]');
+  const switchTo=async id=>{await click('[data-menu="window"]');await click(`[data-dropdown] [data-activate-window="${id}"]`);};
+  const windowId=()=>q('[data-window]').getAttribute('data-window-id');
+  const draftCode='#include <utility>\n\nint main() {\n    auto [a, b] = std::pair{2, 3};\n    return a + b == 5 ? 0 : 1;\n}';
+  const homeId=await windowId();await click('.wb-plus');const first=await windowId(),template=await draft.inputValue();
+  await has('[data-titlefile]',/^未命名1$/);assert.equal(await q('[data-dialog]').isVisible(),false);assert.equal(await draft.evaluate(e=>e===document.activeElement),true);
+  await draft.fill(draftCode);await click('.wb-plus');const second=await windowId();await has('[data-titlefile]',/^未命名2$/);assert.notEqual(first,second);assert.equal(await draft.inputValue(),template);
+  assert.equal(await q('.mc-backtitle').count(),2);await capture('windows');await switchTo(first);assert.equal(await draft.inputValue(),draftCode);await q('[data-o2]').check();
+  await panel('log');await has('.wb-output',/尚无构建记录/);await act('compile');await has('.mc-dialog',/编译前保存源文件/);
+  assert.equal(await file.inputValue(),'未命名1.cpp');await location.selectOption('custom');await folder.fill('relative/folder');await click('[data-dlg="confirmFile"]');await has('[data-file-warning]',/完整的文件夹路径/);
+  await page.keyboard.press('Escape');assert.equal(await q('[data-dialog]').isVisible(),false);assert.equal(await draft.inputValue(),draftCode);await has('.wb-output',/尚无构建记录/);assert.equal(await q('[data-terminal]').isVisible(),false);
+  await act('compile');await has('[data-status]',/等待保存源文件/);await location.selectOption('custom');await folder.fill('D:\\模拟竞赛\\初赛');await file.fill('round17');await has('[data-destination]',/初赛\\round17\.cpp$/);await capture('save-before-build');await click('[data-dlg="confirmFile"]');
+  await has('[data-titlefile]',/^round17\.cpp$/);await has('.wb-log',/-std=c\+\+17 -O2/);assert.ok((await text('.wb-log')).includes('"D:\\模拟竞赛\\初赛\\round17.cpp"'));await has('.wb-log',/未调用编译器/);assert.equal(await draft.inputValue(),draftCode);
+  await act('compile');assert.equal(await q('[data-dialog]').isVisible(),false);await draft.press('Control+n');await has('[data-titlefile]',/^未命名1$/);assert.notEqual(await windowId(),first);
+  await act('closeWindow');await click('[data-dlg="discardWindow"]');await switchTo(second);assert.equal(await draft.inputValue(),template);
+  await act('run');await has('[data-status]',/先编译/);assert.equal(await q('[data-terminal]').isVisible(),false);assert.equal(await q('[data-dialog]').isVisible(),false);
+  await act('rebuild');await has('.mc-dialog',/编译前保存源文件/);await click('.mc-dialog-actions [data-dlg="close"]');await has('[data-titlefile]',/^未命名2$/);
+  await act('buildRun');await file.fill('ROUND17.cpp');await click('[data-dlg="confirmFile"]');await has('[data-file-warning]',/已使用这个文件名/);await location.selectOption('D:\\竞赛练习');await file.fill('round2.cpp');await click('[data-dlg="confirmFile"]');
+  await done();await has('.wb-output',/无输入输出/);await click('[data-term-close]');await has('[data-titlefile]',/^round2\.cpp$/);await panel('log');await has('.wb-log',/-std=c\+\+17 -O0/);
+  await act('closeWindow');await switchTo(first);assert.equal(await draft.inputValue(),draftCode);await act('closeWindow');assert.equal(await windowId(),homeId);
+  await act('open');await click('[data-open-entry="0"]');assert.equal(await draft.inputValue(),draftCode);await has('[data-titlefile]',/^round17\.cpp$/);await act('closeWindow');
+  await scene('debug');await q('[data-std]').selectOption('17');await scene('debug');await panel('log');await has('.wb-log',/-std=c\+\+17 -g -O0/);
   await scene('icons');await noMissing();assert.equal(await q('[data-spec-actions] .mc-glyph').count(),4);
   assert.deepEqual(await q('[data-cpp-sizes] img').evaluateAll(els=>Promise.all(els.map(async el=>{await el.decode();return [el.width,el.naturalWidth];}))),[[48,48],[32,32],[24,24],[16,16]]);
   await capture('icons');await q('[data-cpp-spec]').screenshot({path:path.join(img,'cpp-file.png')});
@@ -82,6 +103,7 @@ try {
     for(const id of ['debug','error','icons','edit']){await scene(id);await assertFit();await noMissing();}
   }
   await act('run');await noRecord();await assertFit();await submit('1');await submit('5');await done();await click('[data-term-close]');
+  await click('.wb-plus');await assertFit();await act('compile');await location.selectOption('custom');await folder.fill('D:\\一段很长的竞赛文件夹名称\\第二轮');await file.fill('一个较长的竞赛源文件名.cpp');await assertFit();await page.keyboard.press('Escape');await click('[data-menu="window"]');await act('closeWindow');await click('[data-dlg="discardWindow"]');
   await page.setViewportSize({width:1024,height:800});await page.emulateMedia({colorScheme:'dark'});await scene('debug');
   const barColor=()=>q('.mc-titlebar').evaluate(el=>getComputedStyle(el).backgroundColor);
   const neutralChrome=async()=>{for(const sel of ['.mc-titlebar','.mc-menustrip','.mc-toolbar','.mc-status','.wb-filebar','.wb-output-head','.wb-side']){const rgb=await q(sel).evaluate(el=>getComputedStyle(el).backgroundColor.match(/\d+/g).slice(0,3).map(Number));assert.ok(Math.max(...rgb)-Math.min(...rgb)<=3,`Unexpected tint on ${sel}: ${rgb}`);}};
@@ -98,5 +120,5 @@ try {
       if((name==='cpp-file'&&size<=48)||size===128)assert.deepEqual(payload,await readFile(path.join(dir,'icons',`${name}-${size}.png`)));
     }
   }
-  assert.deepEqual(errors,[]);console.log('PASS: neutral chrome in both appearances, source-file and app icons, seven Windows icon sizes, build glyphs, console I/O, CE, debug, editor, settings, and responsive layout.');
+  assert.deepEqual(errors,[]);console.log('PASS: graphite glyphs, independent unsaved windows, slot reuse, save/cancel/resume, C++98/11/14/17, O2, debug, console I/O, diagnostics, icon assets and responsive layout.');
 }finally {await browser.close();}

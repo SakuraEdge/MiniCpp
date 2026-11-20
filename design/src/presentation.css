@@ -32,6 +32,14 @@
 #mini-cpp-review .mc-reviewmeta { margin-left: auto; padding-right: 4px; }
 #mini-cpp-review .mc-case { color: var(--mc-muted); background: var(--mc-surface); border: 1px solid var(--mc-line); padding: 4px; font-size: 12px; border-radius: 4px; }
 #mini-cpp-review .mc-window, #mini-cpp-review .mc-identity { border: 1px solid var(--mc-line); border-radius: 8px; background: var(--mc-surface); box-shadow: 0 4px 16px #182e4b0c; }
+#mini-cpp-review .mc-desktop { --layers:0; --offset:12px; --reveal:27px; position:relative; isolation:isolate; min-width:0; padding-block-start:calc(var(--layers) * var(--reveal)); padding-inline-start:calc(var(--layers) * var(--offset)); }
+#mini-cpp-review .mc-desktop .mc-window { position:relative; z-index:1; min-width:0; }
+#mini-cpp-review .mc-backstack { position:absolute; inset:0; z-index:0; pointer-events:none; }
+#mini-cpp-review .mc-backwin { position:absolute; top:calc(var(--layer) * var(--reveal)); left:calc(var(--layer) * var(--offset)); right:calc((var(--layers) - var(--layer)) * var(--offset)); bottom:calc((var(--layers) - var(--layer)) * 9px); border:1px solid var(--mc-line); border-radius:7px; background:var(--mc-soft); }
+#mini-cpp-review .mc-backtitle { pointer-events:auto; display:flex; width:100%; height:var(--reveal); align-items:center; gap:8px; text-align:left; min-width:0; padding-inline:12px; font:12px var(--mc-mono); color:var(--mc-muted); }
+#mini-cpp-review .mc-backtitle span:first-of-type { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+#mini-cpp-review .mc-backsuffix { white-space:nowrap; font:12px 'Segoe UI',sans-serif; }
+#mini-cpp-review .mc-backtitle:hover { color:var(--mc-ink); background:var(--mc-line); }
 #mini-cpp-review .mc-titlebar, #mini-cpp-review .mc-id-head { display: flex; align-items: center; gap: 12px; position: relative; padding: 0 12px; min-height: 33px; background: var(--mc-title); border-radius: 7px 7px 0 0; border-bottom: 1px solid var(--mc-line); }
 #mini-cpp-review .mc-brand { display: inline-flex; align-items: center; gap: 9px; flex: 0 0 auto; }
 #mini-cpp-review .mc-brand strong { font: 650 17px/1.2 'Segoe UI',sans-serif; }
@@ -51,9 +59,13 @@
 #mini-cpp-review .mc-menus button:hover, #mini-cpp-review .mc-menus button[aria-expanded=true] { background:var(--mc-line); color:var(--mc-ink); }
 #mini-cpp-review .mc-caption { margin-left: auto; gap: 21px; color: var(--mc-muted); }
 #mini-cpp-review .mc-caption svg { width: 12px; height: 12px; stroke-width: 1.6; }
+#mini-cpp-review .mc-caption button { display:inline-grid; place-items:center; min-width:24px; min-height:27px; border-radius:3px; }
+#mini-cpp-review .mc-caption button:hover:not(:disabled) { color:var(--mc-danger); background:var(--mc-danger-tint); }
 #mini-cpp-review .mc-dropdown { position: absolute; top: calc(100% - 4px); z-index: 12; left: 0; width: min(253px,100%); padding: 4px; background: var(--mc-surface); border: 1px solid var(--mc-line); border-radius: 6px; box-shadow: 0 7px 23px #10261d2a; }
 #mini-cpp-review .mc-dropdown button { display: flex; align-items: center; gap: 9px; width: 100%; min-height: 30px; text-align: left; padding: 4px 8px; border-radius: 3px; font-size: 13px; }
 #mini-cpp-review .mc-dropdown kbd { margin-left: auto; font-size: 11px; color: var(--mc-muted); }
+#mini-cpp-review [data-dropdown]:has([data-activate-window]) { max-height:245px; overflow:auto; }
+#mini-cpp-review [data-dropdown] button span { min-width:0; overflow-wrap:anywhere; }
 #mini-cpp-review .mc-dropdown button:hover, #mini-cpp-review .mc-quiet:hover { background: var(--mc-tint); color: var(--mc-accent); }
 #mini-cpp-review .mc-dropdown hr { border: 0; border-top: 1px solid var(--mc-line); margin: 3px 5px; }
 #mini-cpp-review .mc-toolbar { display:flex; align-items:center; gap:4px 6px; flex-wrap:wrap; padding:3px 9px; border-bottom:1px solid var(--mc-line); background:var(--mc-surface); }
@@ -126,6 +138,16 @@
 #mini-cpp-review .mc-dialog h2 { font-size: 16px; }
 #mini-cpp-review .mc-dialog input[type=text] { width: 100%; border: 1px solid var(--mc-line); padding: 5px 8px; background: var(--mc-surface); border-radius: 4px; }
 #mini-cpp-review .mc-dialog label { display: grid; gap: 4px; color: var(--mc-muted); font-size: 12px; margin-block: 6px; }
+#mini-cpp-review .mc-dialog select { min-width:0; width:100%; padding:5px 7px; border:1px solid var(--mc-line); background:var(--mc-surface); border-radius:4px; }
+#mini-cpp-review .mc-dialog .mc-save-note { display:flex; align-items:center; gap:8px; margin-bottom:13px; color:var(--mc-ink); }
+#mini-cpp-review .mc-dialog .mc-save-note svg { color:var(--mc-accent); }
+#mini-cpp-review .mc-dialog .mc-save-path { display:flex; align-items:center; gap:8px; padding:8px; margin-top:11px; background:var(--mc-soft); border-radius:3px; font-size:12px; }
+#mini-cpp-review .mc-save-path code, #mini-cpp-review .mc-pathline { min-width:0; overflow-wrap:anywhere; }
+#mini-cpp-review .mc-virtual-label { align-self:center; margin-right:auto; color:var(--mc-muted); font-size:11px; }
+#mini-cpp-review .mc-dialog [data-file-warning] { color:var(--mc-danger); }
+#mini-cpp-review .mc-dialog .mc-saved-file { display:flex; gap:9px; align-items:center; max-width:100%; text-align:left; padding:4px; }
+#mini-cpp-review .mc-saved-file span { display:grid; min-width:0; overflow-wrap:anywhere; }
+#mini-cpp-review .mc-saved-file small { color:var(--mc-muted); }
 #mini-cpp-review .mc-dialog p { margin: 7px 0; color: var(--mc-muted); font-size: 13px; }
 #mini-cpp-review .mc-dialog .mc-example { display: block; background: var(--mc-soft); border-left: 2px solid var(--mc-accent); padding: 10px; margin: 8px 0; font-size: 13px; white-space: pre-wrap; overflow-wrap: anywhere; }
 #mini-cpp-review .mc-dialog .mc-dialog-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; margin-top: 12px; }
@@ -141,6 +163,7 @@
   #mini-cpp-review .mc-toolbar { padding: 6px 8px; }
 }
 @media (max-width: 560px) {
+  #mini-cpp-review .mc-desktop { --offset:5px; }
   #mini-cpp-review .mc-caption { display: none; }
   #mini-cpp-review .mc-reviewbar { gap: 6px 10px; margin-bottom: 9px; }
   #mini-cpp-review .mc-scenes button { padding-inline: 8px; }
@@ -162,6 +185,7 @@
   #mini-cpp-review .mc-brand strong { font-size: 16px; }
 }
 @media (pointer: coarse) {
+  #mini-cpp-review .mc-desktop { --reveal:44px; }
   #mini-cpp-review :is(.mc-scenes,.mc-menus,.mc-dropdown) button, #mini-cpp-review :is(.mc-selectbox select,.mc-switch,.mc-quiet,.mc-sm-btn,.mc-gbtn) { min-height: 44px; }
   #mini-cpp-review .mc-gbtn { min-width: 44px; }
   #mini-cpp-review .mc-switch { padding-inline: 3px; }

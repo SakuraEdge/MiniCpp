@@ -1,6 +1,6 @@
 <div id="mini-cpp-review" lang="zh-CN" aria-label="Mini C++ 界面与图标审查">
   <header class="mc-reviewbar">
-    <div class="mc-reviewtag"><span class="mc-rid">R05</span><span>设计审查</span></div>
+    <div class="mc-reviewtag"><span class="mc-rid">R06</span><span>设计审查</span></div>
     <nav class="mc-scenes" aria-label="审查场景">
       <button type="button" data-scene="edit" aria-pressed="true">编辑器</button>
       <button type="button" data-scene="debug" aria-pressed="false">断点调试</button>
@@ -11,10 +11,11 @@
     <select class="mc-case" data-run-case aria-label="运行样例"><option value="prefix">样例：逐项求和</option><option value="sum">样例：求总和</option><option value="long">样例：长输出</option><option value="file">样例：文件输入输出</option></select>
     <span class="mc-reviewmeta">交互样稿</span>
   </header>
+  <div class="mc-desktop" data-desktop><div class="mc-backstack" data-backstack></div>
   <section class="mc-window" aria-label="Mini C++ 单文件工作台" data-window>
     <header class="mc-titlebar">
       <div class="mc-brand"><span class="mc-mark" aria-hidden="true"><b></b><i></i><i></i></span><span class="mc-titlefile" data-titlefile>main.cpp</span><span class="mc-title-dash" aria-hidden="true">-</span><strong>Mini C++</strong></div>
-      <div class="mc-caption" aria-hidden="true"><i data-lucide="minus"></i><i data-lucide="square"></i><i data-lucide="x"></i></div>
+      <div class="mc-caption"><i data-lucide="minus" aria-hidden="true"></i><i data-lucide="square" aria-hidden="true"></i><button type="button" data-act="closeWindow" data-tip="关闭当前窗口" aria-label="关闭当前窗口"><i data-lucide="x" aria-hidden="true"></i></button></div>
     </header>
     <nav class="mc-menustrip" aria-label="应用菜单">
       <div class="mc-menus">
@@ -37,15 +38,15 @@
       <div class="mc-cluster mc-builds" role="group" aria-label="四个构建操作" data-buildtools></div>
       <div class="mc-cluster" role="group" aria-label="调试操作" data-debugtools></div>
       <div class="mc-config" role="group" aria-label="下次构建设置">
-        <label class="mc-selectbox"><span class="mc-sr">C++ 标准</span><select data-std aria-label="C++ 标准"><option value="98">C++98</option><option value="11">C++11</option><option value="14" selected>C++14</option></select><i data-lucide="chevron-down" aria-hidden="true"></i></label>
+        <label class="mc-selectbox"><span class="mc-sr">C++ 标准</span><select data-std aria-label="C++ 标准"><option value="98">C++98</option><option value="11">C++11</option><option value="14" selected>C++14</option><option value="17">C++17</option></select><i data-lucide="chevron-down" aria-hidden="true"></i></label>
         <label class="mc-switch" data-tip="下次普通构建使用 -O2"><input type="checkbox" data-o2 aria-label="开启 O2 优化"><span class="mc-track" aria-hidden="true"></span><span>O2</span></label>
       </div>
     </div>
     <div data-workbench></div>
     <footer class="mc-status"><span class="mc-footstate" data-status></span><span class="mc-statusinfo"><span data-position></span><span>空格: 4</span><span>UTF-8</span><span>CRLF</span></span></footer>
-  </section>
+  </section></div>
   <section class="mc-identity" data-identity hidden aria-label="Mini C++ 图标审查稿">
-    <header class="mc-id-head"><div class="mc-brand"><span class="mc-mark" aria-hidden="true"><b></b><i></i><i></i></span><strong>Mini C++</strong></div><span>图标规范 <i>/</i> 05</span></header>
+    <header class="mc-id-head"><div class="mc-brand"><span class="mc-mark" aria-hidden="true"><b></b><i></i><i></i></span><strong>Mini C++</strong></div><span>图标规范 <i>/</i> 06</span></header>
     <div class="mc-id-main">
       <section data-cpp-spec aria-label=".cpp 源文件图标">
         <div class="mc-id-intro"><span class="mc-index">01 / FILE</span><h2>.cpp 源文件图标</h2></div>

@@ -6,6 +6,7 @@ import { classicArtwork } from './classic-glyphs.mjs';
 const dir=path.dirname(fileURLToPath(import.meta.url));
 const read=p=>readFile(path.join(dir,p),'utf8');
 const [markup,presentation,workStyle,termStyle,term,work,controller,logo]=await Promise.all(['src/frame.html','src/presentation.css','src/workbench.css','src/console.css','src/console.js','src/workbench.js','src/controller.js','icons/mini-cpp.svg'].map(read));
+const win=await read('src/windows.js');
 const opts=process.argv.slice(2);
 if(opts.includes('--import-icons')) {
   const vendor=path.resolve(dir,'../.review-tools/node_modules/lucide-static');
@@ -24,7 +25,7 @@ const cppRasters=Object.fromEntries(await Promise.all([16,24,32,48,128].map(asyn
 })));
 const subset=JSON.stringify(JSON.parse(await read('vendor/lucide-subset.json')));
 const resources=`<style>\n${presentation}\n${workStyle}\n${termStyle}\n${classic.css}\n</style>`;
-const fragment=`${markup}\n${resources}\n<script>\n(() => {\n'use strict';\nconst classicGlyphs=${JSON.stringify(classic.html)};\nconst cppRasters=${JSON.stringify(cppRasters)};\n${term}\n${work}\n${controller}\n})();\n</script>\n`;
+const fragment=`${markup}\n${resources}\n<script>\n(() => {\n'use strict';\nconst classicGlyphs=${JSON.stringify(classic.html)};\nconst cppRasters=${JSON.stringify(cppRasters)};\n${term}\n${win}\n${work}\n${controller}\n})();\n</script>\n`;
 if(opts.includes('--inline')) {
   const p=opts[opts.indexOf('--inline')+1];
   if(!p || !path.isAbsolute(p)) throw new Error('Provide an absolute path for the inline preview.');

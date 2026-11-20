@@ -2,7 +2,7 @@
 function makeRunConsole(host,{icon,onFinish,onDismiss}) {
   const q=s=>host.querySelector(s);
   let session=null,origin=null,timer=0;
-  const dim=flag=>root.querySelectorAll('.mc-reviewbar,[data-window],[data-identity]').forEach(el=>{el.inert=flag;});
+  const dim=flag=>root.querySelectorAll('.mc-reviewbar,[data-desktop],[data-identity]').forEach(el=>{el.inert=flag;});
   function later(fn,ms){const active=session;clearTimeout(timer);timer=setTimeout(()=>{if(session===active&&!active.ended)fn();},ms);}
   function status(label,detail='',error=false){q('[data-term-state]').textContent=label;const h=q('[data-term-hint]');h.textContent=detail;h.classList.toggle('mc-term-error',error);}
   function entry(kind,text){

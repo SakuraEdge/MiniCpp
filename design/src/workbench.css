@@ -2,12 +2,21 @@
 #mini-cpp-review .wb-filetab { display:flex; align-items:center; gap:8px; padding:0 18px; border-inline-end:1px solid var(--mc-line); border-top:2px solid var(--mc-accent); margin-bottom:-1px; background:var(--mc-surface); }
 #mini-cpp-review .wb-filetab svg { color:var(--mc-accent); }
 #mini-cpp-review .wb-filetab strong { font:600 13px var(--mc-mono); }
+#mini-cpp-review .wb-filetab { min-width:0; max-width:calc(100% - 90px); }
+#mini-cpp-review .wb-filetab strong { min-width:0; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; }
+#mini-cpp-review .wb-dirty { display:inline-block; flex:none; background:var(--mc-muted); border-radius:50%; width:6px; height:6px; }
 #mini-cpp-review .wb-plus { align-self:center; display:grid; place-items:center; width:33px; height:29px; color:var(--mc-muted); }
 #mini-cpp-review .wb-plus:hover { color:var(--mc-accent); }
 #mini-cpp-review .wb-filekind { margin-left:auto; align-self:center; padding-right:14px; color:var(--mc-muted); font-size:11px; }
 #mini-cpp-review .wb-well { display:grid; grid-template-columns:minmax(0,1fr); }
 #mini-cpp-review .wb-split { grid-template-columns:minmax(0,1fr) clamp(205px,26%,265px); }
 #mini-cpp-review .wb-editor { min-width:0; padding:12px 0 16px; min-height:312px; }
+#mini-cpp-review .wb-draft-editor { display:grid; grid-template-columns:56px minmax(0,1fr); }
+#mini-cpp-review .wb-draft-gutter { height:284px; overflow:hidden; border-right:1px solid var(--mc-line); user-select:none; }
+#mini-cpp-review .wb-draft-gutter pre { color:var(--mc-muted); font:11px/20px var(--mc-mono); white-space:pre; text-align:right; padding:0 8px 0 0; margin:0; background:none; }
+#mini-cpp-review [data-draft-code] { display:block; min-width:0; width:100%; height:284px; margin:0; padding:0 10px 0 12px; border:none; resize:none; background:var(--mc-surface); color:var(--mc-ink); font:14px/20px var(--mc-mono); tab-size:4; }
+#mini-cpp-review [data-draft-code]:focus-visible { outline:1px solid var(--mc-line); outline-offset:-1px; }
+@media(max-width:590px){#mini-cpp-review .wb-draft-editor{grid-template-columns:39px minmax(0,1fr)}#mini-cpp-review [data-draft-code]{padding-left:6px}}
 #mini-cpp-review .wb-row { display:grid; grid-template-columns:31px 25px minmax(0,1fr); min-height:20px; align-items:start; }
 #mini-cpp-review .wb-at { background:var(--mc-amber-tint); }
 #mini-cpp-review .wb-invalid { background:var(--mc-danger-tint); }

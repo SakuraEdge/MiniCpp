@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Mini C++ · 设计审查 R05</title><link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3EMini%20C%2B%2B%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%23456982%22%2F%3E%0A%20%20%3Cg%20fill%3D%22%23fff%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M39%2013H22L11%2024v16l11%2011h17v-8H25l-6-6V27l6-6h14z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M32%2026h4v4h4v4h-4v4h-4v-4h-4v-4h4zm15%200h4v4h4v4h-4v4h-4v-4h-4v-4h4z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A"><style>html{color-scheme:light dark}body{margin:0;background:light-dark(#f2f2f2,#181818);padding:clamp(10px,3.8vw,50px) clamp(8px,3vw,40px)}main{max-width:1152px;margin:0 auto}@media(max-width:570px){body{padding:9px 4px}}</style></head><body><main><script>(()=>{const nodes={"align-left":[["path",{"d":"M15 12H3"}],["path",{"d":"M17 18H3"}],["path",{"d":"M21 6H3"}]],"arrow-up-right":[["path",{"d":"M7 7h10v10"}],["path",{"d":"M7 17 17 7"}]],"bug":[["path",{"d":"m8 2 1.88 1.88"}],["path",{"d":"M14.12 3.88 16 2"}],["path",{"d":"M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"}],["path",{"d":"M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"}],["path",{"d":"M12 20v-9"}],["path",{"d":"M6.53 9C4.6 8.8 3 7.1 3 5"}],["path",{"d":"M6 13H2"}],["path",{"d":"M3 21c0-2.1 1.7-3.9 3.8-4"}],["path",{"d":"M20.97 5c0 2.1-1.6 3.8-3.5 4"}],["path",{"d":"M22 13h-4"}],["path",{"d":"M17.2 17c2.1.1 3.8 1.9 3.8 4"}]],"check":[["path",{"d":"M20 6 9 17l-5-5"}]],"chevron-down":[["path",{"d":"m6 9 6 6 6-6"}]],"circle-alert":[["circle",{"cx":"12","cy":"12","r":"10"}],["line",{"x1":"12","x2":"12","y1":"8","y2":"12"}],["line",{"x1":"12","x2":"12.01","y1":"16","y2":"16"}]],"circle-check":[["circle",{"cx":"12","cy":"12","r":"10"}],["path",{"d":"m9 12 2 2 4-4"}]],"corner-down-left":[["polyline",{"points":"9 10 4 15 9 20"}],["path",{"d":"M20 4v7a4 4 0 0 1-4 4H4"}]],"file":[["path",{"d":"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"}],["path",{"d":"M14 2v4a2 2 0 0 0 2 2h4"}]],"file-pen-line":[["path",{"d":"m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2"}],["path",{"d":"M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"}],["path",{"d":"M8 18h1"}]],"file-plus-2":[["path",{"d":"M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"}],["path",{"d":"M14 2v4a2 2 0 0 0 2 2h4"}],["path",{"d":"M3 15h6"}],["path",{"d":"M6 12v6"}]],"folder-open":[["path",{"d":"m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"}]],"gauge":[["path",{"d":"m12 14 4-4"}],["path",{"d":"M3.34 19a10 10 0 1 1 17.32 0"}]],"git-branch":[["line",{"x1":"6","x2":"6","y1":"3","y2":"15"}],["circle",{"cx":"18","cy":"6","r":"3"}],["circle",{"cx":"6","cy":"18","r":"3"}],["path",{"d":"M18 9a9 9 0 0 1-9 9"}]],"indent-decrease":[["path",{"d":"M21 12H11"}],["path",{"d":"M21 18H11"}],["path",{"d":"M21 6H11"}],["path",{"d":"m7 8-4 4 4 4"}]],"indent-increase":[["path",{"d":"M21 12H11"}],["path",{"d":"M21 18H11"}],["path",{"d":"M21 6H11"}],["path",{"d":"m3 8 4 4-4 4"}]],"info":[["circle",{"cx":"12","cy":"12","r":"10"}],["path",{"d":"M12 16v-4"}],["path",{"d":"M12 8h.01"}]],"keyboard":[["path",{"d":"M10 8h.01"}],["path",{"d":"M12 12h.01"}],["path",{"d":"M14 8h.01"}],["path",{"d":"M16 12h.01"}],["path",{"d":"M18 8h.01"}],["path",{"d":"M6 8h.01"}],["path",{"d":"M7 16h10"}],["path",{"d":"M8 12h.01"}],["rect",{"width":"20","height":"16","x":"2","y":"4","rx":"2"}]],"lightbulb":[["path",{"d":"M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"}],["path",{"d":"M9 18h6"}],["path",{"d":"M10 22h4"}]],"list":[["path",{"d":"M3 12h.01"}],["path",{"d":"M3 18h.01"}],["path",{"d":"M3 6h.01"}],["path",{"d":"M8 12h13"}],["path",{"d":"M8 18h13"}],["path",{"d":"M8 6h13"}]],"minus":[["path",{"d":"M5 12h14"}]],"monitor":[["rect",{"width":"20","height":"14","x":"2","y":"3","rx":"2"}],["line",{"x1":"8","x2":"16","y1":"21","y2":"21"}],["line",{"x1":"12","x2":"12","y1":"17","y2":"21"}]],"pause":[["rect",{"x":"14","y":"4","width":"4","height":"16","rx":"1"}],["rect",{"x":"6","y":"4","width":"4","height":"16","rx":"1"}]],"play":[["polygon",{"points":"6 3 20 12 6 21 6 3"}]],"plus":[["path",{"d":"M5 12h14"}],["path",{"d":"M12 5v14"}]],"redo":[["path",{"d":"M21 7v6h-6"}],["path",{"d":"M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"}]],"redo-2":[["path",{"d":"m15 14 5-5-5-5"}],["path",{"d":"M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13"}]],"replace":[["path",{"d":"M14 4a2 2 0 0 1 2-2"}],["path",{"d":"M16 10a2 2 0 0 1-2-2"}],["path",{"d":"M20 2a2 2 0 0 1 2 2"}],["path",{"d":"M22 8a2 2 0 0 1-2 2"}],["path",{"d":"m3 7 3 3 3-3"}],["path",{"d":"M6 10V5a3 3 0 0 1 3-3h1"}],["rect",{"x":"2","y":"14","width":"8","height":"8","rx":"2"}]],"rotate-ccw":[["path",{"d":"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"}],["path",{"d":"M3 3v5h5"}]],"save":[["path",{"d":"M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"}],["path",{"d":"M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"}],["path",{"d":"M7 3v4a1 1 0 0 0 1 1h7"}]],"search":[["circle",{"cx":"11","cy":"11","r":"8"}],["path",{"d":"m21 21-4.3-4.3"}]],"settings-2":[["path",{"d":"M20 7h-9"}],["path",{"d":"M14 17H5"}],["circle",{"cx":"17","cy":"17","r":"3"}],["circle",{"cx":"7","cy":"7","r":"3"}]],"square":[["rect",{"width":"18","height":"18","x":"3","y":"3","rx":"2"}]],"square-terminal":[["path",{"d":"m7 11 2-2-2-2"}],["path",{"d":"M11 13h4"}],["rect",{"width":"18","height":"18","x":"3","y":"3","rx":"2","ry":"2"}]],"step-forward":[["line",{"x1":"6","x2":"6","y1":"4","y2":"20"}],["polygon",{"points":"10,4 20,12 10,20"}]],"terminal":[["polyline",{"points":"4 17 10 11 4 5"}],["line",{"x1":"12","x2":"20","y1":"19","y2":"19"}]],"text-select":[["path",{"d":"M5 3a2 2 0 0 0-2 2"}],["path",{"d":"M19 3a2 2 0 0 1 2 2"}],["path",{"d":"M21 19a2 2 0 0 1-2 2"}],["path",{"d":"M5 21a2 2 0 0 1-2-2"}],["path",{"d":"M9 3h1"}],["path",{"d":"M9 21h1"}],["path",{"d":"M14 3h1"}],["path",{"d":"M14 21h1"}],["path",{"d":"M3 9v1"}],["path",{"d":"M21 9v1"}],["path",{"d":"M3 14v1"}],["path",{"d":"M21 14v1"}],["line",{"x1":"7","x2":"15","y1":"8","y2":"8"}],["line",{"x1":"7","x2":"17","y1":"12","y2":"12"}],["line",{"x1":"7","x2":"13","y1":"16","y2":"16"}]],"undo":[["path",{"d":"M3 7v6h6"}],["path",{"d":"M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"}]],"undo-2":[["path",{"d":"M9 14 4 9l5-5"}],["path",{"d":"M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"}]],"x":[["path",{"d":"M18 6 6 18"}],["path",{"d":"m6 6 12 12"}]]};
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Mini C++ · 设计审查 R06</title><link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3EMini%20C%2B%2B%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%23456982%22%2F%3E%0A%20%20%3Cg%20fill%3D%22%23fff%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M39%2013H22L11%2024v16l11%2011h17v-8H25l-6-6V27l6-6h14z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M32%2026h4v4h4v4h-4v4h-4v-4h-4v-4h4zm15%200h4v4h4v4h-4v4h-4v-4h-4v-4h4z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A"><style>html{color-scheme:light dark}body{margin:0;background:light-dark(#f2f2f2,#181818);padding:clamp(10px,3.8vw,50px) clamp(8px,3vw,40px)}main{max-width:1152px;margin:0 auto}@media(max-width:570px){body{padding:9px 4px}}</style></head><body><main><script>(()=>{const nodes={"align-left":[["path",{"d":"M15 12H3"}],["path",{"d":"M17 18H3"}],["path",{"d":"M21 6H3"}]],"arrow-up-right":[["path",{"d":"M7 7h10v10"}],["path",{"d":"M7 17 17 7"}]],"bug":[["path",{"d":"m8 2 1.88 1.88"}],["path",{"d":"M14.12 3.88 16 2"}],["path",{"d":"M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"}],["path",{"d":"M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"}],["path",{"d":"M12 20v-9"}],["path",{"d":"M6.53 9C4.6 8.8 3 7.1 3 5"}],["path",{"d":"M6 13H2"}],["path",{"d":"M3 21c0-2.1 1.7-3.9 3.8-4"}],["path",{"d":"M20.97 5c0 2.1-1.6 3.8-3.5 4"}],["path",{"d":"M22 13h-4"}],["path",{"d":"M17.2 17c2.1.1 3.8 1.9 3.8 4"}]],"chevron-down":[["path",{"d":"m6 9 6 6 6-6"}]],"circle-alert":[["circle",{"cx":"12","cy":"12","r":"10"}],["line",{"x1":"12","x2":"12","y1":"8","y2":"12"}],["line",{"x1":"12","x2":"12.01","y1":"16","y2":"16"}]],"circle-check":[["circle",{"cx":"12","cy":"12","r":"10"}],["path",{"d":"m9 12 2 2 4-4"}]],"corner-down-left":[["polyline",{"points":"9 10 4 15 9 20"}],["path",{"d":"M20 4v7a4 4 0 0 1-4 4H4"}]],"file":[["path",{"d":"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"}],["path",{"d":"M14 2v4a2 2 0 0 0 2 2h4"}]],"file-pen-line":[["path",{"d":"m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2"}],["path",{"d":"M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"}],["path",{"d":"M8 18h1"}]],"file-plus-2":[["path",{"d":"M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"}],["path",{"d":"M14 2v4a2 2 0 0 0 2 2h4"}],["path",{"d":"M3 15h6"}],["path",{"d":"M6 12v6"}]],"folder-open":[["path",{"d":"m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"}]],"gauge":[["path",{"d":"m12 14 4-4"}],["path",{"d":"M3.34 19a10 10 0 1 1 17.32 0"}]],"git-branch":[["line",{"x1":"6","x2":"6","y1":"3","y2":"15"}],["circle",{"cx":"18","cy":"6","r":"3"}],["circle",{"cx":"6","cy":"18","r":"3"}],["path",{"d":"M18 9a9 9 0 0 1-9 9"}]],"indent-decrease":[["path",{"d":"M21 12H11"}],["path",{"d":"M21 18H11"}],["path",{"d":"M21 6H11"}],["path",{"d":"m7 8-4 4 4 4"}]],"indent-increase":[["path",{"d":"M21 12H11"}],["path",{"d":"M21 18H11"}],["path",{"d":"M21 6H11"}],["path",{"d":"m3 8 4 4-4 4"}]],"info":[["circle",{"cx":"12","cy":"12","r":"10"}],["path",{"d":"M12 16v-4"}],["path",{"d":"M12 8h.01"}]],"keyboard":[["path",{"d":"M10 8h.01"}],["path",{"d":"M12 12h.01"}],["path",{"d":"M14 8h.01"}],["path",{"d":"M16 12h.01"}],["path",{"d":"M18 8h.01"}],["path",{"d":"M6 8h.01"}],["path",{"d":"M7 16h10"}],["path",{"d":"M8 12h.01"}],["rect",{"width":"20","height":"16","x":"2","y":"4","rx":"2"}]],"lightbulb":[["path",{"d":"M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"}],["path",{"d":"M9 18h6"}],["path",{"d":"M10 22h4"}]],"list":[["path",{"d":"M3 12h.01"}],["path",{"d":"M3 18h.01"}],["path",{"d":"M3 6h.01"}],["path",{"d":"M8 12h13"}],["path",{"d":"M8 18h13"}],["path",{"d":"M8 6h13"}]],"minus":[["path",{"d":"M5 12h14"}]],"monitor":[["rect",{"width":"20","height":"14","x":"2","y":"3","rx":"2"}],["line",{"x1":"8","x2":"16","y1":"21","y2":"21"}],["line",{"x1":"12","x2":"12","y1":"17","y2":"21"}]],"pause":[["rect",{"x":"14","y":"4","width":"4","height":"16","rx":"1"}],["rect",{"x":"6","y":"4","width":"4","height":"16","rx":"1"}]],"play":[["polygon",{"points":"6 3 20 12 6 21 6 3"}]],"plus":[["path",{"d":"M5 12h14"}],["path",{"d":"M12 5v14"}]],"redo":[["path",{"d":"M21 7v6h-6"}],["path",{"d":"M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"}]],"redo-2":[["path",{"d":"m15 14 5-5-5-5"}],["path",{"d":"M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13"}]],"replace":[["path",{"d":"M14 4a2 2 0 0 1 2-2"}],["path",{"d":"M16 10a2 2 0 0 1-2-2"}],["path",{"d":"M20 2a2 2 0 0 1 2 2"}],["path",{"d":"M22 8a2 2 0 0 1-2 2"}],["path",{"d":"m3 7 3 3 3-3"}],["path",{"d":"M6 10V5a3 3 0 0 1 3-3h1"}],["rect",{"x":"2","y":"14","width":"8","height":"8","rx":"2"}]],"rotate-ccw":[["path",{"d":"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"}],["path",{"d":"M3 3v5h5"}]],"save":[["path",{"d":"M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"}],["path",{"d":"M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"}],["path",{"d":"M7 3v4a1 1 0 0 0 1 1h7"}]],"scroll":[["path",{"d":"M19 17V5a2 2 0 0 0-2-2H4"}],["path",{"d":"M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"}]],"search":[["circle",{"cx":"11","cy":"11","r":"8"}],["path",{"d":"m21 21-4.3-4.3"}]],"settings-2":[["path",{"d":"M20 7h-9"}],["path",{"d":"M14 17H5"}],["circle",{"cx":"17","cy":"17","r":"3"}],["circle",{"cx":"7","cy":"7","r":"3"}]],"square":[["rect",{"width":"18","height":"18","x":"3","y":"3","rx":"2"}]],"square-terminal":[["path",{"d":"m7 11 2-2-2-2"}],["path",{"d":"M11 13h4"}],["rect",{"width":"18","height":"18","x":"3","y":"3","rx":"2","ry":"2"}]],"step-forward":[["line",{"x1":"6","x2":"6","y1":"4","y2":"20"}],["polygon",{"points":"10,4 20,12 10,20"}]],"terminal":[["polyline",{"points":"4 17 10 11 4 5"}],["line",{"x1":"12","x2":"20","y1":"19","y2":"19"}]],"text-select":[["path",{"d":"M5 3a2 2 0 0 0-2 2"}],["path",{"d":"M19 3a2 2 0 0 1 2 2"}],["path",{"d":"M21 19a2 2 0 0 1-2 2"}],["path",{"d":"M5 21a2 2 0 0 1-2-2"}],["path",{"d":"M9 3h1"}],["path",{"d":"M9 21h1"}],["path",{"d":"M14 3h1"}],["path",{"d":"M14 21h1"}],["path",{"d":"M3 9v1"}],["path",{"d":"M21 9v1"}],["path",{"d":"M3 14v1"}],["path",{"d":"M21 14v1"}],["line",{"x1":"7","x2":"15","y1":"8","y2":"8"}],["line",{"x1":"7","x2":"17","y1":"12","y2":"12"}],["line",{"x1":"7","x2":"13","y1":"16","y2":"16"}]],"trash-2":[["path",{"d":"M3 6h18"}],["path",{"d":"M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"}],["path",{"d":"M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"}],["line",{"x1":"10","x2":"10","y1":"11","y2":"17"}],["line",{"x1":"14","x2":"14","y1":"11","y2":"17"}]],"undo":[["path",{"d":"M3 7v6h6"}],["path",{"d":"M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"}]],"undo-2":[["path",{"d":"M9 14 4 9l5-5"}],["path",{"d":"M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"}]],"x":[["path",{"d":"M18 6 6 18"}],["path",{"d":"m6 6 12 12"}]]};
 window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i of document.querySelectorAll('#mini-cpp-review i[data-lucide]')) {
  const name=i.dataset.lucide, data=nodes[name]; if(!data)continue;
  const svg=document.createElementNS(ns,'svg'); for(const [k,v] of Object.entries({class:'lucide lucide-'+name,'data-lucide':name,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor','stroke-width':'2','stroke-linecap':'round','stroke-linejoin':'round','aria-hidden':'true'}))svg.setAttribute(k,v);
@@ -7,7 +7,7 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
 }}};})()</script>
 <div id="mini-cpp-review" lang="zh-CN" aria-label="Mini C++ 界面与图标审查">
   <header class="mc-reviewbar">
-    <div class="mc-reviewtag"><span class="mc-rid">R05</span><span>设计审查</span></div>
+    <div class="mc-reviewtag"><span class="mc-rid">R06</span><span>设计审查</span></div>
     <nav class="mc-scenes" aria-label="审查场景">
       <button type="button" data-scene="edit" aria-pressed="true">编辑器</button>
       <button type="button" data-scene="debug" aria-pressed="false">断点调试</button>
@@ -18,10 +18,11 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
     <select class="mc-case" data-run-case aria-label="运行样例"><option value="prefix">样例：逐项求和</option><option value="sum">样例：求总和</option><option value="long">样例：长输出</option><option value="file">样例：文件输入输出</option></select>
     <span class="mc-reviewmeta">交互样稿</span>
   </header>
+  <div class="mc-desktop" data-desktop><div class="mc-backstack" data-backstack></div>
   <section class="mc-window" aria-label="Mini C++ 单文件工作台" data-window>
     <header class="mc-titlebar">
       <div class="mc-brand"><span class="mc-mark" aria-hidden="true"><b></b><i></i><i></i></span><span class="mc-titlefile" data-titlefile>main.cpp</span><span class="mc-title-dash" aria-hidden="true">-</span><strong>Mini C++</strong></div>
-      <div class="mc-caption" aria-hidden="true"><i data-lucide="minus"></i><i data-lucide="square"></i><i data-lucide="x"></i></div>
+      <div class="mc-caption"><i data-lucide="minus" aria-hidden="true"></i><i data-lucide="square" aria-hidden="true"></i><button type="button" data-act="closeWindow" data-tip="关闭当前窗口" aria-label="关闭当前窗口"><i data-lucide="x" aria-hidden="true"></i></button></div>
     </header>
     <nav class="mc-menustrip" aria-label="应用菜单">
       <div class="mc-menus">
@@ -44,15 +45,15 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
       <div class="mc-cluster mc-builds" role="group" aria-label="四个构建操作" data-buildtools></div>
       <div class="mc-cluster" role="group" aria-label="调试操作" data-debugtools></div>
       <div class="mc-config" role="group" aria-label="下次构建设置">
-        <label class="mc-selectbox"><span class="mc-sr">C++ 标准</span><select data-std aria-label="C++ 标准"><option value="98">C++98</option><option value="11">C++11</option><option value="14" selected>C++14</option></select><i data-lucide="chevron-down" aria-hidden="true"></i></label>
+        <label class="mc-selectbox"><span class="mc-sr">C++ 标准</span><select data-std aria-label="C++ 标准"><option value="98">C++98</option><option value="11">C++11</option><option value="14" selected>C++14</option><option value="17">C++17</option></select><i data-lucide="chevron-down" aria-hidden="true"></i></label>
         <label class="mc-switch" data-tip="下次普通构建使用 -O2"><input type="checkbox" data-o2 aria-label="开启 O2 优化"><span class="mc-track" aria-hidden="true"></span><span>O2</span></label>
       </div>
     </div>
     <div data-workbench></div>
     <footer class="mc-status"><span class="mc-footstate" data-status></span><span class="mc-statusinfo"><span data-position></span><span>空格: 4</span><span>UTF-8</span><span>CRLF</span></span></footer>
-  </section>
+  </section></div>
   <section class="mc-identity" data-identity hidden aria-label="Mini C++ 图标审查稿">
-    <header class="mc-id-head"><div class="mc-brand"><span class="mc-mark" aria-hidden="true"><b></b><i></i><i></i></span><strong>Mini C++</strong></div><span>图标规范 <i>/</i> 05</span></header>
+    <header class="mc-id-head"><div class="mc-brand"><span class="mc-mark" aria-hidden="true"><b></b><i></i><i></i></span><strong>Mini C++</strong></div><span>图标规范 <i>/</i> 06</span></header>
     <div class="mc-id-main">
       <section data-cpp-spec aria-label=".cpp 源文件图标">
         <div class="mc-id-intro"><span class="mc-index">01 / FILE</span><h2>.cpp 源文件图标</h2></div>
@@ -113,6 +114,14 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
 #mini-cpp-review .mc-reviewmeta { margin-left: auto; padding-right: 4px; }
 #mini-cpp-review .mc-case { color: var(--mc-muted); background: var(--mc-surface); border: 1px solid var(--mc-line); padding: 4px; font-size: 12px; border-radius: 4px; }
 #mini-cpp-review .mc-window, #mini-cpp-review .mc-identity { border: 1px solid var(--mc-line); border-radius: 8px; background: var(--mc-surface); box-shadow: 0 4px 16px #182e4b0c; }
+#mini-cpp-review .mc-desktop { --layers:0; --offset:12px; --reveal:27px; position:relative; isolation:isolate; min-width:0; padding-block-start:calc(var(--layers) * var(--reveal)); padding-inline-start:calc(var(--layers) * var(--offset)); }
+#mini-cpp-review .mc-desktop .mc-window { position:relative; z-index:1; min-width:0; }
+#mini-cpp-review .mc-backstack { position:absolute; inset:0; z-index:0; pointer-events:none; }
+#mini-cpp-review .mc-backwin { position:absolute; top:calc(var(--layer) * var(--reveal)); left:calc(var(--layer) * var(--offset)); right:calc((var(--layers) - var(--layer)) * var(--offset)); bottom:calc((var(--layers) - var(--layer)) * 9px); border:1px solid var(--mc-line); border-radius:7px; background:var(--mc-soft); }
+#mini-cpp-review .mc-backtitle { pointer-events:auto; display:flex; width:100%; height:var(--reveal); align-items:center; gap:8px; text-align:left; min-width:0; padding-inline:12px; font:12px var(--mc-mono); color:var(--mc-muted); }
+#mini-cpp-review .mc-backtitle span:first-of-type { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+#mini-cpp-review .mc-backsuffix { white-space:nowrap; font:12px 'Segoe UI',sans-serif; }
+#mini-cpp-review .mc-backtitle:hover { color:var(--mc-ink); background:var(--mc-line); }
 #mini-cpp-review .mc-titlebar, #mini-cpp-review .mc-id-head { display: flex; align-items: center; gap: 12px; position: relative; padding: 0 12px; min-height: 33px; background: var(--mc-title); border-radius: 7px 7px 0 0; border-bottom: 1px solid var(--mc-line); }
 #mini-cpp-review .mc-brand { display: inline-flex; align-items: center; gap: 9px; flex: 0 0 auto; }
 #mini-cpp-review .mc-brand strong { font: 650 17px/1.2 'Segoe UI',sans-serif; }
@@ -132,9 +141,13 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
 #mini-cpp-review .mc-menus button:hover, #mini-cpp-review .mc-menus button[aria-expanded=true] { background:var(--mc-line); color:var(--mc-ink); }
 #mini-cpp-review .mc-caption { margin-left: auto; gap: 21px; color: var(--mc-muted); }
 #mini-cpp-review .mc-caption svg { width: 12px; height: 12px; stroke-width: 1.6; }
+#mini-cpp-review .mc-caption button { display:inline-grid; place-items:center; min-width:24px; min-height:27px; border-radius:3px; }
+#mini-cpp-review .mc-caption button:hover:not(:disabled) { color:var(--mc-danger); background:var(--mc-danger-tint); }
 #mini-cpp-review .mc-dropdown { position: absolute; top: calc(100% - 4px); z-index: 12; left: 0; width: min(253px,100%); padding: 4px; background: var(--mc-surface); border: 1px solid var(--mc-line); border-radius: 6px; box-shadow: 0 7px 23px #10261d2a; }
 #mini-cpp-review .mc-dropdown button { display: flex; align-items: center; gap: 9px; width: 100%; min-height: 30px; text-align: left; padding: 4px 8px; border-radius: 3px; font-size: 13px; }
 #mini-cpp-review .mc-dropdown kbd { margin-left: auto; font-size: 11px; color: var(--mc-muted); }
+#mini-cpp-review [data-dropdown]:has([data-activate-window]) { max-height:245px; overflow:auto; }
+#mini-cpp-review [data-dropdown] button span { min-width:0; overflow-wrap:anywhere; }
 #mini-cpp-review .mc-dropdown button:hover, #mini-cpp-review .mc-quiet:hover { background: var(--mc-tint); color: var(--mc-accent); }
 #mini-cpp-review .mc-dropdown hr { border: 0; border-top: 1px solid var(--mc-line); margin: 3px 5px; }
 #mini-cpp-review .mc-toolbar { display:flex; align-items:center; gap:4px 6px; flex-wrap:wrap; padding:3px 9px; border-bottom:1px solid var(--mc-line); background:var(--mc-surface); }
@@ -207,6 +220,16 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
 #mini-cpp-review .mc-dialog h2 { font-size: 16px; }
 #mini-cpp-review .mc-dialog input[type=text] { width: 100%; border: 1px solid var(--mc-line); padding: 5px 8px; background: var(--mc-surface); border-radius: 4px; }
 #mini-cpp-review .mc-dialog label { display: grid; gap: 4px; color: var(--mc-muted); font-size: 12px; margin-block: 6px; }
+#mini-cpp-review .mc-dialog select { min-width:0; width:100%; padding:5px 7px; border:1px solid var(--mc-line); background:var(--mc-surface); border-radius:4px; }
+#mini-cpp-review .mc-dialog .mc-save-note { display:flex; align-items:center; gap:8px; margin-bottom:13px; color:var(--mc-ink); }
+#mini-cpp-review .mc-dialog .mc-save-note svg { color:var(--mc-accent); }
+#mini-cpp-review .mc-dialog .mc-save-path { display:flex; align-items:center; gap:8px; padding:8px; margin-top:11px; background:var(--mc-soft); border-radius:3px; font-size:12px; }
+#mini-cpp-review .mc-save-path code, #mini-cpp-review .mc-pathline { min-width:0; overflow-wrap:anywhere; }
+#mini-cpp-review .mc-virtual-label { align-self:center; margin-right:auto; color:var(--mc-muted); font-size:11px; }
+#mini-cpp-review .mc-dialog [data-file-warning] { color:var(--mc-danger); }
+#mini-cpp-review .mc-dialog .mc-saved-file { display:flex; gap:9px; align-items:center; max-width:100%; text-align:left; padding:4px; }
+#mini-cpp-review .mc-saved-file span { display:grid; min-width:0; overflow-wrap:anywhere; }
+#mini-cpp-review .mc-saved-file small { color:var(--mc-muted); }
 #mini-cpp-review .mc-dialog p { margin: 7px 0; color: var(--mc-muted); font-size: 13px; }
 #mini-cpp-review .mc-dialog .mc-example { display: block; background: var(--mc-soft); border-left: 2px solid var(--mc-accent); padding: 10px; margin: 8px 0; font-size: 13px; white-space: pre-wrap; overflow-wrap: anywhere; }
 #mini-cpp-review .mc-dialog .mc-dialog-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; margin-top: 12px; }
@@ -222,6 +245,7 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
   #mini-cpp-review .mc-toolbar { padding: 6px 8px; }
 }
 @media (max-width: 560px) {
+  #mini-cpp-review .mc-desktop { --offset:5px; }
   #mini-cpp-review .mc-caption { display: none; }
   #mini-cpp-review .mc-reviewbar { gap: 6px 10px; margin-bottom: 9px; }
   #mini-cpp-review .mc-scenes button { padding-inline: 8px; }
@@ -243,6 +267,7 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
   #mini-cpp-review .mc-brand strong { font-size: 16px; }
 }
 @media (pointer: coarse) {
+  #mini-cpp-review .mc-desktop { --reveal:44px; }
   #mini-cpp-review :is(.mc-scenes,.mc-menus,.mc-dropdown) button, #mini-cpp-review :is(.mc-selectbox select,.mc-switch,.mc-quiet,.mc-sm-btn,.mc-gbtn) { min-height: 44px; }
   #mini-cpp-review .mc-gbtn { min-width: 44px; }
   #mini-cpp-review .mc-switch { padding-inline: 3px; }
@@ -252,12 +277,21 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
 #mini-cpp-review .wb-filetab { display:flex; align-items:center; gap:8px; padding:0 18px; border-inline-end:1px solid var(--mc-line); border-top:2px solid var(--mc-accent); margin-bottom:-1px; background:var(--mc-surface); }
 #mini-cpp-review .wb-filetab svg { color:var(--mc-accent); }
 #mini-cpp-review .wb-filetab strong { font:600 13px var(--mc-mono); }
+#mini-cpp-review .wb-filetab { min-width:0; max-width:calc(100% - 90px); }
+#mini-cpp-review .wb-filetab strong { min-width:0; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; }
+#mini-cpp-review .wb-dirty { display:inline-block; flex:none; background:var(--mc-muted); border-radius:50%; width:6px; height:6px; }
 #mini-cpp-review .wb-plus { align-self:center; display:grid; place-items:center; width:33px; height:29px; color:var(--mc-muted); }
 #mini-cpp-review .wb-plus:hover { color:var(--mc-accent); }
 #mini-cpp-review .wb-filekind { margin-left:auto; align-self:center; padding-right:14px; color:var(--mc-muted); font-size:11px; }
 #mini-cpp-review .wb-well { display:grid; grid-template-columns:minmax(0,1fr); }
 #mini-cpp-review .wb-split { grid-template-columns:minmax(0,1fr) clamp(205px,26%,265px); }
 #mini-cpp-review .wb-editor { min-width:0; padding:12px 0 16px; min-height:312px; }
+#mini-cpp-review .wb-draft-editor { display:grid; grid-template-columns:56px minmax(0,1fr); }
+#mini-cpp-review .wb-draft-gutter { height:284px; overflow:hidden; border-right:1px solid var(--mc-line); user-select:none; }
+#mini-cpp-review .wb-draft-gutter pre { color:var(--mc-muted); font:11px/20px var(--mc-mono); white-space:pre; text-align:right; padding:0 8px 0 0; margin:0; background:none; }
+#mini-cpp-review [data-draft-code] { display:block; min-width:0; width:100%; height:284px; margin:0; padding:0 10px 0 12px; border:none; resize:none; background:var(--mc-surface); color:var(--mc-ink); font:14px/20px var(--mc-mono); tab-size:4; }
+#mini-cpp-review [data-draft-code]:focus-visible { outline:1px solid var(--mc-line); outline-offset:-1px; }
+@media(max-width:590px){#mini-cpp-review .wb-draft-editor{grid-template-columns:39px minmax(0,1fr)}#mini-cpp-review [data-draft-code]{padding-left:6px}}
 #mini-cpp-review .wb-row { display:grid; grid-template-columns:31px 25px minmax(0,1fr); min-height:20px; align-items:start; }
 #mini-cpp-review .wb-at { background:var(--mc-amber-tint); }
 #mini-cpp-review .wb-invalid { background:var(--mc-danger-tint); }
@@ -366,25 +400,33 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
 @media(max-width:560px){#mini-cpp-review .mc-term-stage{padding:145px 7px 0}#mini-cpp-review .mc-term-body{min-height:112px}#mini-cpp-review .mc-term-log{max-height:140px}}
 @media(pointer:coarse){#mini-cpp-review .mc-term-form textarea{min-height:44px;font-size:16px}#mini-cpp-review .mc-term-form button{width:44px;height:44px}}
 
-#mini-cpp-review .mc-classic{--glyph-edge:light-dark(#424446,#cecece);--glyph-orange:light-dark(#dfa477,#e7b089);--glyph-mist:light-dark(#bbcad3,#c7d1da);--glyph-blue:light-dark(#84adc5,#a1c1d4);--glyph-yellow:light-dark(#e1ca7d,#e5d18e);--glyph-bar:light-dark(#d6b46e,#e4c481);--glyph-screen:light-dark(#efefef,#474747); position:relative;display:inline-block;width:18px;height:18px;flex:0 0 auto;vertical-align:middle;pointer-events:none}
+#mini-cpp-review .mc-classic{--glyph-edge:light-dark(#494b4d,#d0d1d2);--glyph-paper:light-dark(#fbfbfb,#292a2b);--glyph-tile:light-dark(#c4c6c8,#787a7c);--glyph-key:light-dark(#8295a4,#9cabb6);--glyph-strip:light-dark(#e1e1e1,#515253); position:relative;display:inline-block;width:18px;height:18px;flex:0 0 auto;vertical-align:middle;pointer-events:none}
 #mini-cpp-review .mc-classic>b{position:absolute;display:block;border-radius:0;margin:0;padding:0;box-sizing:border-box}
 #mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(1){left:0%;top:0%;width:44.44444444444444%;height:44.44444444444444%;background: var(--glyph-edge)}
-#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(2){left:5.555555555555555%;top:5.555555555555555%;width:33.33333333333333%;height:33.33333333333333%;background: var(--glyph-orange)}
-#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(3){left:55.55555555555556%;top:0%;width:44.44444444444444%;height:44.44444444444444%;background: var(--glyph-edge)}
-#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(4){left:61.111111111111114%;top:5.555555555555555%;width:33.33333333333333%;height:33.33333333333333%;background: var(--glyph-mist)}
-#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(5){left:0%;top:55.55555555555556%;width:44.44444444444444%;height:44.44444444444444%;background: var(--glyph-edge)}
-#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(6){left:5.555555555555555%;top:61.111111111111114%;width:33.33333333333333%;height:33.33333333333333%;background: var(--glyph-blue)}
-#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(7){left:55.55555555555556%;top:55.55555555555556%;width:44.44444444444444%;height:44.44444444444444%;background: var(--glyph-edge)}
-#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(8){left:61.111111111111114%;top:61.111111111111114%;width:33.33333333333333%;height:33.33333333333333%;background: var(--glyph-yellow)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(2){left:5.555555555555555%;top:5.555555555555555%;width:33.33333333333333%;height:33.33333333333333%;background: var(--glyph-paper)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(3){left:11.11111111111111%;top:11.11111111111111%;width:22.22222222222222%;height:22.22222222222222%;background: var(--glyph-key)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(4){left:55.55555555555556%;top:0%;width:44.44444444444444%;height:44.44444444444444%;background: var(--glyph-edge)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(5){left:61.111111111111114%;top:5.555555555555555%;width:33.33333333333333%;height:33.33333333333333%;background: var(--glyph-paper)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(6){left:66.66666666666666%;top:11.11111111111111%;width:22.22222222222222%;height:22.22222222222222%;background: var(--glyph-tile)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(7){left:0%;top:55.55555555555556%;width:44.44444444444444%;height:44.44444444444444%;background: var(--glyph-edge)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(8){left:5.555555555555555%;top:61.111111111111114%;width:33.33333333333333%;height:33.33333333333333%;background: var(--glyph-paper)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(9){left:11.11111111111111%;top:66.66666666666666%;width:22.22222222222222%;height:22.22222222222222%;background: var(--glyph-tile)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(10){left:55.55555555555556%;top:55.55555555555556%;width:44.44444444444444%;height:44.44444444444444%;background: var(--glyph-edge)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(11){left:61.111111111111114%;top:61.111111111111114%;width:33.33333333333333%;height:33.33333333333333%;background: var(--glyph-paper)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(12){left:66.66666666666666%;top:66.66666666666666%;width:22.22222222222222%;height:22.22222222222222%;background: var(--glyph-tile)}
 #mini-cpp-review .mc-classic[data-classic="run"]>b:nth-child(1){left:5.555555555555555%;top:5.555555555555555%;width:88.88888888888889%;height:88.88888888888889%;background: var(--glyph-edge)}
-#mini-cpp-review .mc-classic[data-classic="run"]>b:nth-child(2){left:11.11111111111111%;top:11.11111111111111%;width:77.77777777777779%;height:16.666666666666664%;background: var(--glyph-bar)}
-#mini-cpp-review .mc-classic[data-classic="run"]>b:nth-child(3){left:11.11111111111111%;top:33.33333333333333%;width:77.77777777777779%;height:55.55555555555556%;background: var(--glyph-screen)}
+#mini-cpp-review .mc-classic[data-classic="run"]>b:nth-child(2){left:11.11111111111111%;top:11.11111111111111%;width:77.77777777777779%;height:77.77777777777779%;background: var(--glyph-paper)}
+#mini-cpp-review .mc-classic[data-classic="run"]>b:nth-child(3){left:11.11111111111111%;top:11.11111111111111%;width:77.77777777777779%;height:11.11111111111111%;background: var(--glyph-strip)}
+#mini-cpp-review .mc-classic[data-classic="run"]>b:nth-child(4){left:11.11111111111111%;top:22.22222222222222%;width:77.77777777777779%;height:5.555555555555555%;background: var(--glyph-edge)}
+#mini-cpp-review .mc-classic[data-classic="run"]>b:nth-child(5){left:22.22222222222222%;top:66.66666666666666%;width:22.22222222222222%;height:5.555555555555555%;background: var(--glyph-key)}
 #mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(1){left:5.555555555555555%;top:5.555555555555555%;width:88.88888888888889%;height:88.88888888888889%;background: var(--glyph-edge)}
-#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(2){left:11.11111111111111%;top:11.11111111111111%;width:77.77777777777779%;height:16.666666666666664%;background: var(--glyph-bar)}
-#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(3){left:11.11111111111111%;top:33.33333333333333%;width:38.88888888888889%;height:22.22222222222222%;background: var(--glyph-orange)}
-#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(4){left:55.55555555555556%;top:33.33333333333333%;width:33.33333333333333%;height:22.22222222222222%;background: var(--glyph-mist)}
-#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(5){left:11.11111111111111%;top:61.111111111111114%;width:38.88888888888889%;height:27.77777777777778%;background: var(--glyph-blue)}
-#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(6){left:55.55555555555556%;top:61.111111111111114%;width:33.33333333333333%;height:27.77777777777778%;background: var(--glyph-yellow)}
+#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(2){left:11.11111111111111%;top:11.11111111111111%;width:77.77777777777779%;height:77.77777777777779%;background: var(--glyph-paper)}
+#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(3){left:11.11111111111111%;top:11.11111111111111%;width:77.77777777777779%;height:11.11111111111111%;background: var(--glyph-strip)}
+#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(4){left:11.11111111111111%;top:22.22222222222222%;width:77.77777777777779%;height:5.555555555555555%;background: var(--glyph-edge)}
+#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(5){left:22.22222222222222%;top:38.88888888888889%;width:22.22222222222222%;height:16.666666666666664%;background: var(--glyph-key)}
+#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(6){left:55.55555555555556%;top:38.88888888888889%;width:22.22222222222222%;height:16.666666666666664%;background: var(--glyph-tile)}
+#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(7){left:22.22222222222222%;top:66.66666666666666%;width:22.22222222222222%;height:16.666666666666664%;background: var(--glyph-tile)}
+#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(8){left:55.55555555555556%;top:66.66666666666666%;width:22.22222222222222%;height:16.666666666666664%;background: var(--glyph-tile)}
 #mini-cpp-review .mc-classic[data-classic="rebuild"]>b:nth-child(1){left:0%;top:0%;width:44.44444444444444%;height:44.44444444444444%;border:1px solid var(--glyph-edge)}
 #mini-cpp-review .mc-classic[data-classic="rebuild"]>b:nth-child(2){left:55.55555555555556%;top:0%;width:44.44444444444444%;height:44.44444444444444%;border:1px solid var(--glyph-edge)}
 #mini-cpp-review .mc-classic[data-classic="rebuild"]>b:nth-child(3){left:0%;top:55.55555555555556%;width:44.44444444444444%;height:44.44444444444444%;border:1px solid var(--glyph-edge)}
@@ -393,13 +435,13 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
 <script>
 (() => {
 'use strict';
-const classicGlyphs={"classic-compile":"<span class=\"mc-classic\" data-classic=\"compile\" aria-hidden=\"true\"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></span>","classic-run":"<span class=\"mc-classic\" data-classic=\"run\" aria-hidden=\"true\"><b></b><b></b><b></b></span>","classic-buildRun":"<span class=\"mc-classic\" data-classic=\"buildRun\" aria-hidden=\"true\"><b></b><b></b><b></b><b></b><b></b><b></b></span>","classic-rebuild":"<span class=\"mc-classic\" data-classic=\"rebuild\" aria-hidden=\"true\"><b></b><b></b><b></b><b></b></span>"};
+const classicGlyphs={"classic-compile":"<span class=\"mc-classic\" data-classic=\"compile\" aria-hidden=\"true\"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></span>","classic-run":"<span class=\"mc-classic\" data-classic=\"run\" aria-hidden=\"true\"><b></b><b></b><b></b><b></b><b></b></span>","classic-buildRun":"<span class=\"mc-classic\" data-classic=\"buildRun\" aria-hidden=\"true\"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></span>","classic-rebuild":"<span class=\"mc-classic\" data-classic=\"rebuild\" aria-hidden=\"true\"><b></b><b></b><b></b><b></b></span>"};
 const cppRasters={"16":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAoUlEQVR4nKxTSwqEMAzNDN3Odq4xy7mMS5WieAbxDKIUdellXHoNtx5ArVApabXx86DQ1yQvSdMyWBDwaAIialG+dM7URhS5M5jHiXH2hptgOhFVY3XioQ8kgSNHkgCuQgoqviduCGBHV1W3L3GdqXwH/fiFKzBa6Np02/+9zMmtLUiDXDrH9t0KbNCzYk4SOF2ByoADbXhuCr/PQArA33kGAAD//3YUVL0AAAAGSURBVAMAkNM1K4pgOlUAAAAASUVORK5CYII=","24":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAABzElEQVR4nLRWP0gCURj/EhEEuS5s8Y4aGlLabnIxPLE1bGgIiYgbGqKWhhqzLQqCsLmgQKgpa3DqH9ZgIi4NObQY/huECkHCG/IdPr17d3p3pj94d/d+73u/3/e+9+CdBYYMK3oIa+u7wYA/IooilMoVMItCsQTLS4vjXq+3qmmAEPDPgt1uB4qiwCwOj47BZrNtND/3yDELDBlWkigUi5BOZxTcQmgeruO3Kq4vA5ZhgA0xqkCjgroGGDhjhnEByzKqVRk17WpATtZalRFYew1q1R1zfe8BKWiEM2UgP0Va9f+3gdYp6rf+mgZfPzW4uLkHM8h8VOCtnOCn5lb1DWjKAWfxF3CMOsE4aIBf4F0Tbl7Olj5zEaveVCHkA849KX1nc3nIvuclDvdP48+qGMRhWIyIowmoIXEMLBLdDis4FI/NDBlIwijzVpMDCZGcxHs6Bj1LJM+YFBDApyxRi8MJGTJAwdGdcNsI7wFqmwcxVTIkp7+CpqBP2FfUlNxEnIg8pqdBvV6X3rXvzu2XfFXehGS/G6cwaDREJC8ZJE62wAwenpIw45mOcBynuDLZ4IqzbRC7vHoco2keBojC3Xl1BAaEVCrl1Pqr+AMAAP//1IGmXQAAAAZJREFUAwBdQ8oU1hZkMQAAAABJRU5ErkJggg==","32":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACZ0lEQVR4nMSWP2gTURzHvxduOCHiUBC8SJBaqIPLBS0UHFwcJTrYIVMVggTJ2opizaprESvFoEsERTA4uHaIi1GObtFBNNArWJQWW+8IOTW/a194d7yXXJK75gMv9+73e3++v9/7vSMJjBmVfkqlktq0flQQA2n9eK6zflvmV1gnXyj+W7qzANtxsL29gyhYLT9HIX89l8lkXsjGqKzjui40TUMymcTpyUlEwcpqGYqiXO10pQISGDOqzPGm+lZov5K9jA/1j7CsTZ9d109g5vw5RCaAFuxF0J9K6RgGqYBe0QwT6cACGI8eP+n2Kf2E7HiIW4WbiFSAaMFBNxlJALFhWUJ7Std9PnqPR8CGJax62rBe/+R7j0VAr6JjdTEsob8DsvsfmwDZd6Df9yEyAaK0R3n/+wpYb3zF5tYvjMLWnot379dPTl2avybyu+7f71IBtPnSShWjMYHXtS+zxyb0WZF356c11/cWaEeOIg4c+7f3DHUNCWM6jRvZCzDOpLu2crXmtVr5tm8ss9N4arzdbDRhfm52baEFLC/mvMm0CIPeg4uTQNqU9xUfVDw7BUGt+LAymAAWBT9RBEVGLZgpn3067ZsTOgNhRHoRHmzMjoBYXsh5T/LxGQwtwEtndr8O+PMLjmGRBjdhc7xjCswPJ4AW7mzA6oDBLyjamB8nI/SfUjr/YAQs3bwon/BGU+pjDFQDskhkxUli+xWuUIBt22i1WnD+7MLZ20UcKImEWEC73fbazNkprD29h1FYvHsfxUL+lWEYcyL/qYvzmhqccJh8W3vmKLzBNM2XiAFZBggFY+Y/AAAA//8fm7TqAAAABklEQVQDAJJxDrivIVYWAAAAAElFTkSuQmCC","48":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAACjUlEQVR4nOyaO0/jQBDHB5SUHO0VR5qTOHQdObiK8qQrKRGIhgjxpgU+AtBGvKXQIBAl74YGKQVVaAMSjaGgTZo0kUCzMNFms7ZnbceOCT/J8iNj7/x3Z2Y3cToh5nRCzEnIJ5mpuVeImNzuZoeJfUK9MD46At3d38RxqVSGUrkMYXF2cQWmNAhA51M9P8Rx1+8uSCaTEAan55diXygUXtPpNHsUYp8DXwKiJsEx2tjacbWZn51m2ZJdULAEDA78AS4mtkHAEvB3cAC4mNgGQXvkgIwuxrnxr7vHL8YCnGI87PhHjAU4xXjY8Y+0Xw4Q3Hqv2kUyD+jgxnuz88KzAG68Nzsv2nstxKn/Qce8SiBroSjqPxHIWiiK+k98faGJGnYZ7f0/CWFws5SFn/8mWD/vPF7vdxjNA997eqFVeHl6EPv2XQvJ9P9KQX9fquH6XdGCu3vL9XMiMzykfX7uJA92+BKAjmGjOudEw5B/F9CX0js3/O4cOWgnAK8vrh3WiSV8Ccguj9WO1d6kaypyb6JjuKn3yuc0etjWUGYVAhMg95Zd76igY7IAcg63OgH39Xb53ErNXm3HcxLjwxBsiOO8Dq/3yXgeAbu4d7snuzRWd46oSSry6qODyEYXoohnAfhAryJkMPzc7NTQk/FdRrG3nMqcjOqIXQiJsCxarnaIZwGL64e15MK9ToS2MjHjnmvnawRw+KmU6mo4zQPNxJcAdA5rs9NMS3shpugshkbRzU4mkKUECnHqabfPCW4uyXzuxVylUhEbQUvYVsJRQLVarR3fHq1DM7GenmFjew8WZibB5C1lgwB8N2zBM4QNtuuFBgEHR8cQJ7RDhS+bIUJMQsjofwmtSOzL6BsAAAD//zkwNTIAAAAGSURBVAMADnsZ+shxKfYAAAAASUVORK5CYII=","128":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAFl0lEQVR4nOydT4gcRRTGX8+OsnsQFERwVhYVYYO3XRMhsAcvHmX1kBxyCov4X48GFHQPHiTXYIwJDCqSQLwYvHgSD4KSXRn0IAmCfxacgBFN2E1mYHdcpzpUsrPb3dPdU1VdNd/3g6Z7ema6avp9Xe/Vq+qemhBoakKgoQDAoQDAoQDAqWe9uby8XF9r/3VWiDVmGg8c6Z/nLamIaNgHll54ZVuINZqnTw61gU3oAsChAMCpF/nwxMSEvPPWm6nv/3vtunS7XSHpnGl+Ir1eT3yhkABUxScnJ1Pff/SR+2RqakpIOqfONAder66uHlLrWq1Wn5+fPyeOoQuomL7hz6sliqLnpAIoAHAoAHAoAHAoAHAoAHAoAHAoAHAoAHAoAHAKpYLL8MWFL8Umzy4+s2ffxZVVabeviEkajQflyQP7ZdywLoA/221xjTJ+FeWGCF0AOBQAONZdwIH9T4hrlL9Wi0mmpxsyjlgXQBWB0zgGa7agCwCHAgCHAgCHAgCHAgDHei9gGB98+JEURaV/pxuD3TKV+bOddk7i1ZdflJBhCwAOBQAOBQBO5TFA0nDuMHb7f72vzLHQqVwAScb04Vgo0AWAQwGAQwGAQwGAU3kQmISt+XxJQWKRssYxyPRSACsrPxgXgTLe9OJeA+ZNH6d9P3ToAsChAMChAMDxMgZwmdINfTh3VNgCgEMBgEMBgEMBgEMBgOP98wFs3/+PPokkyOcD8P5/c9AFgEMBgBPk8wFs3P+PSpDPB+D9/+agCwCHAgCHAgCHAgCHAgCHAgCHAgDH2ZSwHy/9Kleu/iPoXL0x+KeR3/30S7y+vtF56LGnjx4SB/R6//3x29efXlTbzgSgjP/Ge6eEDPLzZ1/pzYMi0UFxwMRE7XB/FQuALgCcSmYF33s/8/hVcO3vvXMoKpsWPjl1jxB3dDvrifvpAsChAMChAMChAMChAMDx8ubQYczNzsTrpcWFW6/3zUhRmhe+jZfdxz1x7IiUoXVpTVqX1/YcMwlVb133oujj5yknD0EJQBlInbgyBreNqpNaVP2SxGUKLRxT5QQjgFGuGtfoetoSgclyghBASMbXhCIC74PAEI2vid3VrH13NUo5XrcAeY2vArB4fXlN8qK/k/ezaVeYjkfS6qn2v378rPhUzk68F0Aa+mQVMfoopJWj96v6JPUg4uCwf3XmreewchRJ56VsYOytC8gyvjK8Ursr4+chbxdwVLIi/zJuwFsBZP0YFye6DGluxXS31WQ53rqAtB/jq/EVPrVIefFSACFe/QpXvRWTLUpQmcAikXsVpAnAZL11NjSJMheHny2Aj6neIQFW1hhCEdeQVU5WGrxsyxjkYJBr1Ek/sa/cIFERw4xSTlkoAIvYHBQyVY6X3UBX3SmbZGX1fCqHLYAFQrjyNV4KICto0uPgvqFbLdvpadPleNsCqB+a1OQrAejZNy7rkiU6U3VxVc5OvBWAOhFpEbHqcrlqZjVVDzrZwtuxAHUishIoeqjYxXj7OON1EJjVCijijNiilD62z2llV3g9I8jVECsy3ncDtQBCnRbmO0HkASgCewRzZ5ASwcLS+3QJhgkuE6iDNxX978wTmOoNJPU8THfN4jzGrP1y8hBsKjjuJpo2TP94ZWbW+lpOHnhzKDgUADgUADgUADgUADhGewGbm5tSrycfste784jU7s0N6d7YEOKOqJZ8rRsVwNbWlqyvJz+PrtPp3N7u3lwX4gd0AeA4SwQtzD8u3587Lugce/vdgdevvfR8vI6i6PO5ubnD4oCHnzo6qbedCeDuuzj/1Bd+/+bjrt6mCwCHAgCncLu824eRsGELAA4FAA4FAM7QGKB5+mS0e1+r1Tq/vb3t5B+uiF3YAoBTOjujMldCgicSAg1dADgUADgUADgUADj/AwAA///fGCQ6AAAABklEQVQDALBk85ArUGcyAAAAAElFTkSuQmCC"};
 // Local review fixtures only. Nothing typed here is executed by a shell or sent to the host.
 function makeRunConsole(host,{icon,onFinish,onDismiss}) {
   const q=s=>host.querySelector(s);
   let session=null,origin=null,timer=0;
-  const dim=flag=>root.querySelectorAll('.mc-reviewbar,[data-window],[data-identity]').forEach(el=>{el.inert=flag;});
+  const dim=flag=>root.querySelectorAll('.mc-reviewbar,[data-desktop],[data-identity]').forEach(el=>{el.inert=flag;});
   function later(fn,ms){const active=session;clearTimeout(timer);timer=setTimeout(()=>{if(session===active&&!active.ended)fn();},ms);}
   function status(label,detail='',error=false){q('[data-term-state]').textContent=label;const h=q('[data-term-hint]');h.textContent=detail;h.classList.toggle('mc-term-error',error);}
   function entry(kind,text){
@@ -468,6 +510,30 @@ function makeRunConsole(host,{icon,onFinish,onDismiss}) {
   return {open,reset,isOpen:()=>session!==null};
 }
 
+// Session-only editor windows and a virtual save destination. No filesystem or browser storage.
+const reviewFolders=['D:\\竞赛练习','C:\\Users\\Student\\Documents','C:\\Users\\Student\\Desktop'];
+const filePath=(folder,name)=>folder?folder.replace(/\\$/,'')+'\\'+name:name;
+function validLeaf(s){return !!s && !/[\u0000-\u001f<>:"/\\|?*]/.test(s) && !/[. ]$/.test(s) && !/^(?:CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\.|$)/i.test(s);}
+function folderChoice(raw){
+  const p=raw.trim().replace(/\//g,'\\');
+  const drive=/^[a-z]:\\/i.test(p),unc=p.startsWith('\\\\');
+  if(!drive&&!unc)return null;
+  const parts=p.slice(drive?3:2).split('\\').filter(Boolean);
+  if(unc&&parts.length<2||parts.some(s=>!validLeaf(s)))return null;
+  return (drive?p[0].toUpperCase()+':\\':'\\\\')+parts.join('\\');
+}
+function makeEditorDesk(initial){
+  let serial=0,lastFolder=reviewFolders[0];const windows=[],files=new Map();
+  const idFor=(folder,name)=>filePath(folder,name).toLowerCase();
+  function add(doc){doc.windowId=++serial;windows.push(doc);return doc;}
+  function front(doc){const pos=windows.indexOf(doc);if(pos!==-1){windows.splice(pos,1);windows.push(doc);}return doc;}
+  function nextSlot(){const slots=new Set(windows.map(w=>w.slot).filter(Boolean));let n=1;while(slots.has(n))n++;return n;}
+  function nameCheck(doc,folder,name){const k=idFor(folder,name);return windows.some(other=>other!==doc&&other.dir&&idFor(other.dir,other.file)===k)||files.has(k)&&(!doc.dir||idFor(doc.dir,doc.file)!==k);}
+  function save(doc,folder,name){doc.dir=lastFolder=folder;doc.file=name;doc.slot=0;doc.dirty=false;doc.savedContent=doc.content;files.set(idFor(folder,name),{dir:folder,file:name,content:doc.content,blank:doc.blank,runCase:doc.runCase});}
+  add(initial);
+  return {windows,files,add,front,nextSlot,nameCheck,save,get lastFolder(){return lastFolder;},remove(doc){const i=windows.indexOf(doc);if(i!==-1)windows.splice(i,1);return windows.at(-1);}};
+}
+
 const source = [
   '#include <iostream>', 'using namespace std;', '', '// 读入 n 个整数，输出它们的和。',
   'int main() {', '    int n, x, sum = 0;', '    cin >> n;', '    for (int i = 0; i < n; ++i) {',
@@ -480,6 +546,7 @@ const runExamples={
   long:['#include <iostream>','using namespace std;','','// 逐行输出 1 到 16。','int main() {','    for (int i = 1; i <= 16; ++i) {','        cout << i << endl;','    }','    return 0;','}'],
   file:['#include <fstream>','using namespace std;','','int main() {','    ifstream fin("sum.in");','    ofstream fout("sum.out");','    if (!fin || !fout) return 1;','    int n, x, sum = 0;','    fin >> n;','    for (int i = 0; i < n; ++i) {','        fin >> x;','        sum += x;','    }',"    fout << sum << '\\n';",'    return 0;','}']
 };
+function draftFixture(text){const value=(text||'').replace(/\r\n?/g,'\n').trim();if(value===emptySource.join('\n'))return 'empty';return Object.keys(runExamples).find(k=>runExamples[k].join('\n')===value)||null;}
 const stops = [
   { line: 10, col: 9, i: 1, x: 8, sum: 3, changed: '', before: '' },
   { line: 8, col: 5, i: 1, x: 8, sum: 11, changed: 'sum', before: '3' },
@@ -496,7 +563,7 @@ const ceSamples = {
 function makeWorkbench(host) {
   const frame = () => stops[state.step];
   function lines() {
-    const text = state.blank ? emptySource.slice() : state.scene==='edit'?runExamples[state.runCase].slice():source.slice();
+    const text = state.blank ? state.content.split('\n') : state.scene==='edit'?runExamples[state.runCase].slice():source.slice();
     if (state.scene === 'error') text[9] = ceSamples[state.ce].code;
     return text;
   }
@@ -559,10 +626,12 @@ function makeWorkbench(host) {
     } else if (pan==='log') {
       const cfg = debug ? `${state.debugStd} -g -O0` : `${state.lastStd} ${state.lastO2?'-O2':'-O0'}`;
       const base=fileName().replace(/\.cpp$/i,'');
-      const cmd=`g++ -std=c++${cfg} "${fileName()}" -o "${base}${debug?'.debug':''}.exe"`;
+      const cwd=state.blank?state.dir:null;
+      const cmd=`g++ -std=c++${cfg} "${filePath(cwd,fileName())}" -o "${filePath(cwd,base+(debug?'.debug':'')+'.exe')}"`;
       const d=ceSamples[state.ce];
       body=state.result==='idle' && !debug && !error?`<div class="wb-empty">${icon('classic-compile')} 尚无构建记录</div>`:`<div class="wb-log">${state.lastBuild==='rebuilt' && !debug?'<div class="wb-log-note">已清理当前源文件的旧产物</div>':''}<code>${esc(cmd)}</code><div class="wb-log-note">${error?`<span class="wb-fail">${esc(fileName())}:${d.line}:${d.col}: ${esc(d.msg)}</span>`:debug?'调试构建成功 · 独立的调试副本':'编译成功 · 0 错误，0 警告'}</div></div>`;
-      right=error?'失败':debug?'调试构建':'普通构建';
+      if(state.result==='preview')body=`<div class="wb-log"><code>${esc(cmd)}</code><div class="wb-log-note">命令预览 · 未调用编译器</div></div>`;
+      right=error?'失败':state.result==='preview'?'未执行':debug?'调试构建':'普通构建';
     } else if (error) {
       body=`<div class="wb-empty">${icon('circle-alert')} 编译失败，本次未启动程序。</div>`; right='未运行';
     } else if (debug || state.runPhase==='active') {
@@ -572,17 +641,41 @@ function makeWorkbench(host) {
     } else if (state.record) {
       body=finishedOutput(state.record);right='退出码 0';
     } else {
-      body=`<div class="wb-empty">${icon('terminal')} ${state.result==='idle'?'等待运行':'编译成功，尚未运行'}</div>`;right='未运行';
+      body=`<div class="wb-empty">${icon('terminal')} ${state.result==='idle'||state.result==='preview'?'等待运行':'编译成功，尚未运行'}</div>`;right='未运行';
     }
     return `<section class="wb-output" aria-label="输出与诊断"><div class="wb-output-head"><nav aria-label="输出面板">${nav}</nav><span class="wb-output-status">${right}</span></div>${body}</section>`;
   }
   function render() {
     const hot=host.querySelector('.wb-hot');const anchor=hot && state.running?`[data-var="${hot.dataset.var}"][data-line-ref="${hot.dataset.lineRef}"]`:null;
     hoverClear(); const debug=state.scene==='debug';
-    host.innerHTML=`<div class="wb-filebar"><div class="wb-filetab">${icon('cpp-file')}<strong>${esc(fileName())}</strong></div><button type="button" class="wb-plus" data-act="new" data-tip="新建源代码 · Ctrl+N" aria-label="新建源代码">${icon('plus')}</button><span class="wb-filekind">单文件</span></div>
-      <div class="wb-well${debug?' wb-split':''}"><section class="wb-editor" aria-label="${esc(fileName())} 源码示例">${lines().map((t,i)=>drawLine(t,i+1)).join('')}</section>${debug?inspector():''}</div>${output()}`;
+    const editor=state.blank?`<section class="wb-editor wb-draft-editor"><div class="wb-draft-gutter" aria-hidden="true"><pre data-draft-nums></pre></div><textarea wrap="off" spellcheck="false" autocapitalize="off" autocomplete="off" maxlength="131072" aria-label="${esc(fileName())} 源码" data-draft-code></textarea></section>`:`<section class="wb-editor" aria-label="${esc(fileName())} 源码示例">${lines().map((t,i)=>drawLine(t,i+1)).join('')}</section>`;
+    host.innerHTML=`<div class="wb-filebar"><div class="wb-filetab">${icon('cpp-file')}<strong>${esc(fileName())}</strong><span class="wb-dirty" aria-label="未保存" data-dirty-dot ${state.dirty||!state.dir?'':'hidden'}></span></div><button type="button" class="wb-plus" data-act="new" data-tip="新建源代码窗口 · Ctrl+N" aria-label="新建源代码窗口">${icon('plus')}</button><span class="wb-filekind" data-file-kind>${state.blank?state.dir?(state.dirty?'已修改':'已保存'):'未保存':'单文件'}</span></div>
+      <div class="wb-well${debug?' wb-split':''}">${editor}${debug?inspector():''}</div>${output()}`;
+    if(state.blank){const field=host.querySelector('[data-draft-code]');field.value=state.content;field.setSelectionRange(state.caret,state.caretEnd??state.caret);lineNums(field);field.scrollTop=state.scrollTop||0;syncScroll(field);}
     if(anchor) inspect(host.querySelector(anchor));
   }
+  function lineNums(el){const n=el.value.split('\n').length,pre=host.querySelector('[data-draft-nums]');if(pre.dataset.lines!==String(n)){pre.textContent=Array.from({length:n},(_,i)=>i+1).join('\n');pre.dataset.lines=n;}}
+  function syncScroll(el){state.scrollTop=el.scrollTop;host.querySelector('[data-draft-nums]').style.transform=`translateY(-${el.scrollTop}px)`;}
+  function caret(el){state.caret=el.selectionStart;state.caretEnd=el.selectionEnd;}
+  function updateDraft(el){state.content=el.value;state.dirty=!state.dir||state.content!==state.savedContent;caret(el);lineNums(el);syncScroll(el);host.querySelector('[data-dirty-dot]').hidden=!state.dirty;host.querySelector('[data-file-kind]').textContent=state.dir?(state.dirty?'已修改':'已保存'):'未保存';notice='';status();icons();}
+  function editDraft(op){
+    const el=host.querySelector('[data-draft-code]');if(!el)return false;el.focus({preventScroll:true});
+    if(op==='selectAll'){el.select();return true;}
+    if(op==='undo'||op==='redo'){document.execCommand(op);return true;}
+    const val=el.value,start=el.selectionStart,end=el.selectionEnd;let a=start,b=end,insert='',sel=false;
+    if(op==='newline'){const prev=val.slice(0,a).split('\n').at(-1);insert='\n'+(prev.match(/^\s*/)?.[0]||'')+(/\{\s*$/.test(prev)?'    ':'');}
+    else if(op==='indent'&&a===b){insert='    ';}
+    else if(['indent','outdent','format'].includes(op)){
+      a=val.lastIndexOf('\n',start-1)+1;const next=val.indexOf('\n',end);b=end>start&&val[end-1]==='\n'?end-1:next===-1?val.length:next;
+      let depth=0;const inc=t=>(t.match(/\{/g)||[]).length-(t.match(/\}/g)||[]).length;
+      if(op==='format')depth=Math.max(0,inc(val.slice(0,a)));
+      insert=val.slice(a,b).split('\n').map(line=>{if(op==='indent')return '    '+line;if(op==='outdent')return line.replace(/^(?: {1,4}|\t)/,'');const s=line.trimStart();const pad=Math.max(0,depth-(s.startsWith('}')?1:0));depth=Math.max(0,depth+inc(s));return s&&!s.startsWith('#')?'    '.repeat(Math.min(128,pad))+s:s;}).join('\n');sel=end>start;
+    }else return false;
+    el.setSelectionRange(a,b);if(!document.execCommand('insertText',false,insert)){el.setRangeText(insert,a,b,'end');updateDraft(el);}if(sel)el.setSelectionRange(a,a+insert.length);caret(el);return true;
+  }
+  host.addEventListener('input',e=>{if(e.target.matches('[data-draft-code]'))updateDraft(e.target);});
+  host.addEventListener('select',e=>{if(e.target.matches('[data-draft-code]'))caret(e.target);},true);
+  host.addEventListener('scroll',e=>{if(e.target.matches?.('[data-draft-code]'))syncScroll(e.target);},true);
   let hover=null;
   function hoverClear() { if(hover) hover.remove(); hover=null; host.querySelector('.wb-hot')?.classList.remove('wb-hot'); host.querySelector('.wb-inspected')?.classList.remove('wb-inspected'); }
   function inspect(node) {
@@ -597,7 +690,7 @@ function makeWorkbench(host) {
   host.addEventListener('focusin',e=>{ if(e.target.matches('[data-var]')) inspect(e.target); });
   host.addEventListener('focusout',e=>{ if(e.target.matches('[data-var]')) hoverClear(); });
   host.addEventListener('click',e=>{ const v=e.target.closest('[data-var]'); if(v) inspect(v); });
-  return {render,hoverClear,lines};
+  return {render,hoverClear,lines,editDraft,updateDraft};
 }
 
 const root = document.getElementById('mini-cpp-review');
@@ -609,7 +702,11 @@ const icon = (id) => id==='cpp-file'?cppIcon():classicGlyphs[id] || `<i data-luc
 const icons = () => { if (globalThis.lucide?.createIcons) globalThis.lucide.createIcons({attrs:{width:16,height:16}}); };
 const fileName = () => state.file;
 const defaultState = {scene:'edit',std:'14',o2:false,debugStd:'14',lastStd:'14',lastO2:false,step:0,running:false,breakpoint:true,targetLine:11,ce:'semicolon',panel:'console',result:'compiled',lastBuild:'compiled',file:'main.cpp',blank:false,runCase:'prefix',runPhase:'idle',record:null};
-const state = {...defaultState,followOS:false};
+const standards=['98','11','14','17'];
+const freshState=()=>({...defaultState,followOS:false,slot:0,dir:reviewFolders[0],dirty:false,content:null,savedContent:null,caret:0,runCommand:null});
+let state=freshState(), demoDoc=state, showingIcons=false, pendingFile=null;
+const desk=makeEditorDesk(state);
+const reviewScene=()=>showingIcons?'icons':state.scene;
 const changeSet = [ ['compile','classic-compile','编译','F9','生成当前源文件的程序'], ['run','classic-run','运行','F10','运行已有程序，不编译'], ['buildRun','classic-buildRun','编译并运行','F11','编译成功后再运行'], ['rebuild','classic-rebuild','全部重新编译','F12','清理旧产物并完整编译'] ];
 const menus = {
   file:[['new','file-plus-2','新建源代码','Ctrl+N'],['open','folder-open','打开源代码…','Ctrl+O'],null,['save','save','保存','Ctrl+S'],['saveAs','file-pen-line','另存为…','Ctrl+Shift+S']],
@@ -620,7 +717,6 @@ const menus = {
   run:[...changeSet,null,['debug','bug','开始调试',''],['continue','play','继续',''],['pause','pause','暂停',''],['step','step-forward','单步',''],['stop','square','停止调试','']],
   tools:[['selectStd','settings-2','语言标准…',''],['toggleO2','gauge','O2 优化','']],
   cvs:[['noCvs','git-branch','当前文件未关联 CVS 仓库','']],
-  window:[['activeFile','cpp-file','当前源文件','']],
   help:[['shortcuts','keyboard','快捷键…',''],['about','info','关于 Mini C++…','']]
 };
 const names={edit:'编辑器',debug:'断点调试',error:'编译报错',icons:'图标稿'};
@@ -637,20 +733,20 @@ const terminal=makeRunConsole($('[data-terminal]'),{icon,onFinish(record){
 const caseFiles={prefix:'main.cpp',sum:'main.cpp',long:'numbers.cpp',file:'file_sum.cpp'};
 function applyRunCase(id){Object.assign(state,{runCase:id,runPhase:'idle',record:null,blank:false,file:caseFiles[id],result:'compiled',lastBuild:'compiled',lastStd:state.std,lastO2:state.o2,panel:'console'});}
 function persist() {
-  const modelContent={scene:names[state.scene],standard:'C++'+state.std,optimizeO2:state.o2};
+  const modelContent={scene:names[reviewScene()],standard:'C++'+state.std,optimizeO2:state.o2};
   // Only review choices are saved; text and file names entered in dialogs stay local.
-  const privateContent={scene:state.scene,standard:state.std,o2:state.o2,step:state.step,runCase:state.runCase,followOS:state.followOS};
+  const privateContent={scene:reviewScene(),standard:state.std,o2:state.o2,step:state.step,runCase:state.runCase,followOS:state.followOS};
   savedSignature=JSON.stringify(privateContent);
   try { window.openai?.setWidgetState?.({modelContent,privateContent})?.catch?.(()=>{}); } catch { /* optional host */ }
 }
 function fromHost(saved) {
   const p=saved?.privateContent; if(!p || typeof p!=='object'||JSON.stringify(p)===savedSignature) return;
   clearTimeout(runTimer); closeMenu(); closeDialog(false); notice='';
-  if (['98','11','14'].includes(p.standard)) state.std=p.standard;
+  if (standards.includes(p.standard)) state.std=p.standard;
   if (typeof p.o2==='boolean') state.o2=p.o2;
   if (typeof p.followOS==='boolean') state.followOS=p.followOS;
   setScene(Object.hasOwn(names,p.scene)?p.scene:'edit',false);
-  if(state.scene==='edit'&&Object.hasOwn(caseFiles,p.runCase))applyRunCase(p.runCase);
+  if(state.scene==='edit'&&!state.blank&&Object.hasOwn(caseFiles,p.runCase))applyRunCase(p.runCase);
   if (state.scene==='debug' && Number.isInteger(p.step)) state.step=Math.max(0,Math.min(stops.length-1,p.step));
   paint();
 }
@@ -672,22 +768,24 @@ function openMenu(node) {
   closeMenu(); clearTip(); work.hoverClear(); menu=node.dataset.menu;
   const disabled=a=>a==='noCvs'||['continue','pause','step','stop'].includes(a) && (state.scene!=='debug' || (a==='pause'?!state.running:a==='stop'?false:state.running));
   const toggleValue=a=>a==='followOS'?state.followOS:a==='toggleO2'?state.o2:null;
-  pop.innerHTML=menus[menu].map(item=>{if(!item)return '<hr>';const [id,glyph,label,key]=item,toggle=toggleValue(id);return `<button type="button" data-act="${id}" ${disabled(id)?'disabled':''} ${toggle===null?'':`aria-pressed="${toggle}"`}>${icon(glyph)}<span>${id==='activeFile'?esc(fileName()):label}</span><kbd>${toggle===null?key:toggle?'开':'关'}</kbd></button>`;}).join('');
+  pop.innerHTML=menu==='window'?desk.windows.map(w=>`<button type="button" data-activate-window="${w.windowId}" aria-current="${w===state}">${cppIcon()}<span>${esc(w.file)}</span><kbd>${w===state?'当前':w.dirty||!w.dir?'未保存':''}</kbd></button>`).join('')+'<hr><button type="button" data-act="closeWindow" '+(desk.windows.length<2?'disabled':'')+'>'+icon('x')+'<span>关闭当前窗口</span><kbd>Ctrl+W</kbd></button>':menus[menu].map(item=>{if(!item)return '<hr>';const [id,glyph,label,key]=item,toggle=toggleValue(id);return `<button type="button" data-act="${id}" ${disabled(id)?'disabled':''} ${toggle===null?'':`aria-pressed="${toggle}"`}>${icon(glyph)}<span>${label}</span><kbd>${toggle===null?key:toggle?'开':'关'}</kbd></button>`;}).join('');
   pop.hidden=false; node.setAttribute('aria-expanded','true'); const a=node.getBoundingClientRect(), r=node.closest('.mc-menustrip').getBoundingClientRect();
   pop.style.left=Math.max(0,Math.min(a.left-r.left,r.width-pop.offsetWidth))+'px';pop.style.top=(a.bottom-r.top)+'px';icons();
 }
 function closeDialog(restore=true) {
-  if(!dialog) return; dialog=''; clearTip(); dlg.hidden=true; dlg.replaceChildren();
+  if(!dialog) return; dialog='';pendingFile=null;clearTip();dlg.hidden=true;dlg.replaceChildren();dimSheet(false);
   if(restore && returnTo?.isConnected) returnTo.focus({preventScroll:true}); returnTo=null;
 }
+function dimSheet(flag){$$('.mc-reviewbar,[data-desktop],[data-identity]').forEach(el=>{el.inert=flag;});}
+function cancelSheet(){const request=pendingFile;closeDialog();if(!request)return;const action={compile:'编译',buildRun:'编译并运行',rebuild:'重新编译',debug:'调试'}[request.after];notice=action?'已取消，未开始'+action:'已取消保存';status();icons();say(notice);}
 function sheet(id,title,contents,focusSel) {
   if(!dialog) returnTo=root.contains(document.activeElement)?document.activeElement:null;
   dialog=id; clearTip(); work.hoverClear(); closeMenu();
   dlg.innerHTML=`<section class="mc-dialog" role="dialog" aria-modal="true" aria-label="${esc(title)}"><header><h2>${title}</h2><button type="button" class="mc-quiet" data-dlg="close" aria-label="关闭对话框">${icon('x')}</button></header>${contents}</section>`;
-  const actionGlyphs={confirmFile:'check',close:'x',undoReplace:'undo-2',replaceAll:'replace',demoReset:'rotate-ccw',sampleDebug:'bug',applyDemo:{undo:'undo-2',redo:'redo-2',selectAll:'text-select',format:'align-left',indent:'indent-increase',outdent:'indent-decrease',newline:'corner-down-left'}[id]};
+  const actionGlyphs={confirmFile:'save',close:'x',discardWindow:'trash-2',saveClose:'save',undoReplace:'undo-2',replaceAll:'replace',demoReset:'rotate-ccw',sampleDebug:'bug',applyDemo:{undo:'undo-2',redo:'redo-2',selectAll:'text-select',format:'align-left',indent:'indent-increase',outdent:'indent-decrease',newline:'corner-down-left'}[id]};
   dlg.querySelector('header button').dataset.tip='关闭';
   for(const b of dlg.querySelectorAll('.mc-dialog-actions button')){const hint=b.textContent.trim(),ic=actionGlyphs[b.dataset.dlg];if(!ic)continue;b.setAttribute('aria-label',hint);b.dataset.tip=hint;b.className='mc-gbtn';b.innerHTML=icon(ic);}
-  dlg.hidden=false; icons(); dlg.querySelector(focusSel||'button').focus({preventScroll:true});
+  dlg.hidden=false;dimSheet(true);icons();dlg.querySelector(focusSel||'button').focus({preventScroll:true});
 }
 function drawIdentity(){
   const mark='<span class="mc-mark" aria-hidden="true"><b></b><i></i><i></i></span>';
@@ -707,13 +805,35 @@ function status() {
   if(s.scene==='edit' && s.result!=='idle') text=({compiled:'编译成功',ran:'运行结束',builtRan:'编译并运行完成',rebuilt:'全部重新编译完成'})[s.result];
   if(s.runPhase==='active'){ico='square-terminal';text='命令行运行中';}
   if(s.runPhase==='aborted'){ico='square';text='已中止';}
+  if(s.blank){const preceding=(s.content||'').slice(0,s.caret).split('\n');pos=`行 ${preceding.length}，列 ${preceding.at(-1).length+1}`;}
+  if(s.blank&&s.result==='idle')text=s.dir?(s.dirty?'已修改，尚未保存':'就绪'):'未保存';
+  if(s.blank&&s.result==='preview'){ico='list';text='编译参数预览';}
   $('[data-status]').innerHTML=icon(ico)+esc(notice||text); $('[data-position]').textContent=pos;
 }
+function paintStack(){
+  const behind=desk.windows.slice(0,-1).slice(-2), shell=$('[data-desktop]');
+  shell.style.setProperty('--layers',behind.length);shell.dataset.count=desk.windows.length;
+  $('[data-backstack]').innerHTML=behind.map((w,i)=>`<div class="mc-backwin" style="--layer:${i}"><button type="button" class="mc-backtitle" data-activate-window="${w.windowId}" aria-label="切换到 ${esc(w.file)}">${cppIcon()}<span>${esc(w.file)}</span><span class="mc-backsuffix">- Mini C++</span></button></div>`).join('');
+  $('[data-window]').dataset.windowId=state.windowId;$('[data-window]').setAttribute('aria-label',fileName()+' · Mini C++');
+  $('.mc-caption [data-act="closeWindow"]').disabled=desk.windows.length<=1;
+}
+function activateDoc(doc,focus=true){
+  if(!doc||!desk.windows.includes(doc))return;
+  clearTimeout(runTimer);state.running=false;work.hoverClear();closeMenu();closeDialog(false);clearTip();
+  notice='';showingIcons=false;state=desk.front(doc);paint();
+  if(focus){const editor=$('[data-draft-code]');if(editor){editor.focus({preventScroll:true});editor.setSelectionRange(state.caret,state.caretEnd??state.caret);}else $('.wb-plus')?.focus({preventScroll:true});}
+}
+function newWindow(){
+  const slot=desk.nextSlot();const doc=desk.add({...freshState(),std:state.std,o2:state.o2,followOS:state.followOS,blank:true,slot,dir:null,file:'未命名'+slot,content:emptySource.join('\n'),result:'idle',lastBuild:'idle'});
+  activateDoc(doc);say(doc.file+'，未保存');
+}
+function removeWindow(){if(desk.windows.length<2)return;const old=state,next=desk.remove(old);if(old===demoDoc)demoDoc=null;activateDoc(next);say('当前窗口：'+fileName());}
+function requestClose(){if(desk.windows.length<2)return;if(!state.dir||state.dirty){sheet('closeWindow','关闭窗口',`<p>要保存「${esc(fileName())}」吗？</p><div class="mc-dialog-actions"><button type="button" data-dlg="close">取消</button><button type="button" data-dlg="discardWindow">不保存并关闭</button><button type="button" data-dlg="saveClose">保存并关闭</button></div>`,'[data-dlg="close"]');}else removeWindow();}
 function paint() {
-  clearTip(); const id=state.scene;
+  clearTip(); const id=reviewScene();
   root.dataset.followOs=String(state.followOS);
   $$('[data-scene]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.scene===id)));
-  $('[data-window]').hidden=id==='icons'; $('[data-identity]').hidden=id!=='icons';
+  $('[data-desktop]').hidden=id==='icons'; $('[data-identity]').hidden=id!=='icons';paintStack();
   $('[data-titlefile]').textContent=fileName();
   $('[data-case]').hidden=id!=='error';$('[data-case]').value=state.ce;
   $('[data-run-case]').hidden=id!=='edit'||state.blank;$('[data-run-case]').value=state.runCase;
@@ -723,8 +843,11 @@ function paint() {
 }
 function setScene(id,repaint=true) {
   clearTimeout(runTimer);terminal.reset();closeMenu();closeDialog(false);clearTip();notice='';
-  if(id==='icons') {state.scene='icons';state.running=false;}
-  else Object.assign(state,{scene:id,running:false,step:0,breakpoint:true,blank:false,file:'main.cpp',targetLine:11,ce:'semicolon',debugStd:state.std,lastStd:state.std,lastO2:state.o2,panel:id==='error'?'issues':'console',result:id==='error'?'idle':'compiled',lastBuild:'compiled',runCase:id==='edit'?'prefix':'sum',runPhase:'idle',record:null});
+  state.running=false;showingIcons=id==='icons';
+  if(!showingIcons&&!(id==='edit'&&state.blank)){
+    const {std,o2,followOS}=state;if(!demoDoc)demoDoc=desk.add(freshState());state=desk.front(demoDoc);
+    Object.assign(state,{std,o2,followOS,scene:id,running:false,step:0,breakpoint:true,blank:false,file:'main.cpp',dir:reviewFolders[0],dirty:false,slot:0,targetLine:11,ce:'semicolon',debugStd:std,lastStd:std,lastO2:o2,panel:id==='error'?'issues':'console',result:id==='error'?'idle':'compiled',lastBuild:'compiled',runCase:id==='edit'?'prefix':'sum',runPhase:'idle',record:null});
+  }
   if(repaint){paint();say(names[id]);persist();}
 }
 function finishDebug(message) {
@@ -737,14 +860,18 @@ function nextSample() {
   paint();persist();
 }
 function build(a) {
-  const hadBuild=state.result!=='idle';
+  if(a!=='run'&&(!state.dir||state.dirty))return fileSheet('beforeBuild',a);
+  const hadBuild=state.result!=='idle'&&state.result!=='preview';
   if(a==='run' && (!hadBuild||state.scene==='error')) {notice=state.scene==='error'?'源代码未通过编译，未运行旧程序':'尚无可执行文件，请先编译';state.panel=state.scene==='error'?'issues':'console';paint();say(notice);return;}
   clearTimeout(runTimer);state.running=false;
   if(a!=='run'){state.lastStd=state.std;state.lastO2=state.o2;state.lastBuild=a==='rebuild'?'rebuilt':a==='buildRun'?'builtRan':'compiled';}
-  if(state.scene==='error'){state.panel='issues';notice='编译失败，未启动程序';}
+  const fixture=state.blank?(a==='run'?state.builtFixture:draftFixture(state.content)):state.runCase;
+  if(a!=='run')state.builtFixture=fixture;
+  if(state.blank&&!fixture){state.result='preview';state.runPhase='idle';state.record=null;state.panel='log';notice='仅预览命令，未执行自定义代码';}
+  else if(state.scene==='error'){state.panel='issues';notice='编译失败，未启动程序';}
   else if(a==='run'||a==='buildRun'){
     Object.assign(state,{scene:'edit',runPhase:'active',runCommand:a,record:null,panel:'console',result:'compiled'});
-    paint();terminal.open({mode:state.blank?'empty':state.runCase,file:fileName()});say('命令行运行中');return;
+    paint();terminal.open({mode:fixture,file:fileName()});say('命令行运行中');return;
   } else {state.scene='edit';state.result=a==='compile'?'compiled':'rebuilt';state.runPhase='idle';state.panel='log';}
   paint();say($('[data-status]').textContent);persist();
 }
@@ -752,20 +879,22 @@ const editOps=['undo','redo','find','replace','selectAll','indent','outdent','fo
 function act(a) {
   closeMenu();clearTip();notice='';
   if(['console','log','issues'].includes(a)){state.panel=a;paint();return;}
-  if(a==='activeFile')return;
+  if(a==='new')return newWindow();
+  if(a==='closeWindow')return requestClose();
   if(a==='selectStd'){$('[data-std]').focus();try{$('[data-std]').showPicker?.();}catch{}return;}
   if(a==='toggleO2'){$('[data-o2]').click();return;}
   if(a==='followOS'){state.followOS=!state.followOS;paint();persist();return;}
   if(['sourceInfo','about','shortcuts'].includes(a)){
     const tit={sourceInfo:'源文件属性',about:'关于 Mini C++',shortcuts:'快捷键'};
-    const body=a==='sourceInfo'?`<p class="mc-source-id">${cppIcon(24)}<code>${esc(fileName())}</code></p><p>C++${state.std} · UTF-8 · 单文件</p>`:a==='about'?`<p>Mini C++ · 设计审查 ${$('.mc-rid').textContent}</p>`:`<div class="mc-keylist">${[...changeSet,...menus.search,menus.edit[6]].map(c=>`<div><span>${c[2]}</span><kbd>${c[3]}</kbd></div>`).join('')}</div>`;
+    const body=a==='sourceInfo'?`<p class="mc-source-id">${cppIcon(24)}<code>${esc(fileName())}</code></p><p>C++${state.std} · UTF-8 · 单文件</p><p class="mc-pathline">${state.dir?esc(filePath(state.dir,state.file)):'未保存 · 当前内容仅在内存中'}</p>`:a==='about'?`<p>Mini C++ · 设计审查 ${$('.mc-rid').textContent}</p>`:`<div class="mc-keylist">${[...changeSet,...menus.search,menus.edit[6]].map(c=>`<div><span>${c[2]}</span><kbd>${c[3]}</kbd></div>`).join('')}</div>`;
     sheet(a,tit[a],body);return;
   }
   if(['compile','run','buildRun','rebuild'].includes(a)) return build(a);
-  if(['new','open','saveAs'].includes(a)) return fileSheet(a);
-  if(editOps.includes(a)) return editingSheet(a);
-  if(a==='save') {notice='已保存（样稿）';paint();say(notice);return;}
+  if(['open','saveAs'].includes(a)) return fileSheet(a);
+  if(editOps.includes(a)){if(state.blank&&!['find','replace'].includes(a)&&work.editDraft(a))return;return editingSheet(a);}
+  if(a==='save') {if(!state.dir)return fileSheet('save');desk.save(state,state.dir,state.file);notice='已保存（审查稿）';paint();say(notice);return;}
   if(a==='debug') {
+    if(!state.dir||state.dirty)return fileSheet('beforeBuild','debug');
     if(state.scene==='error'){state.panel='issues'; notice='编译失败，无法启动调试';paint();return;}
     if(state.blank||state.runCase!=='sum'){sheet('debugSample','调试样例','<p>断点预览：求总和 · main.cpp:10</p><div class="mc-dialog-actions"><button type="button" class="mc-sm-btn" data-dlg="sampleDebug">打开求和调试样例</button></div>','[data-dlg="sampleDebug"]');return;}
     return setScene('debug');
@@ -778,29 +907,44 @@ function act(a) {
   if(a==='stop'){clearTimeout(runTimer);state.scene='edit';state.running=false;state.runPhase='aborted';state.record=null;state.panel='log';state.result='compiled';notice='已停止调试';}
   paint();say($('[data-status]').textContent);persist();
 }
-function fileSheet(id) {
-  if(id==='open'){sheet(id,'打开源代码','<p>示例文件</p><button type="button" class="mc-sm-btn" data-dlg="openSample">'+cppIcon(24)+' main.cpp</button>','[data-dlg="openSample"]');return;}
-  const title=id==='new'?'新建源代码':'另存为';
-  sheet(id,title,`<label>文件名<input type="text" data-filename autocomplete="off" maxlength="80" value="${id==='new'?'untitled.cpp':esc(fileName())}"></label><p>C++ 源文件（.cpp）</p><p data-file-warning role="alert" hidden></p><div class="mc-dialog-actions"><button class="mc-quiet" type="button" data-dlg="close">取消</button><button class="mc-tool mc-main" type="button" data-dlg="confirmFile">${id==='new'?'创建':'保存'}</button></div>`,'input');
-  const inp=dlg.querySelector('input');inp.setSelectionRange(0,Math.max(0,inp.value.lastIndexOf('.')));
-}
-function confirmFile(){
-  const inp=dlg.querySelector('[data-filename]'); if(!inp) return;
-  let name=inp.value.trim(); if(name && !name.includes('.')) name+='.cpp';
-  if(!/^[\p{L}\p{N}_-][\p{L}\p{N}_ .-]{0,70}\.cpp$/iu.test(name)||/^(con|prn|aux|nul|com[1-9]|lpt[1-9])\./i.test(name)) {
-    const w=dlg.querySelector('[data-file-warning]');w.hidden=false;w.textContent='请输入有效的 .cpp 文件名，不含目录。';inp.focus();return;
+function fileSheet(id,after=null) {
+  if(id==='open'){
+    const saved=Array.from(desk.files.values());
+    const rows=saved.map((r,i)=>`<button type="button" class="mc-saved-file" data-open-entry="${i}">${cppIcon(24)}<span><strong>${esc(r.file)}</strong><small>${esc(r.dir)}</small></span></button>`).join('');
+    sheet(id,'打开源代码',`<p>示例文件</p><button type="button" class="mc-sm-btn" data-dlg="openSample">${cppIcon(24)} main.cpp</button>${rows?'<p>本次审查中保存的文件</p>'+rows:''}`,'[data-dlg="openSample"]');return;
   }
-  const fresh=dialog==='new';closeDialog(false);clearTimeout(runTimer);
-  if(fresh) Object.assign(state,{blank:true,scene:'edit',running:false,step:0,result:'idle',lastBuild:'idle',runPhase:'idle',record:null,panel:'console',file:name});
-  else {state.file=name;state.running=false;}
-  notice=fresh?'已新建源代码（样稿）':'已另存为（样稿）';paint();say(notice);persist();
+  pendingFile={owner:state,after};
+  const gated=id==='beforeBuild',folder=state.dir||desk.lastFolder,name=state.dir?state.file:state.file+'.cpp';
+  notice='等待保存源文件';status();icons();
+  const choices=[...new Set([folder,...reviewFolders])];
+  const action={compile:'保存并编译',buildRun:'保存、编译并运行',rebuild:'保存并重新编译',debug:'保存并调试',closeWindow:'保存并关闭'}[after]||'保存';
+  const message=gated?`<p class="mc-save-note">${icon('file-pen-line')}<span>「${esc(fileName())}」${state.dir?'有尚未保存的修改':'尚未保存'}。</span></p>`:'';
+  sheet(id,gated?'编译前保存源文件':id==='saveAs'?'另存为':'保存源文件',`${message}<label>保存位置<select data-save-location>${choices.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('')}<option value="custom">其他文件夹…</option></select></label><label data-custom-location hidden>文件夹路径<input type="text" data-save-folder maxlength="250" autocomplete="off" placeholder="D:\\比赛"></label><label>文件名<input type="text" data-filename autocomplete="off" maxlength="110" value="${esc(name)}"></label><p class="mc-save-path">${cppIcon()}<code data-destination></code></p><p data-file-warning role="alert" hidden></p><div class="mc-dialog-actions"><span class="mc-virtual-label">模拟位置 · 不写入磁盘</span><button type="button" data-dlg="close">取消</button><button type="button" data-dlg="confirmFile">${action}</button></div>`,'[data-filename]');
+  const inp=$('[data-filename]');inp.setSelectionRange(0,Math.max(0,inp.value.lastIndexOf('.')));previewLocation();
 }
+function selection(){let name=$('[data-filename]').value.trim();if(name&&!name.includes('.'))name+='.cpp';const opt=$('[data-save-location]').value;return {name,folder:folderChoice(opt==='custom'?$('[data-save-folder]').value:opt)};}
+function previewLocation(){if(!pendingFile||!$('[data-filename]'))return;const {name,folder}=selection();$('[data-destination]').textContent=folder&&name?filePath(folder,name):'请选择位置和文件名';$('[data-file-warning]').hidden=true;}
+function confirmFile(){
+  const request=pendingFile;if(!request||request.owner!==state)return;
+  const {name,folder}=selection();
+  const invalid=(msg,sel)=>{const w=$('[data-file-warning]');w.hidden=false;w.textContent=msg;$(sel).focus();};
+  if(!folder)return invalid('请输入完整的文件夹路径，例如 D:\\比赛。','[data-save-folder]');
+  if(!validLeaf(name)||!/^.+\.cpp$/i.test(name))return invalid('请输入有效的 .cpp 文件名，不含目录。','[data-filename]');
+  if(desk.nameCheck(state,folder,name))return invalid('该位置已使用这个文件名，请更换名称或位置。','[data-filename]');
+  if(demoDoc===state&&(state.file!==name||state.dir!==folder))demoDoc=null;
+  if(filePath(folder,name)!==filePath(state.dir,state.file))Object.assign(state,{result:'idle',lastBuild:'idle',builtFixture:null,record:null,runPhase:'idle'});
+  desk.save(state,folder,name);closeDialog(false);notice='已保存（审查稿）';
+  if(request.after==='closeWindow')return removeWindow();
+  if(request.after)return act(request.after);
+  paint();say(notice);
+}
+function openSaved(index){const r=Array.from(desk.files.values())[index];if(!r)return;const existing=desk.windows.find(w=>w.dir===r.dir&&w.file===r.file);closeDialog(false);activateDoc(existing||desk.add({...freshState(),std:state.std,o2:state.o2,followOS:state.followOS,...r,savedContent:r.content,result:'idle',lastBuild:'idle'}));}
 const specimen=['if (x > 0) {','sum += x;','cout << sum;', '}'];
 let draft=null;
 const inv = {indent:'增加缩进',outdent:'减少缩进',format:'自动缩进选区',newline:'换行并继承缩进',selectAll:'全选',undo:'撤销',redo:'重做'};
 function editingSheet(id){
   const search=id==='find'||id==='replace';
-  if(search){draft={text:specimen.join('\n'),prev:null};
+  if(search){draft={text:state.blank?state.content:specimen.join('\n'),prev:null};
     sheet(id,id==='find'?'查找':'查找和替换',`<label>查找<input type="text" data-find value="sum" maxlength="80"></label>${id==='replace'?'<label>替换为<input type="text" data-replace value="total" maxlength="80"></label>':''}<p data-match></p><pre class="mc-example" data-code-preview></pre><div class="mc-dialog-actions">${id==='replace'?'<button type="button" class="mc-quiet" data-dlg="undoReplace" disabled>撤销</button><button type="button" class="mc-tool mc-main" data-dlg="replaceAll">全部替换</button>':''}<button type="button" class="mc-sm-btn" data-dlg="close">关闭</button></div>`,'[data-find]');findPreview();return;
   }
   const indented=['if (x > 0) {','    sum += x;', '    cout << sum;', '}'];
@@ -830,15 +974,21 @@ function findPreview(message=''){
   const u=dlg.querySelector('[data-dlg="undoReplace"]');if(u)u.disabled=draft.prev===null;
 }
 function dlgAct(a){
-  if(a==='close')return closeDialog();
-  if(a==='sampleDebug'||a==='openSample')return setScene(a==='sampleDebug'?'debug':'edit');
+  if(a==='close')return cancelSheet();
+  if(a==='discardWindow'){closeDialog(false);return removeWindow();}
+  if(a==='saveClose'){closeDialog(false);return fileSheet('save','closeWindow');}
+  if(a==='sampleDebug')return setScene('debug');
+  if(a==='openSample'){if(!demoDoc)demoDoc=desk.add(freshState());activateDoc(demoDoc,false);return setScene('edit');}
   if(a==='confirmFile')return confirmFile();
   if(a==='applyDemo'||a==='demoReset')return applyDemo(a==='applyDemo');
-  if(a==='undoReplace'&&draft.prev!==null){draft.text=draft.prev;draft.prev=null;return findPreview();}
-  if(a==='replaceAll'){const f=dlg.querySelector('[data-find]').value;if(!f)return;const bits=draft.text.split(f);draft.prev=draft.text;draft.text=bits.join(dlg.querySelector('[data-replace]').value);findPreview(`已替换 ${bits.length-1} 处`);}
+  if(a==='undoReplace'&&draft.prev!==null){draft.text=draft.prev;draft.prev=null;applyFindText();return findPreview();}
+  if(a==='replaceAll'){const f=dlg.querySelector('[data-find]').value;if(!f)return;const bits=draft.text.split(f);draft.prev=draft.text;draft.text=bits.join(dlg.querySelector('[data-replace]').value);applyFindText();findPreview(`已替换 ${bits.length-1} 处`);}
 }
+function applyFindText(){const ta=$('[data-draft-code]');if(state.blank&&ta){ta.value=draft.text;work.updateDraft(ta);}}
 root.addEventListener('click',e=>{
-  const b=e.target.closest('button'); if(!b){if(e.target===dlg)closeDialog();else if(!e.target.closest('[data-dropdown]'))closeMenu();return;}
+  const b=e.target.closest('button'); if(!b){if(e.target===dlg)cancelSheet();else if(!e.target.closest('[data-dropdown]'))closeMenu();return;}
+  if(b.hasAttribute('data-activate-window'))return activateDoc(desk.windows.find(w=>w.windowId===Number(b.dataset.activateWindow)));
+  if(b.hasAttribute('data-open-entry'))return openSaved(Number(b.dataset.openEntry));
   if(b.dataset.dlg)return dlgAct(b.dataset.dlg);
   if(b.dataset.scene)return setScene(b.dataset.scene);
   if(b.dataset.menu)return openMenu(b);
@@ -847,8 +997,9 @@ root.addEventListener('click',e=>{
   if(b.dataset.panel){state.panel=b.dataset.panel;notice='';paint();return;}
   if(b.dataset.jump){state.targetLine=Number(b.dataset.jump);paint();const row=$(`[data-code-line="${state.targetLine}"]`);row?.scrollIntoView({block:'nearest',behavior:'instant'});say($('[data-position]').textContent);}
 });
-root.addEventListener('input',e=>{if(e.target.matches('[data-find]'))findPreview();});
+root.addEventListener('input',e=>{if(e.target.matches('[data-find]'))findPreview();else if(e.target.matches('[data-filename],[data-save-folder]'))previewLocation();});
 root.addEventListener('change',e=>{
+  if(e.target.matches('[data-save-location]')){const custom=e.target.value==='custom';$('[data-custom-location]').hidden=!custom;if(custom)$('[data-save-folder]').focus();previewLocation();return;}
   if(e.target.matches('[data-run-case]')&&Object.hasOwn(caseFiles,e.target.value)){applyRunCase(e.target.value);notice='';paint();persist();return;}
   if(e.target.matches('[data-case]')&&Object.hasOwn(ceSamples,e.target.value)){state.ce=e.target.value;state.targetLine=ceSamples[state.ce].line;state.panel='issues';notice='';paint();return;}
   if(e.target.matches('[data-std]')) state.std=e.target.value;
@@ -856,17 +1007,22 @@ root.addEventListener('change',e=>{
   notice=`下次构建：C++${state.std} · ${state.o2?'-O2':'-O0'}`;status();icons();say(notice);persist();
 });
 root.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){clearTip();work.hoverClear();if(dialog)closeDialog();else if(menu){const old=menu;closeMenu();$(`[data-menu="${old}"]`).focus();}return;}
+  if(e.key==='Escape'){clearTip();work.hoverClear();if(dialog)cancelSheet();else if(menu){const old=menu;closeMenu();$(`[data-menu="${old}"]`).focus();}return;}
   if(dialog){
-    if(e.key==='Enter'&&e.target.matches('[data-filename]')){e.preventDefault();confirmFile();return;}
-    if(e.key==='Tab'){const cs=Array.from(dlg.querySelectorAll('button:not(:disabled),input'));if(e.shiftKey&&document.activeElement===cs[0]||!e.shiftKey&&document.activeElement===cs.at(-1)){e.preventDefault();(e.shiftKey?cs.at(-1):cs[0]).focus();}}
+    if(e.key==='Enter'&&!e.isComposing&&e.target.matches('[data-filename],[data-save-folder]')){e.preventDefault();confirmFile();return;}
+    if(e.key==='Tab'){const cs=Array.from(dlg.querySelectorAll('button:not(:disabled),input,select')).filter(el=>!el.closest('[hidden]'));if(e.shiftKey&&document.activeElement===cs[0]||!e.shiftKey&&document.activeElement===cs.at(-1)){e.preventDefault();(e.shiftKey?cs.at(-1):cs[0]).focus();}}
     if(inv[dialog] && (dialog==='format'&&e.ctrlKey&&e.key==='Tab'||dialog==='newline'&&e.key==='Enter'&&e.target.dataset.dlg==='applyDemo'||dialog==='selectAll'&&e.ctrlKey&&e.key.toLowerCase()==='a')) {e.preventDefault();applyDemo(true);}return;
   }
-  if(state.scene==='icons')return;
+  if(showingIcons)return;
+  if(e.target.matches('[data-draft-code]')){
+    if(e.isComposing||e.keyCode===229)return;
+    if(e.ctrlKey&&['a','z','y'].includes(e.key.toLowerCase()))return;
+    if(e.key==='Enter'||e.key==='Tab'){e.preventDefault();work.editDraft(e.key==='Enter'?'newline':e.ctrlKey?'format':e.shiftKey?'outdent':'indent');return;}
+  }
   if(e.altKey&&!e.ctrlKey){const target=$$('[data-menu]').find(b=>b.getAttribute('aria-keyshortcuts').slice(-1)===e.key.toUpperCase());if(target){e.preventDefault();target.focus();openMenu(target);return;}}
   if(menu && ['ArrowDown','ArrowUp'].includes(e.key)){const items=Array.from(pop.querySelectorAll('button:not(:disabled)'));if(items.length){e.preventDefault();let n=items.indexOf(document.activeElement)+(e.key==='ArrowDown'?1:-1);items[(n+items.length)%items.length].focus();}return;}
   const byKey={F9:'compile',F10:'run',F11:'buildRun',F12:'rebuild'};
-  const byCtrl={n:'new',o:'open',s:e.shiftKey?'saveAs':'save',f:'find',h:'replace',z:'undo',y:'redo',a:'selectAll',tab:'format'};
+  const byCtrl={n:'new',o:'open',s:e.shiftKey?'saveAs':'save',w:'closeWindow',f:'find',h:'replace',z:'undo',y:'redo',a:'selectAll',tab:'format'};
   const a=e.ctrlKey?byCtrl[e.key.toLowerCase()]:byKey[e.key];if(a){e.preventDefault();act(a);}
 });
 root.addEventListener('pointerover',e=>{const n=e.target.closest('[data-tip]');if(n&&!n.contains(e.relatedTarget))showTip(n);});
