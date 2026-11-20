@@ -2,3 +2,9 @@
 node_modules/
 design/.qa/
 *.log
+.build-cache/
+dist/
+artifacts/
+bin/
+obj/
+.vs/

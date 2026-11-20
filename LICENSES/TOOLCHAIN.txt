@@ -1,0 +1,18 @@
+The full portable distribution includes the unmodified w64devkit x64 2.11.0 toolchain.
+It is started as separate programs, not linked into the IDE. Its components and
+their individual licenses are described in w64devkit/README.md and its source archive.
+
+Upstream release and executable:
+https://github.com/skeeto/w64devkit/releases/tag/v2.11.0
+https://github.com/skeeto/w64devkit/releases/download/v2.11.0/w64devkit-x64-2.11.0.7z.exe
+SHA256: 54c2bb9962e8a30c8270e34c5efc3d5fee579f53087fa7d435b95fbba2af7b2b
+
+Complete corresponding source supplied by upstream for this exact release:
+https://github.com/skeeto/w64devkit/releases/download/v2.11.0/source.tar
+SHA256: 50ee43ca02b9ca49e0e16da7eaf9701c9a396a019ebb2416a93d16769d53e5ff
+Build scripts and component license references:
+https://github.com/skeeto/w64devkit/tree/v2.11.0
+
+ScintillaNET 3.6.3 comes from jacobslusser.ScintillaNET on NuGet. It embeds
+Scintilla. Their notices are included here. Other toolbar glyphs are from
+Lucide 0.468.0; the four build actions and Mini C++ marks are project artwork.
