@@ -2,12 +2,12 @@ const root = document.getElementById('mini-cpp-review');
 const $ = (sel) => root.querySelector(sel);
 const $$ = (sel) => Array.from(root.querySelectorAll(sel));
 const esc = (s) => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const icon = (id) => `<i data-lucide="${id}" aria-hidden="true"></i>`;
+const icon = (id) => classicGlyphs[id] || `<i data-lucide="${id}" aria-hidden="true"></i>`;
 const icons = () => { if (globalThis.lucide?.createIcons) globalThis.lucide.createIcons({attrs:{width:16,height:16}}); };
 const fileName = () => state.file;
-const defaultState = {scene:'edit',std:'14',o2:false,debugStd:'14',lastStd:'14',lastO2:false,step:0,running:false,breakpoint:true,targetLine:11,ce:'semicolon',panel:'console',result:'builtRan',lastBuild:'builtRan',file:'main.cpp',blank:false};
+const defaultState = {scene:'edit',std:'14',o2:false,debugStd:'14',lastStd:'14',lastO2:false,step:0,running:false,breakpoint:true,targetLine:11,ce:'semicolon',panel:'console',result:'compiled',lastBuild:'compiled',file:'main.cpp',blank:false,runCase:'prefix',runPhase:'idle',record:null};
 const state = {...defaultState};
-const changeSet = [ ['compile','hammer','编译','F9','生成当前源文件的程序'], ['run','play','运行','F10','运行已有程序，不编译'], ['buildRun','square-play','编译并运行','F11','编译成功后再运行'], ['rebuild','rotate-cw','全部重新编译','F12','清理旧产物并完整编译'] ];
+const changeSet = [ ['compile','classic-compile','编译','F9','生成当前源文件的程序'], ['run','classic-run','运行','F10','运行已有程序，不编译'], ['buildRun','classic-buildRun','编译并运行','F11','编译成功后再运行'], ['rebuild','classic-rebuild','全部重新编译','F12','清理旧产物并完整编译'] ];
 const menus = {
   file:[['new','file-plus-2','新建源代码','Ctrl+N'],['open','folder-open','打开源代码…','Ctrl+O'],null,['save','save','保存','Ctrl+S'],['saveAs','file-pen-line','另存为…','Ctrl+Shift+S']],
   edit:[['undo','undo-2','撤销','Ctrl+Z'],['redo','redo-2','重做','Ctrl+Y'],['selectAll','text-select','全选','Ctrl+A'],null,['indent','indent-increase','增加缩进','Tab'],['outdent','indent-decrease','减少缩进','Shift+Tab'],['format','align-left','自动缩进选区','Ctrl+Tab'],['newline','corner-down-left','换行并继承缩进','Enter']],
@@ -23,20 +23,30 @@ const menus = {
 const names={edit:'编辑器',debug:'断点调试',error:'编译报错',icons:'图标稿'};
 const work=makeWorkbench($('[data-workbench]'));
 const dlg=$('[data-dialog]'), pop=$('[data-dropdown]');
-let menu='', dialog='', returnTo=null, tip=null, tipTimer=0, runTimer=0, notice='';
+let menu='', dialog='', returnTo=null, tip=null, tipTimer=0, runTimer=0, notice='', savedSignature='';
 const say = (msg) => { $('[data-announce]').textContent=msg; };
+const terminal=makeRunConsole($('[data-terminal]'),{icon,onFinish(record){
+  state.runPhase=record.aborted?'aborted':'done';state.record=record.aborted?null:record;
+  if(record.aborted){state.result='compiled';notice='运行已中止';}
+  else{state.result=state.runCommand==='buildRun'?'builtRan':'ran';notice='运行结束 · 退出码 0';}
+  paint();say(notice);persist();
+},onDismiss:clearTip});
+const caseFiles={prefix:'main.cpp',sum:'main.cpp',long:'numbers.cpp',file:'file_sum.cpp'};
+function applyRunCase(id){Object.assign(state,{runCase:id,runPhase:'idle',record:null,blank:false,file:caseFiles[id],result:'compiled',lastBuild:'compiled',lastStd:state.std,lastO2:state.o2,panel:'console'});}
 function persist() {
   const modelContent={scene:names[state.scene],standard:'C++'+state.std,optimizeO2:state.o2};
   // Only review choices are saved; text and file names entered in dialogs stay local.
-  const privateContent={scene:state.scene,standard:state.std,o2:state.o2,step:state.step};
+  const privateContent={scene:state.scene,standard:state.std,o2:state.o2,step:state.step,runCase:state.runCase};
+  savedSignature=JSON.stringify(privateContent);
   try { window.openai?.setWidgetState?.({modelContent,privateContent})?.catch?.(()=>{}); } catch { /* optional host */ }
 }
 function fromHost(saved) {
-  const p=saved?.privateContent; if(!p || typeof p!=='object') return;
+  const p=saved?.privateContent; if(!p || typeof p!=='object'||JSON.stringify(p)===savedSignature) return;
   clearTimeout(runTimer); closeMenu(); closeDialog(false); notice='';
   if (['98','11','14'].includes(p.standard)) state.std=p.standard;
   if (typeof p.o2==='boolean') state.o2=p.o2;
   setScene(Object.hasOwn(names,p.scene)?p.scene:'edit',false);
+  if(state.scene==='edit'&&Object.hasOwn(caseFiles,p.runCase))applyRunCase(p.runCase);
   if (state.scene==='debug' && Number.isInteger(p.step)) state.step=Math.max(0,Math.min(stops.length-1,p.step));
   paint();
 }
@@ -88,6 +98,8 @@ function status() {
   if(s.scene==='debug'){ico=s.running?'play':'pause';text=s.running?'运行中 · 变量为最近采样值':'调试暂停 · -g -O0';const f=stops[s.step];pos=s.running?'采样：行 '+f.line:`行 ${f.line}，列 ${f.col}`;}
   if(s.scene==='error'){const d=ceSamples[s.ce];ico='circle-alert';text='编译失败 · 1 个错误';pos=`行 ${s.targetLine}，列 ${s.targetLine===d.hintLine?d.hintCol:d.col}`;}
   if(s.scene==='edit' && s.result!=='idle') text=({compiled:'编译成功',ran:'运行结束',builtRan:'编译并运行完成',rebuilt:'全部重新编译完成'})[s.result];
+  if(s.runPhase==='active'){ico='square-terminal';text='命令行运行中';}
+  if(s.runPhase==='aborted'){ico='square';text='已中止';}
   $('[data-status]').innerHTML=icon(ico)+esc(notice||text); $('[data-position]').textContent=pos;
 }
 function paint() {
@@ -96,18 +108,20 @@ function paint() {
   $('[data-window]').hidden=id==='icons'; $('[data-identity]').hidden=id!=='icons';
   $('[data-titlefile]').textContent=fileName();
   $('[data-case]').hidden=id!=='error';$('[data-case]').value=state.ce;
+  $('[data-run-case]').hidden=id!=='edit'||state.blank;$('[data-run-case]').value=state.runCase;
   $('[data-std]').value=state.std; $('[data-o2]').checked=state.o2;
   if(id!=='icons') {work.render();status();} else work.hoverClear();
   icons();
 }
 function setScene(id,repaint=true) {
-  clearTimeout(runTimer); closeMenu(); closeDialog(false); clearTip(); notice='';
+  clearTimeout(runTimer);terminal.reset();closeMenu();closeDialog(false);clearTip();notice='';
   if(id==='icons') {state.scene='icons';state.running=false;}
-  else Object.assign(state,{scene:id,running:false,step:0,breakpoint:true,blank:false,file:'main.cpp',targetLine:11,ce:'semicolon',debugStd:state.std,lastStd:state.std,lastO2:state.o2,panel:id==='error'?'issues':'console',result:id==='error'?'idle':'builtRan',lastBuild:id==='error'?'compiled':'builtRan'});
+  else Object.assign(state,{scene:id,running:false,step:0,breakpoint:true,blank:false,file:'main.cpp',targetLine:11,ce:'semicolon',debugStd:state.std,lastStd:state.std,lastO2:state.o2,panel:id==='error'?'issues':'console',result:id==='error'?'idle':'compiled',lastBuild:'compiled',runCase:id==='edit'?'prefix':'sum',runPhase:'idle',record:null});
   if(repaint){paint();say(names[id]);persist();}
 }
 function finishDebug(message) {
   clearTimeout(runTimer); state.scene='edit';state.running=false;state.result='ran';state.panel='console';notice=message||'调试结束 · 退出码 0';
+  state.runPhase='done';state.record={mode:'sum',events:[{kind:'in',text:'3'},{kind:'in',text:'3 8 -2'},{kind:'out',text:'9'}]};
 }
 function nextSample() {
   if(state.scene!=='debug'||!state.running) return;
@@ -120,7 +134,10 @@ function build(a) {
   clearTimeout(runTimer);state.running=false;
   if(a!=='run'){state.lastStd=state.std;state.lastO2=state.o2;state.lastBuild=a==='rebuild'?'rebuilt':a==='buildRun'?'builtRan':'compiled';}
   if(state.scene==='error'){state.panel='issues';notice='编译失败，未启动程序';}
-  else {state.scene='edit';state.result=({compile:'compiled',run:'ran',buildRun:'builtRan',rebuild:'rebuilt'})[a];state.panel=a==='run'||a==='buildRun'?'console':'log';}
+  else if(a==='run'||a==='buildRun'){
+    Object.assign(state,{scene:'edit',runPhase:'active',runCommand:a,record:null,panel:'console',result:'compiled'});
+    paint();terminal.open({mode:state.blank?'empty':state.runCase,file:fileName()});say('命令行运行中');return;
+  } else {state.scene='edit';state.result=a==='compile'?'compiled':'rebuilt';state.runPhase='idle';state.panel='log';}
   paint();say($('[data-status]').textContent);persist();
 }
 const editOps=['undo','redo','find','replace','selectAll','indent','outdent','format','newline'];
@@ -132,7 +149,7 @@ function act(a) {
   if(a==='toggleO2'){$('[data-o2]').click();return;}
   if(['sourceInfo','about','shortcuts'].includes(a)){
     const tit={sourceInfo:'源文件属性',about:'关于 Mini C++',shortcuts:'快捷键'};
-    const body=a==='sourceInfo'?`<p><code>${esc(fileName())}</code></p><p>C++${state.std} · UTF-8 · 单文件</p>`:a==='about'?'<p>Mini C++ · 设计审查 R02</p>':`<div class="mc-keylist">${[...changeSet,...menus.search,menus.edit[6]].map(c=>`<div><span>${c[2]}</span><kbd>${c[3]}</kbd></div>`).join('')}</div>`;
+    const body=a==='sourceInfo'?`<p><code>${esc(fileName())}</code></p><p>C++${state.std} · UTF-8 · 单文件</p>`:a==='about'?'<p>Mini C++ · 设计审查 R03</p>':`<div class="mc-keylist">${[...changeSet,...menus.search,menus.edit[6]].map(c=>`<div><span>${c[2]}</span><kbd>${c[3]}</kbd></div>`).join('')}</div>`;
     sheet(a,tit[a],body);return;
   }
   if(['compile','run','buildRun','rebuild'].includes(a)) return build(a);
@@ -141,7 +158,7 @@ function act(a) {
   if(a==='save') {notice='已保存（样稿）';paint();say(notice);return;}
   if(a==='debug') {
     if(state.scene==='error'){state.panel='issues'; notice='编译失败，无法启动调试';paint();return;}
-    if(state.blank){sheet('debugBlank','调试样例','<p>当前模板没有示例断点。</p><div class="mc-dialog-actions"><button type="button" class="mc-sm-btn" data-dlg="sampleDebug">打开求和调试样例</button></div>','[data-dlg="sampleDebug"]');return;}
+    if(state.blank||state.runCase!=='sum'){sheet('debugSample','调试样例','<p>断点预览：求总和 · main.cpp:10</p><div class="mc-dialog-actions"><button type="button" class="mc-sm-btn" data-dlg="sampleDebug">打开求和调试样例</button></div>','[data-dlg="sampleDebug"]');return;}
     return setScene('debug');
   }
   if(state.scene!=='debug') return;
@@ -149,7 +166,7 @@ function act(a) {
   if(a==='step'&&!state.running){if(state.step<stops.length-1) state.step++; else finishDebug();}
   if(a==='continue'&&!state.running){state.running=true;runTimer=setTimeout(nextSample,720);}
   if(a==='pause'&&state.running){clearTimeout(runTimer);state.running=false;}
-  if(a==='stop'){clearTimeout(runTimer);state.scene='edit';state.running=false;state.panel='log';state.result='compiled';notice='已停止调试';}
+  if(a==='stop'){clearTimeout(runTimer);state.scene='edit';state.running=false;state.runPhase='aborted';state.record=null;state.panel='log';state.result='compiled';notice='已停止调试';}
   paint();say($('[data-status]').textContent);persist();
 }
 function fileSheet(id) {
@@ -165,7 +182,7 @@ function confirmFile(){
     const w=dlg.querySelector('[data-file-warning]');w.hidden=false;w.textContent='请输入有效的 .cpp 文件名，不含目录。';inp.focus();return;
   }
   const fresh=dialog==='new';closeDialog(false);clearTimeout(runTimer);
-  if(fresh) Object.assign(state,{blank:true,scene:'edit',running:false,step:0,result:'idle',lastBuild:'idle',panel:'console',file:name});
+  if(fresh) Object.assign(state,{blank:true,scene:'edit',running:false,step:0,result:'idle',lastBuild:'idle',runPhase:'idle',record:null,panel:'console',file:name});
   else {state.file=name;state.running=false;}
   notice=fresh?'已新建源代码（样稿）':'已另存为（样稿）';paint();say(notice);persist();
 }
@@ -223,6 +240,7 @@ root.addEventListener('click',e=>{
 });
 root.addEventListener('input',e=>{if(e.target.matches('[data-find]'))findPreview();});
 root.addEventListener('change',e=>{
+  if(e.target.matches('[data-run-case]')&&Object.hasOwn(caseFiles,e.target.value)){applyRunCase(e.target.value);notice='';paint();persist();return;}
   if(e.target.matches('[data-case]')&&Object.hasOwn(ceSamples,e.target.value)){state.ce=e.target.value;state.targetLine=ceSamples[state.ce].line;state.panel='issues';notice='';paint();return;}
   if(e.target.matches('[data-std]')) state.std=e.target.value;
   else if(e.target.matches('[data-o2]')) state.o2=e.target.checked; else return;

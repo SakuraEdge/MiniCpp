@@ -1,6 +1,6 @@
 <div id="mini-cpp-review" lang="zh-CN" aria-label="Mini C++ 界面与图标审查">
   <header class="mc-reviewbar">
-    <div class="mc-reviewtag"><span class="mc-rid">R02</span><span>设计审查</span></div>
+    <div class="mc-reviewtag"><span class="mc-rid">R03</span><span>设计审查</span></div>
     <nav class="mc-scenes" aria-label="审查场景">
       <button type="button" data-scene="edit" aria-pressed="true">编辑器</button>
       <button type="button" data-scene="debug" aria-pressed="false">断点调试</button>
@@ -8,6 +8,7 @@
       <button type="button" data-scene="icons" aria-pressed="false">图标稿</button>
     </nav>
     <select class="mc-case" data-case aria-label="报错样例" hidden><option value="semicolon">样例：漏写分号</option><option value="name">样例：变量名误写</option></select>
+    <select class="mc-case" data-run-case aria-label="运行样例"><option value="prefix">样例：逐项求和</option><option value="sum">样例：求总和</option><option value="long">样例：长输出</option><option value="file">样例：文件输入输出</option></select>
     <span class="mc-reviewmeta">交互样稿</span>
   </header>
   <section class="mc-window" aria-label="Mini C++ 单文件工作台" data-window>
@@ -44,7 +45,7 @@
     <footer class="mc-status"><span class="mc-footstate" data-status></span><span class="mc-statusinfo"><span data-position></span><span>空格: 4</span><span>UTF-8</span><span>CRLF</span></span></footer>
   </section>
   <section class="mc-identity" data-identity hidden aria-label="Mini C++ 图标审查稿">
-    <header class="mc-id-head"><div class="mc-brand"><span class="mc-mark" aria-hidden="true"><b></b><i></i><i></i></span><strong>Mini C++</strong></div><span>图标规范 <i>/</i> 02</span></header>
+    <header class="mc-id-head"><div class="mc-brand"><span class="mc-mark" aria-hidden="true"><b></b><i></i><i></i></span><strong>Mini C++</strong></div><span>图标规范 <i>/</i> 03</span></header>
     <div class="mc-id-main">
       <div class="mc-id-intro"><span class="mc-index">01 / APP</span><h2>应用图标</h2></div>
       <div class="mc-id-spec">
@@ -54,9 +55,10 @@
       </div>
       <div class="mc-id-intro"><span class="mc-index">02 / TOOLBAR</span><h2>构建工具栏</h2></div>
       <div class="mc-id-actions" data-spec-actions></div>
-      <div class="mc-id-fine"><span>24 × 24 网格</span><span>2 px 线宽</span><span>圆角端点</span></div>
+      <div class="mc-id-fine"><span>18 × 18 px</span><span>1 px 边框</span><span>直角方格</span></div>
     </div>
   </section>
   <div class="mc-dialogstage" data-dialog hidden></div>
+  <div class="mc-term-stage" data-terminal hidden></div>
   <div class="mc-sr" data-announce role="status" aria-live="polite"></div>
 </div>

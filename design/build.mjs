@@ -2,23 +2,25 @@
 import { readFile, writeFile, mkdir, copyFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { classicArtwork } from './classic-glyphs.mjs';
 const dir=path.dirname(fileURLToPath(import.meta.url));
 const read=p=>readFile(path.join(dir,p),'utf8');
-const [markup,presentation,workStyle,work,controller,logo]=await Promise.all(['src/frame.html','src/presentation.css','src/workbench.css','src/workbench.js','src/controller.js','icons/mini-cpp.svg'].map(read));
+const [markup,presentation,workStyle,termStyle,term,work,controller,logo]=await Promise.all(['src/frame.html','src/presentation.css','src/workbench.css','src/console.css','src/console.js','src/workbench.js','src/controller.js','icons/mini-cpp.svg'].map(read));
 const opts=process.argv.slice(2);
 if(opts.includes('--import-icons')) {
   const vendor=path.resolve(dir,'../.review-tools/node_modules/lucide-static');
   const db=JSON.parse(await readFile(path.join(vendor,'icon-nodes.json'),'utf8'));
-  const names=new Set([...((markup+work+controller).matchAll(/(?:data-lucide="|')([a-z][a-z0-9-]*)(?:"|')/g))].map(m=>m[1]).filter(n=>Object.hasOwn(db,n)));
+  const names=new Set([...((markup+work+term+controller).matchAll(/(?:data-lucide="|')([a-z][a-z0-9-]*)(?:"|')/g))].map(m=>m[1]).filter(n=>Object.hasOwn(db,n)));
   const subset=Object.fromEntries([...names].sort().map(n=>[n,db[n]]));
   await mkdir(path.join(dir,'vendor'),{recursive:true});
   await writeFile(path.join(dir,'vendor/lucide-subset.json'),JSON.stringify(subset,null,2)+'\n');
   await copyFile(path.join(vendor,'LICENSE'),path.join(dir,'vendor/LUCIDE-LICENSE.txt'));
-  for(const [file,ic] of Object.entries({compile:'hammer',run:'play','compile-and-run':'square-play',rebuild:'rotate-cw'})) await copyFile(path.join(vendor,`icons/${ic}.svg`),path.join(dir,`icons/${file}.svg`));
 }
+const classic=classicArtwork();
+await Promise.all(Object.entries(classic.files).map(([file,svg])=>writeFile(path.join(dir,'icons',file),svg)));
 const subset=JSON.stringify(JSON.parse(await read('vendor/lucide-subset.json')));
-const resources=`<style>\n${presentation}\n${workStyle}\n</style>`;
-const fragment=`${markup}\n${resources}\n<script>\n(() => {\n'use strict';\n${work}\n${controller}\n})();\n</script>\n`;
+const resources=`<style>\n${presentation}\n${workStyle}\n${termStyle}\n${classic.css}\n</style>`;
+const fragment=`${markup}\n${resources}\n<script>\n(() => {\n'use strict';\nconst classicGlyphs=${JSON.stringify(classic.html)};\n${term}\n${work}\n${controller}\n})();\n</script>\n`;
 if(opts.includes('--inline')) {
   const p=opts[opts.indexOf('--inline')+1];
   if(!p || !path.isAbsolute(p)) throw new Error('Provide an absolute path for the inline preview.');

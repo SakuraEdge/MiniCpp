@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Mini C++ · 设计审查 R02</title><link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3EMini%20C%2B%2B%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%2311654f%22%2F%3E%0A%20%20%3Cg%20fill%3D%22%23fff%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M39%2013H22L11%2024v16l11%2011h17v-8H25l-6-6V27l6-6h14z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M32%2026h4v4h4v4h-4v4h-4v-4h-4v-4h4zm15%200h4v4h4v4h-4v4h-4v-4h-4v-4h4z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A"><style>html{color-scheme:light dark}body{margin:0;background:light-dark(#eef2f0,#131816);padding:clamp(10px,3.8vw,50px) clamp(8px,3vw,40px)}main{max-width:1152px;margin:0 auto}@media(max-width:570px){body{padding:9px 4px}}</style></head><body><main><script>(()=>{const nodes={"align-left":[["path",{"d":"M15 12H3"}],["path",{"d":"M17 18H3"}],["path",{"d":"M21 6H3"}]],"arrow-up-right":[["path",{"d":"M7 7h10v10"}],["path",{"d":"M7 17 17 7"}]],"bug":[["path",{"d":"m8 2 1.88 1.88"}],["path",{"d":"M14.12 3.88 16 2"}],["path",{"d":"M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"}],["path",{"d":"M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"}],["path",{"d":"M12 20v-9"}],["path",{"d":"M6.53 9C4.6 8.8 3 7.1 3 5"}],["path",{"d":"M6 13H2"}],["path",{"d":"M3 21c0-2.1 1.7-3.9 3.8-4"}],["path",{"d":"M20.97 5c0 2.1-1.6 3.8-3.5 4"}],["path",{"d":"M22 13h-4"}],["path",{"d":"M17.2 17c2.1.1 3.8 1.9 3.8 4"}]],"check":[["path",{"d":"M20 6 9 17l-5-5"}]],"chevron-down":[["path",{"d":"m6 9 6 6 6-6"}]],"circle-alert":[["circle",{"cx":"12","cy":"12","r":"10"}],["line",{"x1":"12","x2":"12","y1":"8","y2":"12"}],["line",{"x1":"12","x2":"12.01","y1":"16","y2":"16"}]],"circle-check":[["circle",{"cx":"12","cy":"12","r":"10"}],["path",{"d":"m9 12 2 2 4-4"}]],"corner-down-left":[["polyline",{"points":"9 10 4 15 9 20"}],["path",{"d":"M20 4v7a4 4 0 0 1-4 4H4"}]],"file-code-2":[["path",{"d":"M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"}],["path",{"d":"M14 2v4a2 2 0 0 0 2 2h4"}],["path",{"d":"m5 12-3 3 3 3"}],["path",{"d":"m9 18 3-3-3-3"}]],"file-pen-line":[["path",{"d":"m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2"}],["path",{"d":"M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"}],["path",{"d":"M8 18h1"}]],"file-plus-2":[["path",{"d":"M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"}],["path",{"d":"M14 2v4a2 2 0 0 0 2 2h4"}],["path",{"d":"M3 15h6"}],["path",{"d":"M6 12v6"}]],"folder-open":[["path",{"d":"m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"}]],"gauge":[["path",{"d":"m12 14 4-4"}],["path",{"d":"M3.34 19a10 10 0 1 1 17.32 0"}]],"git-branch":[["line",{"x1":"6","x2":"6","y1":"3","y2":"15"}],["circle",{"cx":"18","cy":"6","r":"3"}],["circle",{"cx":"6","cy":"18","r":"3"}],["path",{"d":"M18 9a9 9 0 0 1-9 9"}]],"hammer":[["path",{"d":"m15 12-8.373 8.373a1 1 0 1 1-3-3L12 9"}],["path",{"d":"m18 15 4-4"}],["path",{"d":"m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172V7l-2.26-2.26a6 6 0 0 0-4.202-1.756L9 2.96l.92.82A6.18 6.18 0 0 1 12 8.4V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"}]],"indent-decrease":[["path",{"d":"M21 12H11"}],["path",{"d":"M21 18H11"}],["path",{"d":"M21 6H11"}],["path",{"d":"m7 8-4 4 4 4"}]],"indent-increase":[["path",{"d":"M21 12H11"}],["path",{"d":"M21 18H11"}],["path",{"d":"M21 6H11"}],["path",{"d":"m3 8 4 4-4 4"}]],"info":[["circle",{"cx":"12","cy":"12","r":"10"}],["path",{"d":"M12 16v-4"}],["path",{"d":"M12 8h.01"}]],"keyboard":[["path",{"d":"M10 8h.01"}],["path",{"d":"M12 12h.01"}],["path",{"d":"M14 8h.01"}],["path",{"d":"M16 12h.01"}],["path",{"d":"M18 8h.01"}],["path",{"d":"M6 8h.01"}],["path",{"d":"M7 16h10"}],["path",{"d":"M8 12h.01"}],["rect",{"width":"20","height":"16","x":"2","y":"4","rx":"2"}]],"lightbulb":[["path",{"d":"M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"}],["path",{"d":"M9 18h6"}],["path",{"d":"M10 22h4"}]],"list":[["path",{"d":"M3 12h.01"}],["path",{"d":"M3 18h.01"}],["path",{"d":"M3 6h.01"}],["path",{"d":"M8 12h13"}],["path",{"d":"M8 18h13"}],["path",{"d":"M8 6h13"}]],"minus":[["path",{"d":"M5 12h14"}]],"pause":[["rect",{"x":"14","y":"4","width":"4","height":"16","rx":"1"}],["rect",{"x":"6","y":"4","width":"4","height":"16","rx":"1"}]],"play":[["polygon",{"points":"6 3 20 12 6 21 6 3"}]],"plus":[["path",{"d":"M5 12h14"}],["path",{"d":"M12 5v14"}]],"redo":[["path",{"d":"M21 7v6h-6"}],["path",{"d":"M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"}]],"redo-2":[["path",{"d":"m15 14 5-5-5-5"}],["path",{"d":"M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13"}]],"replace":[["path",{"d":"M14 4a2 2 0 0 1 2-2"}],["path",{"d":"M16 10a2 2 0 0 1-2-2"}],["path",{"d":"M20 2a2 2 0 0 1 2 2"}],["path",{"d":"M22 8a2 2 0 0 1-2 2"}],["path",{"d":"m3 7 3 3 3-3"}],["path",{"d":"M6 10V5a3 3 0 0 1 3-3h1"}],["rect",{"x":"2","y":"14","width":"8","height":"8","rx":"2"}]],"rotate-ccw":[["path",{"d":"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"}],["path",{"d":"M3 3v5h5"}]],"rotate-cw":[["path",{"d":"M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"}],["path",{"d":"M21 3v5h-5"}]],"save":[["path",{"d":"M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"}],["path",{"d":"M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"}],["path",{"d":"M7 3v4a1 1 0 0 0 1 1h7"}]],"search":[["circle",{"cx":"11","cy":"11","r":"8"}],["path",{"d":"m21 21-4.3-4.3"}]],"settings-2":[["path",{"d":"M20 7h-9"}],["path",{"d":"M14 17H5"}],["circle",{"cx":"17","cy":"17","r":"3"}],["circle",{"cx":"7","cy":"7","r":"3"}]],"square":[["rect",{"width":"18","height":"18","x":"3","y":"3","rx":"2"}]],"square-play":[["rect",{"width":"18","height":"18","x":"3","y":"3","rx":"2"}],["path",{"d":"m9 8 6 4-6 4Z"}]],"square-terminal":[["path",{"d":"m7 11 2-2-2-2"}],["path",{"d":"M11 13h4"}],["rect",{"width":"18","height":"18","x":"3","y":"3","rx":"2","ry":"2"}]],"step-forward":[["line",{"x1":"6","x2":"6","y1":"4","y2":"20"}],["polygon",{"points":"10,4 20,12 10,20"}]],"terminal":[["polyline",{"points":"4 17 10 11 4 5"}],["line",{"x1":"12","x2":"20","y1":"19","y2":"19"}]],"text-select":[["path",{"d":"M5 3a2 2 0 0 0-2 2"}],["path",{"d":"M19 3a2 2 0 0 1 2 2"}],["path",{"d":"M21 19a2 2 0 0 1-2 2"}],["path",{"d":"M5 21a2 2 0 0 1-2-2"}],["path",{"d":"M9 3h1"}],["path",{"d":"M9 21h1"}],["path",{"d":"M14 3h1"}],["path",{"d":"M14 21h1"}],["path",{"d":"M3 9v1"}],["path",{"d":"M21 9v1"}],["path",{"d":"M3 14v1"}],["path",{"d":"M21 14v1"}],["line",{"x1":"7","x2":"15","y1":"8","y2":"8"}],["line",{"x1":"7","x2":"17","y1":"12","y2":"12"}],["line",{"x1":"7","x2":"13","y1":"16","y2":"16"}]],"undo":[["path",{"d":"M3 7v6h6"}],["path",{"d":"M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"}]],"undo-2":[["path",{"d":"M9 14 4 9l5-5"}],["path",{"d":"M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"}]],"x":[["path",{"d":"M18 6 6 18"}],["path",{"d":"m6 6 12 12"}]]};
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Mini C++ · 设计审查 R03</title><link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%20width%3D%2264%22%20height%3D%2264%22%20role%3D%22img%22%20aria-labelledby%3D%22title%22%3E%0A%20%20%3Ctitle%20id%3D%22title%22%3EMini%20C%2B%2B%3C%2Ftitle%3E%0A%20%20%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%2311654f%22%2F%3E%0A%20%20%3Cg%20fill%3D%22%23fff%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M39%2013H22L11%2024v16l11%2011h17v-8H25l-6-6V27l6-6h14z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M32%2026h4v4h4v4h-4v4h-4v-4h-4v-4h4zm15%200h4v4h4v4h-4v4h-4v-4h-4v-4h4z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A"><style>html{color-scheme:light dark}body{margin:0;background:light-dark(#eef2f0,#131816);padding:clamp(10px,3.8vw,50px) clamp(8px,3vw,40px)}main{max-width:1152px;margin:0 auto}@media(max-width:570px){body{padding:9px 4px}}</style></head><body><main><script>(()=>{const nodes={"align-left":[["path",{"d":"M15 12H3"}],["path",{"d":"M17 18H3"}],["path",{"d":"M21 6H3"}]],"arrow-up-right":[["path",{"d":"M7 7h10v10"}],["path",{"d":"M7 17 17 7"}]],"bug":[["path",{"d":"m8 2 1.88 1.88"}],["path",{"d":"M14.12 3.88 16 2"}],["path",{"d":"M9 7.13v-1a3.003 3.003 0 1 1 6 0v1"}],["path",{"d":"M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6"}],["path",{"d":"M12 20v-9"}],["path",{"d":"M6.53 9C4.6 8.8 3 7.1 3 5"}],["path",{"d":"M6 13H2"}],["path",{"d":"M3 21c0-2.1 1.7-3.9 3.8-4"}],["path",{"d":"M20.97 5c0 2.1-1.6 3.8-3.5 4"}],["path",{"d":"M22 13h-4"}],["path",{"d":"M17.2 17c2.1.1 3.8 1.9 3.8 4"}]],"check":[["path",{"d":"M20 6 9 17l-5-5"}]],"chevron-down":[["path",{"d":"m6 9 6 6 6-6"}]],"circle-alert":[["circle",{"cx":"12","cy":"12","r":"10"}],["line",{"x1":"12","x2":"12","y1":"8","y2":"12"}],["line",{"x1":"12","x2":"12.01","y1":"16","y2":"16"}]],"circle-check":[["circle",{"cx":"12","cy":"12","r":"10"}],["path",{"d":"m9 12 2 2 4-4"}]],"corner-down-left":[["polyline",{"points":"9 10 4 15 9 20"}],["path",{"d":"M20 4v7a4 4 0 0 1-4 4H4"}]],"file":[["path",{"d":"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"}],["path",{"d":"M14 2v4a2 2 0 0 0 2 2h4"}]],"file-code-2":[["path",{"d":"M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"}],["path",{"d":"M14 2v4a2 2 0 0 0 2 2h4"}],["path",{"d":"m5 12-3 3 3 3"}],["path",{"d":"m9 18 3-3-3-3"}]],"file-pen-line":[["path",{"d":"m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2"}],["path",{"d":"M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"}],["path",{"d":"M8 18h1"}]],"file-plus-2":[["path",{"d":"M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"}],["path",{"d":"M14 2v4a2 2 0 0 0 2 2h4"}],["path",{"d":"M3 15h6"}],["path",{"d":"M6 12v6"}]],"folder-open":[["path",{"d":"m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"}]],"gauge":[["path",{"d":"m12 14 4-4"}],["path",{"d":"M3.34 19a10 10 0 1 1 17.32 0"}]],"git-branch":[["line",{"x1":"6","x2":"6","y1":"3","y2":"15"}],["circle",{"cx":"18","cy":"6","r":"3"}],["circle",{"cx":"6","cy":"18","r":"3"}],["path",{"d":"M18 9a9 9 0 0 1-9 9"}]],"indent-decrease":[["path",{"d":"M21 12H11"}],["path",{"d":"M21 18H11"}],["path",{"d":"M21 6H11"}],["path",{"d":"m7 8-4 4 4 4"}]],"indent-increase":[["path",{"d":"M21 12H11"}],["path",{"d":"M21 18H11"}],["path",{"d":"M21 6H11"}],["path",{"d":"m3 8 4 4-4 4"}]],"info":[["circle",{"cx":"12","cy":"12","r":"10"}],["path",{"d":"M12 16v-4"}],["path",{"d":"M12 8h.01"}]],"keyboard":[["path",{"d":"M10 8h.01"}],["path",{"d":"M12 12h.01"}],["path",{"d":"M14 8h.01"}],["path",{"d":"M16 12h.01"}],["path",{"d":"M18 8h.01"}],["path",{"d":"M6 8h.01"}],["path",{"d":"M7 16h10"}],["path",{"d":"M8 12h.01"}],["rect",{"width":"20","height":"16","x":"2","y":"4","rx":"2"}]],"lightbulb":[["path",{"d":"M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"}],["path",{"d":"M9 18h6"}],["path",{"d":"M10 22h4"}]],"list":[["path",{"d":"M3 12h.01"}],["path",{"d":"M3 18h.01"}],["path",{"d":"M3 6h.01"}],["path",{"d":"M8 12h13"}],["path",{"d":"M8 18h13"}],["path",{"d":"M8 6h13"}]],"minus":[["path",{"d":"M5 12h14"}]],"pause":[["rect",{"x":"14","y":"4","width":"4","height":"16","rx":"1"}],["rect",{"x":"6","y":"4","width":"4","height":"16","rx":"1"}]],"play":[["polygon",{"points":"6 3 20 12 6 21 6 3"}]],"plus":[["path",{"d":"M5 12h14"}],["path",{"d":"M12 5v14"}]],"redo":[["path",{"d":"M21 7v6h-6"}],["path",{"d":"M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"}]],"redo-2":[["path",{"d":"m15 14 5-5-5-5"}],["path",{"d":"M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13"}]],"replace":[["path",{"d":"M14 4a2 2 0 0 1 2-2"}],["path",{"d":"M16 10a2 2 0 0 1-2-2"}],["path",{"d":"M20 2a2 2 0 0 1 2 2"}],["path",{"d":"M22 8a2 2 0 0 1-2 2"}],["path",{"d":"m3 7 3 3 3-3"}],["path",{"d":"M6 10V5a3 3 0 0 1 3-3h1"}],["rect",{"x":"2","y":"14","width":"8","height":"8","rx":"2"}]],"rotate-ccw":[["path",{"d":"M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"}],["path",{"d":"M3 3v5h5"}]],"save":[["path",{"d":"M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"}],["path",{"d":"M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"}],["path",{"d":"M7 3v4a1 1 0 0 0 1 1h7"}]],"search":[["circle",{"cx":"11","cy":"11","r":"8"}],["path",{"d":"m21 21-4.3-4.3"}]],"settings-2":[["path",{"d":"M20 7h-9"}],["path",{"d":"M14 17H5"}],["circle",{"cx":"17","cy":"17","r":"3"}],["circle",{"cx":"7","cy":"7","r":"3"}]],"square":[["rect",{"width":"18","height":"18","x":"3","y":"3","rx":"2"}]],"square-terminal":[["path",{"d":"m7 11 2-2-2-2"}],["path",{"d":"M11 13h4"}],["rect",{"width":"18","height":"18","x":"3","y":"3","rx":"2","ry":"2"}]],"step-forward":[["line",{"x1":"6","x2":"6","y1":"4","y2":"20"}],["polygon",{"points":"10,4 20,12 10,20"}]],"terminal":[["polyline",{"points":"4 17 10 11 4 5"}],["line",{"x1":"12","x2":"20","y1":"19","y2":"19"}]],"text-select":[["path",{"d":"M5 3a2 2 0 0 0-2 2"}],["path",{"d":"M19 3a2 2 0 0 1 2 2"}],["path",{"d":"M21 19a2 2 0 0 1-2 2"}],["path",{"d":"M5 21a2 2 0 0 1-2-2"}],["path",{"d":"M9 3h1"}],["path",{"d":"M9 21h1"}],["path",{"d":"M14 3h1"}],["path",{"d":"M14 21h1"}],["path",{"d":"M3 9v1"}],["path",{"d":"M21 9v1"}],["path",{"d":"M3 14v1"}],["path",{"d":"M21 14v1"}],["line",{"x1":"7","x2":"15","y1":"8","y2":"8"}],["line",{"x1":"7","x2":"17","y1":"12","y2":"12"}],["line",{"x1":"7","x2":"13","y1":"16","y2":"16"}]],"undo":[["path",{"d":"M3 7v6h6"}],["path",{"d":"M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"}]],"undo-2":[["path",{"d":"M9 14 4 9l5-5"}],["path",{"d":"M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"}]],"x":[["path",{"d":"M18 6 6 18"}],["path",{"d":"m6 6 12 12"}]]};
 window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i of document.querySelectorAll('#mini-cpp-review i[data-lucide]')) {
  const name=i.dataset.lucide, data=nodes[name]; if(!data)continue;
  const svg=document.createElementNS(ns,'svg'); for(const [k,v] of Object.entries({class:'lucide lucide-'+name,'data-lucide':name,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor','stroke-width':'2','stroke-linecap':'round','stroke-linejoin':'round','aria-hidden':'true'}))svg.setAttribute(k,v);
@@ -7,7 +7,7 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
 }}};})()</script>
 <div id="mini-cpp-review" lang="zh-CN" aria-label="Mini C++ 界面与图标审查">
   <header class="mc-reviewbar">
-    <div class="mc-reviewtag"><span class="mc-rid">R02</span><span>设计审查</span></div>
+    <div class="mc-reviewtag"><span class="mc-rid">R03</span><span>设计审查</span></div>
     <nav class="mc-scenes" aria-label="审查场景">
       <button type="button" data-scene="edit" aria-pressed="true">编辑器</button>
       <button type="button" data-scene="debug" aria-pressed="false">断点调试</button>
@@ -15,6 +15,7 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
       <button type="button" data-scene="icons" aria-pressed="false">图标稿</button>
     </nav>
     <select class="mc-case" data-case aria-label="报错样例" hidden><option value="semicolon">样例：漏写分号</option><option value="name">样例：变量名误写</option></select>
+    <select class="mc-case" data-run-case aria-label="运行样例"><option value="prefix">样例：逐项求和</option><option value="sum">样例：求总和</option><option value="long">样例：长输出</option><option value="file">样例：文件输入输出</option></select>
     <span class="mc-reviewmeta">交互样稿</span>
   </header>
   <section class="mc-window" aria-label="Mini C++ 单文件工作台" data-window>
@@ -51,7 +52,7 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
     <footer class="mc-status"><span class="mc-footstate" data-status></span><span class="mc-statusinfo"><span data-position></span><span>空格: 4</span><span>UTF-8</span><span>CRLF</span></span></footer>
   </section>
   <section class="mc-identity" data-identity hidden aria-label="Mini C++ 图标审查稿">
-    <header class="mc-id-head"><div class="mc-brand"><span class="mc-mark" aria-hidden="true"><b></b><i></i><i></i></span><strong>Mini C++</strong></div><span>图标规范 <i>/</i> 02</span></header>
+    <header class="mc-id-head"><div class="mc-brand"><span class="mc-mark" aria-hidden="true"><b></b><i></i><i></i></span><strong>Mini C++</strong></div><span>图标规范 <i>/</i> 03</span></header>
     <div class="mc-id-main">
       <div class="mc-id-intro"><span class="mc-index">01 / APP</span><h2>应用图标</h2></div>
       <div class="mc-id-spec">
@@ -61,10 +62,11 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
       </div>
       <div class="mc-id-intro"><span class="mc-index">02 / TOOLBAR</span><h2>构建工具栏</h2></div>
       <div class="mc-id-actions" data-spec-actions></div>
-      <div class="mc-id-fine"><span>24 × 24 网格</span><span>2 px 线宽</span><span>圆角端点</span></div>
+      <div class="mc-id-fine"><span>18 × 18 px</span><span>1 px 边框</span><span>直角方格</span></div>
     </div>
   </section>
   <div class="mc-dialogstage" data-dialog hidden></div>
+  <div class="mc-term-stage" data-terminal hidden></div>
   <div class="mc-sr" data-announce role="status" aria-live="polite"></div>
 </div>
 
@@ -178,8 +180,8 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
 #mini-cpp-review .mc-glyph strong { font-size: 14px; font-weight: 600; }
 #mini-cpp-review .mc-glyph small { font-size: 12px; color: var(--mc-muted); }
 #mini-cpp-review .mc-glyph .mc-glyph-view { display: flex; gap: 8px; align-items: center; margin-bottom: 4px; }
-#mini-cpp-review .mc-glyph-view span { display: inline-grid; place-items: center; width: 35px; height: 35px; background: #eef3f0; color: #22372d; border-radius: 4px; }
-#mini-cpp-review .mc-glyph-view span+span { background: #26302c; color: #f3f9f5; }
+#mini-cpp-review .mc-glyph-view>span { display: inline-grid; place-items: center; width: 35px; height: 35px; background: #eef3f0; color: #22372d; border-radius: 4px; color-scheme:light; }
+#mini-cpp-review .mc-glyph-view>span+span { background: #26302c; color: #f3f9f5; color-scheme:dark; }
 #mini-cpp-review .mc-glyph-view svg { width: 18px; height: 18px; }
 #mini-cpp-review .mc-id-fine { display: flex; gap: 16px; color: var(--mc-muted); font: 11px var(--mc-mono); margin-top: 12px; }
 #mini-cpp-review .mc-dialogstage { position: absolute; inset: 0; z-index: 20; padding: 70px 15px 15px; background: #13271d35; display: flex; align-items: start; justify-content: center; border-radius: 8px; }
@@ -300,12 +302,12 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
 #mini-cpp-review .wb-ptab[aria-pressed=true] { color:var(--mc-ink); border-color:var(--mc-accent); font-weight:600; }
 #mini-cpp-review .wb-count.wb-has { color:var(--mc-danger); background:var(--mc-danger-tint); }
 #mini-cpp-review .wb-output-status { font:11px var(--mc-mono); color:var(--mc-muted); }
-#mini-cpp-review .wb-io { background:light-dark(#202925,#181d1b); color:#e6f1ea; display:grid; grid-template-columns:1fr 1fr; padding:12px 17px; gap:15px; min-height:83px; }
-#mini-cpp-review .wb-io>div+div { border-left:1px solid #48564f; padding-left:16px; }
-#mini-cpp-review .wb-io h3 { color:#bdcfc4; font:400 11px/1.3 'Microsoft YaHei UI',sans-serif; margin:0 0 5px; }
-#mini-cpp-review .wb-io small { color:#a0b6aa; font:11px var(--mc-mono); margin-left:5px; }
-#mini-cpp-review .wb-io pre, #mini-cpp-review .wb-console-muted { font:13px/18px var(--mc-mono); padding:0; background:none; border:0; color:inherit; }
-#mini-cpp-review .wb-console-muted { color:#a8bcb0; font-size:12px; }
+#mini-cpp-review .wb-record { margin:0; padding:9px 16px; list-style:none; }
+#mini-cpp-review .wb-record li { display:flex; gap:10px; align-items:baseline; line-height:20px; }
+#mini-cpp-review .wb-record li>span { min-width:27px; font-size:11px; color:var(--mc-muted); }
+#mini-cpp-review .wb-record [data-record-row=out]>span, #mini-cpp-review .wb-file-done svg { color:var(--mc-accent); }
+#mini-cpp-review .wb-record code { white-space:pre-wrap; overflow-wrap:anywhere; min-width:0; font:13px/20px var(--mc-mono); }
+#mini-cpp-review .wb-ellipsis small { font-size:11px; color:var(--mc-muted); }
 #mini-cpp-review .wb-empty, #mini-cpp-review .wb-log, #mini-cpp-review .wb-diag { min-height:83px; padding:12px 16px; }
 #mini-cpp-review .wb-empty { display:flex; gap:7px; align-items:center; color:var(--mc-muted); font-size:13px; }
 #mini-cpp-review .wb-diag-line, #mini-cpp-review .wb-advice { display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 8px; }
@@ -324,16 +326,142 @@ window.lucide={createIcons(){const ns='http://www.w3.org/2000/svg'; for(const i 
 @media(max-width:390px){#mini-cpp-review .wb-row{grid-template-columns:24px 20px minmax(0,1fr)}#mini-cpp-review .wb-line{font-size:12px;padding-left:6px}#mini-cpp-review .wb-ptab{gap:3px}}
 @media(pointer:coarse){#mini-cpp-review .wb-debugbar button,#mini-cpp-review .wb-ptab,#mini-cpp-review .wb-plus{min-height:44px}#mini-cpp-review .wb-debugbar button,#mini-cpp-review .wb-plus{min-width:44px}}
 
+#mini-cpp-review .mc-term-stage { position:absolute; inset:0; z-index:20; display:flex; align-items:flex-start; justify-content:center; padding:clamp(118px,16%,172px) 14px 0; border-radius:7px; background:light-dark(#18252010,#0003); }
+#mini-cpp-review .mc-term { width:min(100%,502px); min-width:0; overflow:hidden; border:1px solid light-dark(#68776e,#67756d); border-radius:5px; background:var(--mc-surface); box-shadow:0 10px 30px #12201a36,0 2px 5px #17231b26; }
+#mini-cpp-review .mc-term-head { display:flex; align-items:center; gap:8px; min-height:32px; padding:0 4px 0 12px; color:var(--mc-ink); background:var(--mc-bg); }
+#mini-cpp-review .mc-term-head strong { font-size:13px; font-weight:600; white-space:nowrap; }
+#mini-cpp-review .mc-term-emblem { display:inline-flex; }
+#mini-cpp-review .mc-term-filename { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--mc-muted); font:12px var(--mc-mono); }
+#mini-cpp-review .mc-term-head button { margin-left:auto; }
+#mini-cpp-review .mc-term-body { min-height:155px; padding:11px 13px; background:#171b19; color:#edf1ee; font:14px/20px var(--mc-mono); }
+#mini-cpp-review .mc-term-log { max-height:174px; overflow:auto; scrollbar-color:#5d7065 #171b19; }
+#mini-cpp-review .mc-term-log>div { white-space:pre-wrap; overflow-wrap:anywhere; min-height:20px; }
+#mini-cpp-review .mc-term-log [data-term-row=in] { color:#a4dfbd; }
+#mini-cpp-review .mc-term-form { display:flex; align-items:flex-start; gap:6px; margin:1px 0 0; padding:0; color:#a4dfbd; }
+#mini-cpp-review .mc-term-form>span { user-select:none; }
+#mini-cpp-review .mc-term-form textarea { flex:1; min-width:0; min-height:23px; height:24px; margin:0; padding:0 2px; border:0; border-radius:0; resize:none; background:transparent; color:inherit; caret-color:#c3f4d6; font:inherit; line-height:20px; }
+#mini-cpp-review .mc-term-form textarea:focus-visible { outline:1px solid #607267; outline-offset:1px; }
+#mini-cpp-review .mc-term-form button { margin-left:auto; width:23px; height:23px; color:#bdcec2; }
+#mini-cpp-review .mc-term-form button:hover { color:#f2f8f4; background:#323d35; }
+#mini-cpp-review .mc-term-foot { display:flex; align-items:center; flex-wrap:wrap; gap:3px 12px; padding:6px 12px; background:var(--mc-soft); font-size:12px; color:var(--mc-muted); }
+#mini-cpp-review .mc-term-state { color:var(--mc-ink); font-weight:600; }
+#mini-cpp-review .mc-term-error { color:var(--mc-danger); }
+@media(max-width:560px){#mini-cpp-review .mc-term-stage{padding:145px 7px 0}#mini-cpp-review .mc-term-body{min-height:112px}#mini-cpp-review .mc-term-log{max-height:140px}}
+@media(pointer:coarse){#mini-cpp-review .mc-term-form textarea{min-height:44px;font-size:16px}#mini-cpp-review .mc-term-form button{width:44px;height:44px}}
+
+#mini-cpp-review .mc-classic{--glyph-edge:light-dark(#36443e,#c6d4cd);--glyph-orange:light-dark(#e89c63,#eda872);--glyph-green:light-dark(#96bc61,#b2cf8a);--glyph-blue:light-dark(#72b5d5,#8fc8e3);--glyph-yellow:light-dark(#edcf66,#eed584);--glyph-bar:light-dark(#dcad54,#e7bc69);--glyph-screen:light-dark(#e9ede9,#414b46); position:relative;display:inline-block;width:18px;height:18px;flex:0 0 auto;vertical-align:middle;pointer-events:none}
+#mini-cpp-review .mc-classic>b{position:absolute;display:block;border-radius:0;margin:0;padding:0;box-sizing:border-box}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(1){left:0%;top:0%;width:44.44444444444444%;height:44.44444444444444%;background: var(--glyph-edge)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(2){left:5.555555555555555%;top:5.555555555555555%;width:33.33333333333333%;height:33.33333333333333%;background: var(--glyph-orange)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(3){left:55.55555555555556%;top:0%;width:44.44444444444444%;height:44.44444444444444%;background: var(--glyph-edge)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(4){left:61.111111111111114%;top:5.555555555555555%;width:33.33333333333333%;height:33.33333333333333%;background: var(--glyph-green)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(5){left:0%;top:55.55555555555556%;width:44.44444444444444%;height:44.44444444444444%;background: var(--glyph-edge)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(6){left:5.555555555555555%;top:61.111111111111114%;width:33.33333333333333%;height:33.33333333333333%;background: var(--glyph-blue)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(7){left:55.55555555555556%;top:55.55555555555556%;width:44.44444444444444%;height:44.44444444444444%;background: var(--glyph-edge)}
+#mini-cpp-review .mc-classic[data-classic="compile"]>b:nth-child(8){left:61.111111111111114%;top:61.111111111111114%;width:33.33333333333333%;height:33.33333333333333%;background: var(--glyph-yellow)}
+#mini-cpp-review .mc-classic[data-classic="run"]>b:nth-child(1){left:5.555555555555555%;top:5.555555555555555%;width:88.88888888888889%;height:88.88888888888889%;background: var(--glyph-edge)}
+#mini-cpp-review .mc-classic[data-classic="run"]>b:nth-child(2){left:11.11111111111111%;top:11.11111111111111%;width:77.77777777777779%;height:16.666666666666664%;background: var(--glyph-bar)}
+#mini-cpp-review .mc-classic[data-classic="run"]>b:nth-child(3){left:11.11111111111111%;top:33.33333333333333%;width:77.77777777777779%;height:55.55555555555556%;background: var(--glyph-screen)}
+#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(1){left:5.555555555555555%;top:5.555555555555555%;width:88.88888888888889%;height:88.88888888888889%;background: var(--glyph-edge)}
+#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(2){left:11.11111111111111%;top:11.11111111111111%;width:77.77777777777779%;height:16.666666666666664%;background: var(--glyph-bar)}
+#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(3){left:11.11111111111111%;top:33.33333333333333%;width:38.88888888888889%;height:22.22222222222222%;background: var(--glyph-orange)}
+#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(4){left:55.55555555555556%;top:33.33333333333333%;width:33.33333333333333%;height:22.22222222222222%;background: var(--glyph-green)}
+#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(5){left:11.11111111111111%;top:61.111111111111114%;width:38.88888888888889%;height:27.77777777777778%;background: var(--glyph-blue)}
+#mini-cpp-review .mc-classic[data-classic="buildRun"]>b:nth-child(6){left:55.55555555555556%;top:61.111111111111114%;width:33.33333333333333%;height:27.77777777777778%;background: var(--glyph-yellow)}
+#mini-cpp-review .mc-classic[data-classic="rebuild"]>b:nth-child(1){left:0%;top:0%;width:44.44444444444444%;height:44.44444444444444%;border:1px solid var(--glyph-edge)}
+#mini-cpp-review .mc-classic[data-classic="rebuild"]>b:nth-child(2){left:55.55555555555556%;top:0%;width:44.44444444444444%;height:44.44444444444444%;border:1px solid var(--glyph-edge)}
+#mini-cpp-review .mc-classic[data-classic="rebuild"]>b:nth-child(3){left:0%;top:55.55555555555556%;width:44.44444444444444%;height:44.44444444444444%;border:1px solid var(--glyph-edge)}
+#mini-cpp-review .mc-classic[data-classic="rebuild"]>b:nth-child(4){left:55.55555555555556%;top:55.55555555555556%;width:44.44444444444444%;height:44.44444444444444%;border:1px solid var(--glyph-edge)}
 </style>
 <script>
 (() => {
 'use strict';
+const classicGlyphs={"classic-compile":"<span class=\"mc-classic\" data-classic=\"compile\" aria-hidden=\"true\"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></span>","classic-run":"<span class=\"mc-classic\" data-classic=\"run\" aria-hidden=\"true\"><b></b><b></b><b></b></span>","classic-buildRun":"<span class=\"mc-classic\" data-classic=\"buildRun\" aria-hidden=\"true\"><b></b><b></b><b></b><b></b><b></b><b></b></span>","classic-rebuild":"<span class=\"mc-classic\" data-classic=\"rebuild\" aria-hidden=\"true\"><b></b><b></b><b></b><b></b></span>"};
+// Local review fixtures only. Nothing typed here is executed by a shell or sent to the host.
+function makeRunConsole(host,{icon,onFinish,onDismiss}) {
+  const q=s=>host.querySelector(s);
+  let session=null,origin=null,timer=0;
+  const dim=flag=>root.querySelectorAll('.mc-reviewbar,[data-window],[data-identity]').forEach(el=>{el.inert=flag;});
+  function later(fn,ms){const active=session;clearTimeout(timer);timer=setTimeout(()=>{if(session===active&&!active.ended)fn();},ms);}
+  function status(label,detail='',error=false){q('[data-term-state]').textContent=label;const h=q('[data-term-hint]');h.textContent=detail;h.classList.toggle('mc-term-error',error);}
+  function entry(kind,text){
+    const event={kind,text:String(text)};session.events.push(event);
+    const line=document.createElement('div');line.dataset.termRow=kind;line.textContent=event.text;line.setAttribute('aria-label',`${kind==='in'?'输入':'输出'}：${event.text}`);
+    const log=q('[data-term-log]');log.append(line);log.scrollTop=log.scrollHeight;
+  }
+  function end(aborted=false){
+    if(!session||session.ended)return;
+    clearTimeout(timer);session.ended=true;
+    q('[data-term-form]').hidden=true;
+    status(aborted?'已中止':'已退出',aborted?'':'退出码 0');
+    if(!aborted)q('[data-term-close]').focus({preventScroll:true});
+    onFinish({mode:session.mode,aborted,events:aborted?[]:session.events.slice()});
+  }
+  function drain(){q('[data-term-form]').hidden=true;status('正在结束');later(()=>end(),140);}
+  function reset(){clearTimeout(timer);session=null;origin=null;host.hidden=true;host.replaceChildren();dim(false);}
+  function dismiss(){
+    if(!session)return;const focus=origin;if(!session.ended)end(true);reset();onDismiss();
+    if(focus?.isConnected)focus.focus({preventScroll:true});
+  }
+  function hint(){const s=session;return s.n===null?'等待输入 n（0–64）':`等待第 ${s.seen+1} / ${s.n} 个整数`;}
+  function submit(){
+    const s=session;if(!s||s.ended||q('[data-term-form]').hidden)return;
+    const input=q('[data-term-input]'),raw=input.value;if(!raw.trim())return;
+    // Validate before echoing so a bad pasted line cannot partially advance the sample.
+    let n=s.n,seen=s.seen,sum=s.sum;const pending=[];
+    for(const line of raw.replace(/\r\n?/g,'\n').split('\n')){
+      if(n!==null&&seen===n)break;
+      pending.push(['in',line]);
+      for(const token of line.trim().split(/\s+/).filter(Boolean)){
+        if(n!==null&&seen===n)break;
+        if(!/^[+-]?\d+$/.test(token)){status('等待输入','请输入十进制整数。',true);input.focus();return;}
+        const val=Number(token);
+        if(n===null){if(!Number.isInteger(val)||val<0||val>64){status('等待输入','样例的 n 范围是 0–64。',true);input.focus();return;}n=val;}
+        else {if(!Number.isInteger(val)||val< -2147483648||val>2147483647||sum+val< -2147483648||sum+val>2147483647){status('等待输入','数值或累计和超出了 int 范围。',true);input.focus();return;}sum+=val;seen++;if(s.mode==='prefix')pending.push(['out',String(sum)]);}
+      }
+    }
+    Object.assign(s,{n,seen,sum});input.value='';pending.forEach(([kind,text])=>entry(kind,text));
+    if(n!==null&&seen===n){if(s.mode==='sum')entry('out',sum);drain();}else{status('运行中',hint());input.focus({preventScroll:true});}
+  }
+  function open({mode,file}){
+    reset();origin=document.activeElement;session={mode,n:null,seen:0,sum:0,events:[],ended:false};
+    host.innerHTML=`<section class="mc-term" role="dialog" aria-modal="true" aria-labelledby="mc-terminal-name">
+      <header class="mc-term-head"><span class="mc-term-emblem">${icon('square-terminal')}</span><strong id="mc-terminal-name">命令行</strong><span class="mc-term-filename" data-term-name></span><button type="button" class="mc-gbtn" data-term-close aria-label="关闭命令行" data-tip="关闭命令行">${icon('x')}</button></header>
+      <div class="mc-term-body"><div class="mc-term-log" role="log" aria-label="命令行输入输出" aria-live="polite" data-term-log></div>
+      <form class="mc-term-form" data-term-form><span aria-hidden="true">›</span><textarea rows="1" maxlength="4096" spellcheck="false" autocomplete="off" autocapitalize="off" inputmode="text" aria-label="标准输入" aria-describedby="mc-term-hint" data-term-input></textarea><button class="mc-gbtn" type="submit" data-term-send aria-label="提交输入" data-tip="提交输入 · Enter">${icon('corner-down-left')}</button></form></div>
+      <footer class="mc-term-foot"><span class="mc-term-state" data-term-state></span><span id="mc-term-hint" data-term-hint aria-live="polite"></span></footer></section>`;
+    const interactive=mode==='sum'||mode==='prefix';q('[data-term-form]').hidden=!interactive;
+    q('[data-term-name]').textContent=file.replace(/\.cpp$/i,'')+'.exe';
+    host.hidden=false;dim(true);icons();
+    status('运行中',interactive?hint():mode==='file'?'文件输入输出':mode==='long'?'标准输出':'');
+    (interactive?q('[data-term-input]'):q('[data-term-close]')).focus({preventScroll:true});
+    if(mode==='long'){let i=0;const tick=()=>{entry('out',++i);if(i===16)drain();else later(tick,95);};later(tick,180);}
+    else if(!interactive)later(()=>end(),mode==='file'?600:180);
+  }
+  host.addEventListener('submit',e=>{e.preventDefault();submit();});
+  host.addEventListener('click',e=>{if(e.target.closest('[data-term-close]'))dismiss();});
+  host.addEventListener('keydown',e=>{
+    if(!session)return;e.stopPropagation();
+    if(e.isComposing||e.keyCode===229)return;
+    if(e.key==='Escape'){e.preventDefault();dismiss();return;}
+    if(e.key==='Enter'&&!e.shiftKey&&e.target.matches('[data-term-input]')){e.preventDefault();submit();return;}
+    if(e.key==='Tab'){const items=Array.from(host.querySelectorAll('button,textarea')).filter(n=>!n.closest('[hidden]'));if(e.shiftKey&&document.activeElement===items[0]||!e.shiftKey&&document.activeElement===items.at(-1)){e.preventDefault();(e.shiftKey?items.at(-1):items[0]).focus();}}
+  });
+  return {open,reset,isOpen:()=>session!==null};
+}
+
 const source = [
   '#include <iostream>', 'using namespace std;', '', '// 读入 n 个整数，输出它们的和。',
   'int main() {', '    int n, x, sum = 0;', '    cin >> n;', '    for (int i = 0; i < n; ++i) {',
   '        cin >> x;', '        sum += x;', '    }', "    cout << sum << '\\n';", '    return 0;', '}'
 ];
 const emptySource = ['#include <iostream>', '', 'int main() {', '    return 0;', '}'];
+const runExamples={
+  sum:source,
+  prefix:[...source.slice(0,3),'// 每读入一个整数，就输出当前总和。',...source.slice(4,10),'        cout << sum << endl;',source[10],...source.slice(12)],
+  long:['#include <iostream>','using namespace std;','','// 逐行输出 1 到 16。','int main() {','    for (int i = 1; i <= 16; ++i) {','        cout << i << endl;','    }','    return 0;','}'],
+  file:['#include <fstream>','using namespace std;','','int main() {','    ifstream fin("sum.in");','    ofstream fout("sum.out");','    if (!fin || !fout) return 1;','    int n, x, sum = 0;','    fin >> n;','    for (int i = 0; i < n; ++i) {','        fin >> x;','        sum += x;','    }',"    fout << sum << '\\n';",'    return 0;','}']
+};
 const stops = [
   { line: 10, col: 9, i: 1, x: 8, sum: 3, changed: '', before: '' },
   { line: 8, col: 5, i: 1, x: 8, sum: 11, changed: 'sum', before: '3' },
@@ -350,20 +478,20 @@ const ceSamples = {
 function makeWorkbench(host) {
   const frame = () => stops[state.step];
   function lines() {
-    const text = state.blank ? emptySource.slice() : source.slice();
+    const text = state.blank ? emptySource.slice() : state.scene==='edit'?runExamples[state.runCase].slice():source.slice();
     if (state.scene === 'error') text[9] = ceSamples[state.ce].code;
     return text;
   }
   function nameValue(name) { return name === 'n' ? 3 : frame()[name]; }
   function codeTokens(text, num) {
     if (text.startsWith('//')) return `<span class="wb-comment">${esc(text)}</span>`;
-    if (text.startsWith('#')) return '<span class="wb-directive">#include</span> <span class="wb-string">&lt;iostream&gt;</span>';
+    if (text.startsWith('#')) return `<span class="wb-directive">#include</span> <span class="wb-string">${esc(text.slice(9))}</span>`;
     const vars = { n:1, x:1, sum:1, i:1 };
-    return text.split(/('(?:\\.|[^'])*'|\b(?:int|using|namespace|for|return|main|cin|cout|std|n|x|sum|i)\b|\b\d+\b)/g).map(t => {
+    return text.split(/('(?:\\.|[^'])*'|"(?:\\.|[^"])*"|\b(?:int|using|namespace|for|if|return|main|cin|cout|endl|ifstream|ofstream|std|n|x|sum|i)\b|\b\d+\b)/g).map(t => {
       if (vars[t] && state.scene==='debug' && nameValue(t)!==undefined) {
         return `<button type="button" class="wb-token" data-var="${t}" data-line-ref="${num}" aria-label="查看 ${t} 的值">${t}</button>`;
       }
-      const cls = /^(?:int|using|namespace|for|return)$/.test(t) ? 'wb-key' : /^(?:main|cin|cout|std)$/.test(t) ? 'wb-name' : /^'/.test(t) ? 'wb-string' : /^\d+$/.test(t) ? 'wb-number' : '';
+      const cls = /^(?:int|using|namespace|for|if|return)$/.test(t) ? 'wb-key' : /^(?:main|cin|cout|endl|ifstream|ofstream|std)$/.test(t) ? 'wb-name' : /^['"]/.test(t) ? 'wb-string' : /^\d+$/.test(t) ? 'wb-number' : '';
       return cls ? `<span class="${cls}">${esc(t)}</span>` : esc(t);
     }).join('');
   }
@@ -395,6 +523,14 @@ function makeWorkbench(host) {
     return `<div class="wb-diag" aria-label="编译诊断"><div class="wb-diag-line"><span class="wb-tag wb-red">错误</span><button class="wb-link" type="button" data-jump="${d.line}" data-tip="定位编译器报告的位置">${esc(fileName())}:${d.line}:${d.col}</button><code>${esc(d.msg)}</code></div>
       <div class="wb-advice">${icon('lightbulb')}<div><strong>中文建议</strong><span> ${d.advice}</span><button class="wb-link" type="button" data-jump="${d.hintLine}">检查第 ${d.hintLine} 行 · 第 ${d.hintCol} 列 ${icon('arrow-up-right')}</button></div></div></div>`;
   }
+  function finishedOutput(record){
+    if(record.mode==='file')return `<div class="wb-empty wb-file-done" data-file-done>${icon('circle-check')} 已完成文件输入输出</div>`;
+    const all=record.events;
+    if(!all.length)return `<div class="wb-empty">${icon('terminal')} 无输入输出</div>`;
+    const row=({kind,text})=>`<li data-record-row="${kind}"><span>${kind==='in'?'输入':'输出'}</span><code>${esc(text.length>120?text.slice(0,119)+'…':text)}</code></li>`;
+    const ellipsis=`<li class="wb-ellipsis" data-record-ellipsis><span>…</span><small>省略 ${all.length-4} 行</small></li>`;
+    return `<ol class="wb-record" data-run-record aria-label="本次运行的输入输出记录">${all.length>10?all.slice(0,3).map(row).join('')+ellipsis+row(all.at(-1)):all.map(row).join('')}</ol>`;
+  }
   function output() {
     const debug=state.scene==='debug', error=state.scene==='error', pan=state.panel;
     const tabs=[['console','square-terminal','运行输出'],['log','list','编译日志'],['issues','circle-alert','问题']];
@@ -407,14 +543,16 @@ function makeWorkbench(host) {
       const base=fileName().replace(/\.cpp$/i,'');
       const cmd=`g++ -std=c++${cfg} "${fileName()}" -o "${base}${debug?'.debug':''}.exe"`;
       const d=ceSamples[state.ce];
-      body=state.result==='idle' && !debug && !error?`<div class="wb-empty">${icon('hammer')} 尚无构建记录</div>`:`<div class="wb-log">${state.lastBuild==='rebuilt' && !debug?'<div class="wb-log-note">已清理当前源文件的旧产物</div>':''}<code>${esc(cmd)}</code><div class="wb-log-note">${error?`<span class="wb-fail">${esc(fileName())}:${d.line}:${d.col}: ${esc(d.msg)}</span>`:debug?'调试构建成功 · 独立的调试副本':'编译成功 · 0 错误，0 警告'}</div></div>`;
+      body=state.result==='idle' && !debug && !error?`<div class="wb-empty">${icon('classic-compile')} 尚无构建记录</div>`:`<div class="wb-log">${state.lastBuild==='rebuilt' && !debug?'<div class="wb-log-note">已清理当前源文件的旧产物</div>':''}<code>${esc(cmd)}</code><div class="wb-log-note">${error?`<span class="wb-fail">${esc(fileName())}:${d.line}:${d.col}: ${esc(d.msg)}</span>`:debug?'调试构建成功 · 独立的调试副本':'编译成功 · 0 错误，0 警告'}</div></div>`;
       right=error?'失败':debug?'调试构建':'普通构建';
     } else if (error) {
       body=`<div class="wb-empty">${icon('circle-alert')} 编译失败，本次未启动程序。</div>`; right='未运行';
-    } else if (debug || ['ran','builtRan'].includes(state.result)) {
-      const done=!debug || state.step===6;
-      body=`<div class="wb-io"><div><h3>标准输入 <small>stdin</small></h3><pre>${state.blank?'无输入':'3\n3 8 -2'}</pre></div><div><h3>标准输出 <small>stdout</small></h3>${done && !state.blank?'<pre>9</pre>':`<span class="wb-console-muted">${done?'无输出':'尚无输出'}</span>`}</div></div>`;
-      right=debug?(state.running?'运行中':'断点会话'):'退出码 0';
+    } else if (debug || state.runPhase==='active') {
+      body=`<div class="wb-empty" data-run-pending>${icon('square-terminal')} ${debug?'调试未结束，暂无本次记录':'程序运行中，结束后显示本次记录'}</div>`;right=debug?'调试会话':'命令行中';
+    } else if (state.runPhase==='aborted') {
+      body=`<div class="wb-empty">${icon('square')} 运行已中止，未生成完成记录</div>`;right='已中止';
+    } else if (state.record) {
+      body=finishedOutput(state.record);right='退出码 0';
     } else {
       body=`<div class="wb-empty">${icon('terminal')} ${state.result==='idle'?'等待运行':'编译成功，尚未运行'}</div>`;right='未运行';
     }
@@ -448,12 +586,12 @@ const root = document.getElementById('mini-cpp-review');
 const $ = (sel) => root.querySelector(sel);
 const $$ = (sel) => Array.from(root.querySelectorAll(sel));
 const esc = (s) => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const icon = (id) => `<i data-lucide="${id}" aria-hidden="true"></i>`;
+const icon = (id) => classicGlyphs[id] || `<i data-lucide="${id}" aria-hidden="true"></i>`;
 const icons = () => { if (globalThis.lucide?.createIcons) globalThis.lucide.createIcons({attrs:{width:16,height:16}}); };
 const fileName = () => state.file;
-const defaultState = {scene:'edit',std:'14',o2:false,debugStd:'14',lastStd:'14',lastO2:false,step:0,running:false,breakpoint:true,targetLine:11,ce:'semicolon',panel:'console',result:'builtRan',lastBuild:'builtRan',file:'main.cpp',blank:false};
+const defaultState = {scene:'edit',std:'14',o2:false,debugStd:'14',lastStd:'14',lastO2:false,step:0,running:false,breakpoint:true,targetLine:11,ce:'semicolon',panel:'console',result:'compiled',lastBuild:'compiled',file:'main.cpp',blank:false,runCase:'prefix',runPhase:'idle',record:null};
 const state = {...defaultState};
-const changeSet = [ ['compile','hammer','编译','F9','生成当前源文件的程序'], ['run','play','运行','F10','运行已有程序，不编译'], ['buildRun','square-play','编译并运行','F11','编译成功后再运行'], ['rebuild','rotate-cw','全部重新编译','F12','清理旧产物并完整编译'] ];
+const changeSet = [ ['compile','classic-compile','编译','F9','生成当前源文件的程序'], ['run','classic-run','运行','F10','运行已有程序，不编译'], ['buildRun','classic-buildRun','编译并运行','F11','编译成功后再运行'], ['rebuild','classic-rebuild','全部重新编译','F12','清理旧产物并完整编译'] ];
 const menus = {
   file:[['new','file-plus-2','新建源代码','Ctrl+N'],['open','folder-open','打开源代码…','Ctrl+O'],null,['save','save','保存','Ctrl+S'],['saveAs','file-pen-line','另存为…','Ctrl+Shift+S']],
   edit:[['undo','undo-2','撤销','Ctrl+Z'],['redo','redo-2','重做','Ctrl+Y'],['selectAll','text-select','全选','Ctrl+A'],null,['indent','indent-increase','增加缩进','Tab'],['outdent','indent-decrease','减少缩进','Shift+Tab'],['format','align-left','自动缩进选区','Ctrl+Tab'],['newline','corner-down-left','换行并继承缩进','Enter']],
@@ -469,20 +607,30 @@ const menus = {
 const names={edit:'编辑器',debug:'断点调试',error:'编译报错',icons:'图标稿'};
 const work=makeWorkbench($('[data-workbench]'));
 const dlg=$('[data-dialog]'), pop=$('[data-dropdown]');
-let menu='', dialog='', returnTo=null, tip=null, tipTimer=0, runTimer=0, notice='';
+let menu='', dialog='', returnTo=null, tip=null, tipTimer=0, runTimer=0, notice='', savedSignature='';
 const say = (msg) => { $('[data-announce]').textContent=msg; };
+const terminal=makeRunConsole($('[data-terminal]'),{icon,onFinish(record){
+  state.runPhase=record.aborted?'aborted':'done';state.record=record.aborted?null:record;
+  if(record.aborted){state.result='compiled';notice='运行已中止';}
+  else{state.result=state.runCommand==='buildRun'?'builtRan':'ran';notice='运行结束 · 退出码 0';}
+  paint();say(notice);persist();
+},onDismiss:clearTip});
+const caseFiles={prefix:'main.cpp',sum:'main.cpp',long:'numbers.cpp',file:'file_sum.cpp'};
+function applyRunCase(id){Object.assign(state,{runCase:id,runPhase:'idle',record:null,blank:false,file:caseFiles[id],result:'compiled',lastBuild:'compiled',lastStd:state.std,lastO2:state.o2,panel:'console'});}
 function persist() {
   const modelContent={scene:names[state.scene],standard:'C++'+state.std,optimizeO2:state.o2};
   // Only review choices are saved; text and file names entered in dialogs stay local.
-  const privateContent={scene:state.scene,standard:state.std,o2:state.o2,step:state.step};
+  const privateContent={scene:state.scene,standard:state.std,o2:state.o2,step:state.step,runCase:state.runCase};
+  savedSignature=JSON.stringify(privateContent);
   try { window.openai?.setWidgetState?.({modelContent,privateContent})?.catch?.(()=>{}); } catch { /* optional host */ }
 }
 function fromHost(saved) {
-  const p=saved?.privateContent; if(!p || typeof p!=='object') return;
+  const p=saved?.privateContent; if(!p || typeof p!=='object'||JSON.stringify(p)===savedSignature) return;
   clearTimeout(runTimer); closeMenu(); closeDialog(false); notice='';
   if (['98','11','14'].includes(p.standard)) state.std=p.standard;
   if (typeof p.o2==='boolean') state.o2=p.o2;
   setScene(Object.hasOwn(names,p.scene)?p.scene:'edit',false);
+  if(state.scene==='edit'&&Object.hasOwn(caseFiles,p.runCase))applyRunCase(p.runCase);
   if (state.scene==='debug' && Number.isInteger(p.step)) state.step=Math.max(0,Math.min(stops.length-1,p.step));
   paint();
 }
@@ -534,6 +682,8 @@ function status() {
   if(s.scene==='debug'){ico=s.running?'play':'pause';text=s.running?'运行中 · 变量为最近采样值':'调试暂停 · -g -O0';const f=stops[s.step];pos=s.running?'采样：行 '+f.line:`行 ${f.line}，列 ${f.col}`;}
   if(s.scene==='error'){const d=ceSamples[s.ce];ico='circle-alert';text='编译失败 · 1 个错误';pos=`行 ${s.targetLine}，列 ${s.targetLine===d.hintLine?d.hintCol:d.col}`;}
   if(s.scene==='edit' && s.result!=='idle') text=({compiled:'编译成功',ran:'运行结束',builtRan:'编译并运行完成',rebuilt:'全部重新编译完成'})[s.result];
+  if(s.runPhase==='active'){ico='square-terminal';text='命令行运行中';}
+  if(s.runPhase==='aborted'){ico='square';text='已中止';}
   $('[data-status]').innerHTML=icon(ico)+esc(notice||text); $('[data-position]').textContent=pos;
 }
 function paint() {
@@ -542,18 +692,20 @@ function paint() {
   $('[data-window]').hidden=id==='icons'; $('[data-identity]').hidden=id!=='icons';
   $('[data-titlefile]').textContent=fileName();
   $('[data-case]').hidden=id!=='error';$('[data-case]').value=state.ce;
+  $('[data-run-case]').hidden=id!=='edit'||state.blank;$('[data-run-case]').value=state.runCase;
   $('[data-std]').value=state.std; $('[data-o2]').checked=state.o2;
   if(id!=='icons') {work.render();status();} else work.hoverClear();
   icons();
 }
 function setScene(id,repaint=true) {
-  clearTimeout(runTimer); closeMenu(); closeDialog(false); clearTip(); notice='';
+  clearTimeout(runTimer);terminal.reset();closeMenu();closeDialog(false);clearTip();notice='';
   if(id==='icons') {state.scene='icons';state.running=false;}
-  else Object.assign(state,{scene:id,running:false,step:0,breakpoint:true,blank:false,file:'main.cpp',targetLine:11,ce:'semicolon',debugStd:state.std,lastStd:state.std,lastO2:state.o2,panel:id==='error'?'issues':'console',result:id==='error'?'idle':'builtRan',lastBuild:id==='error'?'compiled':'builtRan'});
+  else Object.assign(state,{scene:id,running:false,step:0,breakpoint:true,blank:false,file:'main.cpp',targetLine:11,ce:'semicolon',debugStd:state.std,lastStd:state.std,lastO2:state.o2,panel:id==='error'?'issues':'console',result:id==='error'?'idle':'compiled',lastBuild:'compiled',runCase:id==='edit'?'prefix':'sum',runPhase:'idle',record:null});
   if(repaint){paint();say(names[id]);persist();}
 }
 function finishDebug(message) {
   clearTimeout(runTimer); state.scene='edit';state.running=false;state.result='ran';state.panel='console';notice=message||'调试结束 · 退出码 0';
+  state.runPhase='done';state.record={mode:'sum',events:[{kind:'in',text:'3'},{kind:'in',text:'3 8 -2'},{kind:'out',text:'9'}]};
 }
 function nextSample() {
   if(state.scene!=='debug'||!state.running) return;
@@ -566,7 +718,10 @@ function build(a) {
   clearTimeout(runTimer);state.running=false;
   if(a!=='run'){state.lastStd=state.std;state.lastO2=state.o2;state.lastBuild=a==='rebuild'?'rebuilt':a==='buildRun'?'builtRan':'compiled';}
   if(state.scene==='error'){state.panel='issues';notice='编译失败，未启动程序';}
-  else {state.scene='edit';state.result=({compile:'compiled',run:'ran',buildRun:'builtRan',rebuild:'rebuilt'})[a];state.panel=a==='run'||a==='buildRun'?'console':'log';}
+  else if(a==='run'||a==='buildRun'){
+    Object.assign(state,{scene:'edit',runPhase:'active',runCommand:a,record:null,panel:'console',result:'compiled'});
+    paint();terminal.open({mode:state.blank?'empty':state.runCase,file:fileName()});say('命令行运行中');return;
+  } else {state.scene='edit';state.result=a==='compile'?'compiled':'rebuilt';state.runPhase='idle';state.panel='log';}
   paint();say($('[data-status]').textContent);persist();
 }
 const editOps=['undo','redo','find','replace','selectAll','indent','outdent','format','newline'];
@@ -578,7 +733,7 @@ function act(a) {
   if(a==='toggleO2'){$('[data-o2]').click();return;}
   if(['sourceInfo','about','shortcuts'].includes(a)){
     const tit={sourceInfo:'源文件属性',about:'关于 Mini C++',shortcuts:'快捷键'};
-    const body=a==='sourceInfo'?`<p><code>${esc(fileName())}</code></p><p>C++${state.std} · UTF-8 · 单文件</p>`:a==='about'?'<p>Mini C++ · 设计审查 R02</p>':`<div class="mc-keylist">${[...changeSet,...menus.search,menus.edit[6]].map(c=>`<div><span>${c[2]}</span><kbd>${c[3]}</kbd></div>`).join('')}</div>`;
+    const body=a==='sourceInfo'?`<p><code>${esc(fileName())}</code></p><p>C++${state.std} · UTF-8 · 单文件</p>`:a==='about'?'<p>Mini C++ · 设计审查 R03</p>':`<div class="mc-keylist">${[...changeSet,...menus.search,menus.edit[6]].map(c=>`<div><span>${c[2]}</span><kbd>${c[3]}</kbd></div>`).join('')}</div>`;
     sheet(a,tit[a],body);return;
   }
   if(['compile','run','buildRun','rebuild'].includes(a)) return build(a);
@@ -587,7 +742,7 @@ function act(a) {
   if(a==='save') {notice='已保存（样稿）';paint();say(notice);return;}
   if(a==='debug') {
     if(state.scene==='error'){state.panel='issues'; notice='编译失败，无法启动调试';paint();return;}
-    if(state.blank){sheet('debugBlank','调试样例','<p>当前模板没有示例断点。</p><div class="mc-dialog-actions"><button type="button" class="mc-sm-btn" data-dlg="sampleDebug">打开求和调试样例</button></div>','[data-dlg="sampleDebug"]');return;}
+    if(state.blank||state.runCase!=='sum'){sheet('debugSample','调试样例','<p>断点预览：求总和 · main.cpp:10</p><div class="mc-dialog-actions"><button type="button" class="mc-sm-btn" data-dlg="sampleDebug">打开求和调试样例</button></div>','[data-dlg="sampleDebug"]');return;}
     return setScene('debug');
   }
   if(state.scene!=='debug') return;
@@ -595,7 +750,7 @@ function act(a) {
   if(a==='step'&&!state.running){if(state.step<stops.length-1) state.step++; else finishDebug();}
   if(a==='continue'&&!state.running){state.running=true;runTimer=setTimeout(nextSample,720);}
   if(a==='pause'&&state.running){clearTimeout(runTimer);state.running=false;}
-  if(a==='stop'){clearTimeout(runTimer);state.scene='edit';state.running=false;state.panel='log';state.result='compiled';notice='已停止调试';}
+  if(a==='stop'){clearTimeout(runTimer);state.scene='edit';state.running=false;state.runPhase='aborted';state.record=null;state.panel='log';state.result='compiled';notice='已停止调试';}
   paint();say($('[data-status]').textContent);persist();
 }
 function fileSheet(id) {
@@ -611,7 +766,7 @@ function confirmFile(){
     const w=dlg.querySelector('[data-file-warning]');w.hidden=false;w.textContent='请输入有效的 .cpp 文件名，不含目录。';inp.focus();return;
   }
   const fresh=dialog==='new';closeDialog(false);clearTimeout(runTimer);
-  if(fresh) Object.assign(state,{blank:true,scene:'edit',running:false,step:0,result:'idle',lastBuild:'idle',panel:'console',file:name});
+  if(fresh) Object.assign(state,{blank:true,scene:'edit',running:false,step:0,result:'idle',lastBuild:'idle',runPhase:'idle',record:null,panel:'console',file:name});
   else {state.file=name;state.running=false;}
   notice=fresh?'已新建源代码（样稿）':'已另存为（样稿）';paint();say(notice);persist();
 }
@@ -669,6 +824,7 @@ root.addEventListener('click',e=>{
 });
 root.addEventListener('input',e=>{if(e.target.matches('[data-find]'))findPreview();});
 root.addEventListener('change',e=>{
+  if(e.target.matches('[data-run-case]')&&Object.hasOwn(caseFiles,e.target.value)){applyRunCase(e.target.value);notice='';paint();persist();return;}
   if(e.target.matches('[data-case]')&&Object.hasOwn(ceSamples,e.target.value)){state.ce=e.target.value;state.targetLine=ceSamples[state.ce].line;state.panel='issues';notice='';paint();return;}
   if(e.target.matches('[data-std]')) state.std=e.target.value;
   else if(e.target.matches('[data-o2]')) state.o2=e.target.checked; else return;

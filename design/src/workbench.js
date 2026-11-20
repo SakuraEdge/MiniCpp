@@ -4,6 +4,12 @@ const source = [
   '        cin >> x;', '        sum += x;', '    }', "    cout << sum << '\\n';", '    return 0;', '}'
 ];
 const emptySource = ['#include <iostream>', '', 'int main() {', '    return 0;', '}'];
+const runExamples={
+  sum:source,
+  prefix:[...source.slice(0,3),'// 每读入一个整数，就输出当前总和。',...source.slice(4,10),'        cout << sum << endl;',source[10],...source.slice(12)],
+  long:['#include <iostream>','using namespace std;','','// 逐行输出 1 到 16。','int main() {','    for (int i = 1; i <= 16; ++i) {','        cout << i << endl;','    }','    return 0;','}'],
+  file:['#include <fstream>','using namespace std;','','int main() {','    ifstream fin("sum.in");','    ofstream fout("sum.out");','    if (!fin || !fout) return 1;','    int n, x, sum = 0;','    fin >> n;','    for (int i = 0; i < n; ++i) {','        fin >> x;','        sum += x;','    }',"    fout << sum << '\\n';",'    return 0;','}']
+};
 const stops = [
   { line: 10, col: 9, i: 1, x: 8, sum: 3, changed: '', before: '' },
   { line: 8, col: 5, i: 1, x: 8, sum: 11, changed: 'sum', before: '3' },
@@ -20,20 +26,20 @@ const ceSamples = {
 function makeWorkbench(host) {
   const frame = () => stops[state.step];
   function lines() {
-    const text = state.blank ? emptySource.slice() : source.slice();
+    const text = state.blank ? emptySource.slice() : state.scene==='edit'?runExamples[state.runCase].slice():source.slice();
     if (state.scene === 'error') text[9] = ceSamples[state.ce].code;
     return text;
   }
   function nameValue(name) { return name === 'n' ? 3 : frame()[name]; }
   function codeTokens(text, num) {
     if (text.startsWith('//')) return `<span class="wb-comment">${esc(text)}</span>`;
-    if (text.startsWith('#')) return '<span class="wb-directive">#include</span> <span class="wb-string">&lt;iostream&gt;</span>';
+    if (text.startsWith('#')) return `<span class="wb-directive">#include</span> <span class="wb-string">${esc(text.slice(9))}</span>`;
     const vars = { n:1, x:1, sum:1, i:1 };
-    return text.split(/('(?:\\.|[^'])*'|\b(?:int|using|namespace|for|return|main|cin|cout|std|n|x|sum|i)\b|\b\d+\b)/g).map(t => {
+    return text.split(/('(?:\\.|[^'])*'|"(?:\\.|[^"])*"|\b(?:int|using|namespace|for|if|return|main|cin|cout|endl|ifstream|ofstream|std|n|x|sum|i)\b|\b\d+\b)/g).map(t => {
       if (vars[t] && state.scene==='debug' && nameValue(t)!==undefined) {
         return `<button type="button" class="wb-token" data-var="${t}" data-line-ref="${num}" aria-label="查看 ${t} 的值">${t}</button>`;
       }
-      const cls = /^(?:int|using|namespace|for|return)$/.test(t) ? 'wb-key' : /^(?:main|cin|cout|std)$/.test(t) ? 'wb-name' : /^'/.test(t) ? 'wb-string' : /^\d+$/.test(t) ? 'wb-number' : '';
+      const cls = /^(?:int|using|namespace|for|if|return)$/.test(t) ? 'wb-key' : /^(?:main|cin|cout|endl|ifstream|ofstream|std)$/.test(t) ? 'wb-name' : /^['"]/.test(t) ? 'wb-string' : /^\d+$/.test(t) ? 'wb-number' : '';
       return cls ? `<span class="${cls}">${esc(t)}</span>` : esc(t);
     }).join('');
   }
@@ -65,6 +71,14 @@ function makeWorkbench(host) {
     return `<div class="wb-diag" aria-label="编译诊断"><div class="wb-diag-line"><span class="wb-tag wb-red">错误</span><button class="wb-link" type="button" data-jump="${d.line}" data-tip="定位编译器报告的位置">${esc(fileName())}:${d.line}:${d.col}</button><code>${esc(d.msg)}</code></div>
       <div class="wb-advice">${icon('lightbulb')}<div><strong>中文建议</strong><span> ${d.advice}</span><button class="wb-link" type="button" data-jump="${d.hintLine}">检查第 ${d.hintLine} 行 · 第 ${d.hintCol} 列 ${icon('arrow-up-right')}</button></div></div></div>`;
   }
+  function finishedOutput(record){
+    if(record.mode==='file')return `<div class="wb-empty wb-file-done" data-file-done>${icon('circle-check')} 已完成文件输入输出</div>`;
+    const all=record.events;
+    if(!all.length)return `<div class="wb-empty">${icon('terminal')} 无输入输出</div>`;
+    const row=({kind,text})=>`<li data-record-row="${kind}"><span>${kind==='in'?'输入':'输出'}</span><code>${esc(text.length>120?text.slice(0,119)+'…':text)}</code></li>`;
+    const ellipsis=`<li class="wb-ellipsis" data-record-ellipsis><span>…</span><small>省略 ${all.length-4} 行</small></li>`;
+    return `<ol class="wb-record" data-run-record aria-label="本次运行的输入输出记录">${all.length>10?all.slice(0,3).map(row).join('')+ellipsis+row(all.at(-1)):all.map(row).join('')}</ol>`;
+  }
   function output() {
     const debug=state.scene==='debug', error=state.scene==='error', pan=state.panel;
     const tabs=[['console','square-terminal','运行输出'],['log','list','编译日志'],['issues','circle-alert','问题']];
@@ -77,14 +91,16 @@ function makeWorkbench(host) {
       const base=fileName().replace(/\.cpp$/i,'');
       const cmd=`g++ -std=c++${cfg} "${fileName()}" -o "${base}${debug?'.debug':''}.exe"`;
       const d=ceSamples[state.ce];
-      body=state.result==='idle' && !debug && !error?`<div class="wb-empty">${icon('hammer')} 尚无构建记录</div>`:`<div class="wb-log">${state.lastBuild==='rebuilt' && !debug?'<div class="wb-log-note">已清理当前源文件的旧产物</div>':''}<code>${esc(cmd)}</code><div class="wb-log-note">${error?`<span class="wb-fail">${esc(fileName())}:${d.line}:${d.col}: ${esc(d.msg)}</span>`:debug?'调试构建成功 · 独立的调试副本':'编译成功 · 0 错误，0 警告'}</div></div>`;
+      body=state.result==='idle' && !debug && !error?`<div class="wb-empty">${icon('classic-compile')} 尚无构建记录</div>`:`<div class="wb-log">${state.lastBuild==='rebuilt' && !debug?'<div class="wb-log-note">已清理当前源文件的旧产物</div>':''}<code>${esc(cmd)}</code><div class="wb-log-note">${error?`<span class="wb-fail">${esc(fileName())}:${d.line}:${d.col}: ${esc(d.msg)}</span>`:debug?'调试构建成功 · 独立的调试副本':'编译成功 · 0 错误，0 警告'}</div></div>`;
       right=error?'失败':debug?'调试构建':'普通构建';
     } else if (error) {
       body=`<div class="wb-empty">${icon('circle-alert')} 编译失败，本次未启动程序。</div>`; right='未运行';
-    } else if (debug || ['ran','builtRan'].includes(state.result)) {
-      const done=!debug || state.step===6;
-      body=`<div class="wb-io"><div><h3>标准输入 <small>stdin</small></h3><pre>${state.blank?'无输入':'3\n3 8 -2'}</pre></div><div><h3>标准输出 <small>stdout</small></h3>${done && !state.blank?'<pre>9</pre>':`<span class="wb-console-muted">${done?'无输出':'尚无输出'}</span>`}</div></div>`;
-      right=debug?(state.running?'运行中':'断点会话'):'退出码 0';
+    } else if (debug || state.runPhase==='active') {
+      body=`<div class="wb-empty" data-run-pending>${icon('square-terminal')} ${debug?'调试未结束，暂无本次记录':'程序运行中，结束后显示本次记录'}</div>`;right=debug?'调试会话':'命令行中';
+    } else if (state.runPhase==='aborted') {
+      body=`<div class="wb-empty">${icon('square')} 运行已中止，未生成完成记录</div>`;right='已中止';
+    } else if (state.record) {
+      body=finishedOutput(state.record);right='退出码 0';
     } else {
       body=`<div class="wb-empty">${icon('terminal')} ${state.result==='idle'?'等待运行':'编译成功，尚未运行'}</div>`;right='未运行';
     }
