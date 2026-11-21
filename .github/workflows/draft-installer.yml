@@ -116,11 +116,15 @@ jobs:
           if ($exitCode -ne 0) { throw "Fresh installation exited with $exitCode" }
           $registry = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniCpp.Dev'
           if ((Get-ItemPropertyValue -LiteralPath $registry -Name InstallLocation) -ne $installDir) { throw 'Custom installation directory was not recorded' }
-          $shell = New-Object -ComObject WScript.Shell
+          $shell = New-Object -ComObject Shell.Application
           foreach ($folder in 'DesktopDirectory', 'Programs') {
-            $link = Join-Path ([Environment]::GetFolderPath($folder)) 'Mini C++.lnk'
-            if (!(Test-Path -LiteralPath $link) -or $shell.CreateShortcut($link).TargetPath -ne (Join-Path $installDir 'MiniCpp.exe')) {
-              throw "Shortcut does not point to the custom installation: $link"
+            $directory = [Environment]::GetFolderPath($folder)
+            $link = Join-Path $directory 'Mini C++.lnk'
+            if (!(Test-Path -LiteralPath $link -PathType Leaf)) { throw "Shortcut missing: $link" }
+            $target = $shell.NameSpace($directory).ParseName('Mini C++.lnk').ExtendedProperty('System.Link.TargetParsingPath')
+            $expected = Join-Path $installDir 'MiniCpp.exe'
+            if ($target -ne $expected) {
+              throw "Shortcut $link targets '$target', expected '$expected'"
             }
           }
 

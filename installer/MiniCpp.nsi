@@ -172,6 +172,7 @@ SectionEnd
 
 Section "创建桌面快捷方式" DESKTOP_SHORTCUT
   SetOutPath "$INSTDIR"
+  CreateDirectory "$DESKTOP"
   CreateShortcut "${DESKTOPLINK}" "$INSTDIR\MiniCpp.exe"
 SectionEnd
 
