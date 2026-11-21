@@ -1,0 +1,68 @@
+name: Build installer for a release draft
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing draft tag (the draft must target an exact commit)
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  installer:
+    runs-on: windows-2022
+    timeout-minutes: 35
+    env:
+      RELEASE_TAG: ${{ inputs.tag }}
+    steps:
+      - name: Resolve the existing draft
+        id: draft
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ($env:RELEASE_TAG -notmatch '^v[0-9]+\.[0-9]+\.[0-9]+-dev$') { throw 'Invalid development tag' }
+          $h = @{Authorization="Bearer $env:GH_TOKEN"}
+          $items = Invoke-RestMethod -Headers $h "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases?per_page=100"
+          $r = @($items | Where-Object { $_.tag_name -ceq $env:RELEASE_TAG -and $_.draft })
+          if ($r.Count -ne 1 -or $r[0].target_commitish -notmatch '^[a-f0-9]{40}$') { throw 'Expected one draft pinned to a commit' }
+          "sha=$($r[0].target_commitish)" >> $env:GITHUB_OUTPUT
+          "id=$($r[0].id)" >> $env:GITHUB_OUTPUT
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ steps.draft.outputs.sha }}
+          persist-credentials: false
+      - name: Build and check the editor
+        shell: pwsh
+        run: |
+          ./scripts/build.ps1 -AppDir dist/MiniCpp
+          ./scripts/smoke.ps1 -AppDir dist/MiniCpp -Unicode
+      - name: Package the offline installer
+        shell: pwsh
+        run: |
+          ./scripts/get-toolchain.ps1 -AppDir dist/MiniCpp
+          if (!(Get-Command makensis.exe -ErrorAction SilentlyContinue) -and !(Test-Path "${env:ProgramFiles(x86)}/NSIS/makensis.exe")) {
+            choco install nsis --yes --no-progress
+            if ($LASTEXITCODE) { throw 'Could not install NSIS' }
+          }
+          ./scripts/build-installer.ps1 -AppDir dist/MiniCpp
+      - name: Attach and verify without publishing
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DRAFT_ID: ${{ steps.draft.outputs.id }}
+          TARGET_SHA: ${{ steps.draft.outputs.sha }}
+        run: |
+          $h = @{Authorization="Bearer $env:GH_TOKEN"; Accept='application/vnd.github+json'}
+          $r = Invoke-RestMethod -Headers $h "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases/$env:DRAFT_ID"
+          if (!$r.draft -or $r.tag_name -cne $env:RELEASE_TAG -or $r.target_commitish -cne $env:TARGET_SHA) { throw 'Draft changed during build' }
+          $version = $env:RELEASE_TAG.Substring(1).Replace('-dev','')
+          $f = Get-Item -LiteralPath "artifacts/MiniCpp-Dev-v$version-win-x64-Setup.exe"
+          if ($r.assets.name -contains $f.Name) { throw 'Refusing to replace an existing installer' }
+          $sha = (Get-FileHash -Algorithm SHA256 -LiteralPath $f.FullName).Hash.ToLowerInvariant()
+          $url = $r.upload_url.Split('{')[0] + '?name=' + [uri]::EscapeDataString($f.Name)
+          $a = Invoke-RestMethod -Uri $url -Method Post -Headers $h -ContentType 'application/octet-stream' -InFile $f.FullName
+          if ($a.state -ne 'uploaded' -or $a.size -ne $f.Length -or $a.digest -cne "sha256:$sha") { throw 'Uploaded asset verification failed' }
+          "Verified $($f.Name): $($f.Length) bytes, SHA-256 $sha (source $env:TARGET_SHA)" >> $env:GITHUB_STEP_SUMMARY
