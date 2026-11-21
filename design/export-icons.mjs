@@ -10,6 +10,7 @@ const browser=await chromium.launch({executablePath:process.env.CHROME_PATH||'C:
 try{
   const page=await browser.newPage({viewport:{width:300,height:300},deviceScaleFactor:1,colorScheme:'light'});
   for(const name of ['mini-cpp','cpp-file']){
+    if(process.argv.length>2&&!process.argv.slice(2).includes(name))continue;
     const art=await readFile(path.join(base,name+'.svg'),'utf8');
     const small=name==='cpp-file'?await readFile(path.join(base,'cpp-file-small.svg'),'utf8'):art;
     const entries=[], header=Buffer.alloc(6+16*sizes.length);header.writeUInt16LE(1,2);header.writeUInt16LE(sizes.length,4);

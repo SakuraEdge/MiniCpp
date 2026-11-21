@@ -1,8 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-labelledby="title">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-labelledby="title">
   <title id="title">Mini C++</title>
-  <rect width="64" height="64" rx="14" fill="#456982"/>
-  <g fill="#fff">
-    <path d="M39 13H22L11 24v16l11 11h17v-8H25l-6-6V27l6-6h14z"/>
-    <path d="M32 26h4v4h4v4h-4v4h-4v-4h-4v-4h4zm15 0h4v4h4v4h-4v4h-4v-4h-4v-4h4z"/>
-  </g>
+  <defs>
+    <linearGradient id="blue" x1="16" y1="12" x2="108" y2="119" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#58AACB"/>
+      <stop offset=".48" stop-color="#357EAB"/>
+      <stop offset="1" stop-color="#355E9B"/>
+    </linearGradient>
+  </defs>
+  <rect x="6" y="6" width="116" height="116" rx="27" fill="url(#blue)"/>
+  <rect x="6.5" y="6.5" width="115" height="115" rx="26.5" fill="none" stroke="#254D7C" stroke-opacity=".32"/>
+  <path d="M42 56V30a4 4 0 0 1 4-4h5L64 41 77 26h5a4 4 0 0 1 4 4V56H76V40L64 53 52 40V56Z" fill="#fff"/>
+  <path d="M51.9 74.1A14 14 0 1 0 51.9 93.9" fill="none" stroke="#DDF3FF" stroke-width="9" stroke-linecap="round"/>
+  <path d="M73 77.5v13m-6.5-6.5h13M95 77.5v13m-6.5-6.5h13" fill="none" stroke="#DDF3FF" stroke-width="6" stroke-linecap="round"/>
 </svg>
