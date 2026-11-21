@@ -101,17 +101,28 @@ jobs:
           SIGNED_BUILD: ${{ inputs.sign }}
         run: |
           $setup = Get-Item -LiteralPath "artifacts/$env:SETUP"
-          $installDir = Join-Path $env:RUNNER_TEMP 'MiniCpp-Install-Smoke'
-          function Invoke-Installer {
-            $process = Start-Process -FilePath $setup.FullName -ArgumentList @('/S', "/D=$installDir") -WindowStyle Hidden -PassThru
+          $installDir = Join-Path $env:RUNNER_TEMP 'MiniCpp 安装测试'
+          function Invoke-Installer([string]$destination) {
+            $arguments = @('/S')
+            if ($destination) { $arguments += "/D=$destination" }
+            $process = Start-Process -FilePath $setup.FullName -ArgumentList $arguments -WindowStyle Hidden -PassThru
             if (!$process.WaitForExit(120000)) {
               $process.Kill()
               throw 'Silent installer did not exit within two minutes'
             }
             $process.ExitCode
           }
-          $exitCode = Invoke-Installer
+          $exitCode = Invoke-Installer $installDir
           if ($exitCode -ne 0) { throw "Fresh installation exited with $exitCode" }
+          $registry = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniCpp.Dev'
+          if ((Get-ItemPropertyValue -LiteralPath $registry -Name InstallLocation) -ne $installDir) { throw 'Custom installation directory was not recorded' }
+          $shell = New-Object -ComObject WScript.Shell
+          foreach ($folder in 'DesktopDirectory', 'Programs') {
+            $link = Join-Path ([Environment]::GetFolderPath($folder)) 'Mini C++.lnk'
+            if (!(Test-Path -LiteralPath $link) -or $shell.CreateShortcut($link).TargetPath -ne (Join-Path $installDir 'MiniCpp.exe')) {
+              throw "Shortcut does not point to the custom installation: $link"
+            }
+          }
 
           $config = Join-Path $installDir 'MiniCpp.exe.config'
           $program = Join-Path $installDir 'keep.cpp'
@@ -124,7 +135,9 @@ jobs:
           } finally {
             $handle.Dispose()
           }
-          if ($exitCode -ne 0) { throw "Upgrade with identical locked config exited with $exitCode" }
+          if ($exitCode -ne 0 -or (Get-ItemPropertyValue -LiteralPath $registry -Name InstallLocation) -ne $installDir) {
+            throw "Upgrade did not reuse the custom directory with the locked config (exit $exitCode)"
+          }
 
           Set-Content -LiteralPath $config -Value '<configuration/>'
           Set-Content -LiteralPath $licensePath -Value 'Previous installation'

@@ -8,9 +8,12 @@ Unicode true
 !define CAP "Software\MiniCpp\Capabilities"
 !define CLASSES "Software\Classes"
 !define UNKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniCpp.Dev"
+!define STARTLINK "$SMPROGRAMS\Mini C++.lnk"
+!define DESKTOPLINK "$DESKTOP\Mini C++.lnk"
 Name "Mini C++ ${APPCHANNEL} v${APPVERSION}"
 OutFile "${OUTPUT}"
 InstallDir "$LOCALAPPDATA\Programs\MiniCpp"
+InstallDirRegKey HKCU "${UNKEY}" "InstallLocation"
 RequestExecutionLevel user
 SetCompressor /SOLID lzma
 SetCompressorDictSize 32
@@ -25,9 +28,15 @@ VIAddVersionKey "ProductVersion" "${PRODUCTVERSION}"
 VIAddVersionKey "LegalCopyright" "Mini C++ contributors"
 !define MUI_ABORTWARNING
 !insertmacro MUI_PAGE_COMPONENTS
+!insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !define MUI_FINISHPAGE_RUN "$INSTDIR\MiniCpp.exe"
 !define MUI_FINISHPAGE_RUN_NOTCHECKED
+!define MUI_FINISHPAGE_TEXT "Mini C++ ${APPCHANNEL} v${APPVERSION} 已安装完成。$\r$\n$\r$\n要固定到「开始」，可勾选下方选项，完成后右键单击选中的快捷方式。"
+!define MUI_FINISHPAGE_SHOWREADME
+!define MUI_FINISHPAGE_SHOWREADME_TEXT "查看开始菜单快捷方式"
+!define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
+!define MUI_FINISHPAGE_SHOWREADME_FUNCTION ShowStartMenuShortcut
 !insertmacro MUI_PAGE_FINISH
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
@@ -42,6 +51,10 @@ Function .onInit
   ${EndIf}
   SetRegView 64
   SetShellVarContext current
+FunctionEnd
+
+Function ShowStartMenuShortcut
+  ExecShell "open" "$WINDIR\explorer.exe" '/select,$\"${STARTLINK}$\"'
 FunctionEnd
 
 ; Skip rewriting an identical config, even if another process has it open for reading.
@@ -127,6 +140,9 @@ Section "Mini C++ 和 C++ 工具链（必选）" IDE
   ClearErrors
   SetOutPath "$INSTDIR"
   IfErrors installFailed
+  GetTempFileName $0 "$INSTDIR"
+  IfErrors installFailed
+  Delete "$0"
   SetOverwrite on
   AllowSkipFiles off
   ${If} $ConfigMatches == 0
@@ -136,7 +152,8 @@ Section "Mini C++ 和 C++ 工具链（必选）" IDE
   IfErrors installFailed
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   IfErrors installFailed
-  CreateShortcut "$SMPROGRAMS\Mini C++.lnk" "$INSTDIR\MiniCpp.exe"
+  SetOutPath "$INSTDIR"
+  CreateShortcut "${STARTLINK}" "$INSTDIR\MiniCpp.exe"
   WriteRegStr HKCU "${UNKEY}" "DisplayName" "Mini C++ ${APPCHANNEL}"
   WriteRegStr HKCU "${UNKEY}" "DisplayVersion" "${PRODUCTVERSION}"
   WriteRegStr HKCU "${UNKEY}" "Publisher" "Mini C++"
@@ -151,6 +168,11 @@ Section "Mini C++ 和 C++ 工具链（必选）" IDE
     SetErrorLevel 5
     Abort
   installed:
+SectionEnd
+
+Section "创建桌面快捷方式" DESKTOP_SHORTCUT
+  SetOutPath "$INSTDIR"
+  CreateShortcut "${DESKTOPLINK}" "$INSTDIR\MiniCpp.exe"
 SectionEnd
 
 ; An optional NSIS section is selected by default unless declared /o.
@@ -192,8 +214,12 @@ Section "Uninstall"
     DeleteRegKey HKCU "${CAP}"
     System::Call 'shell32::SHChangeNotify(i 0x08000000, i 0, p 0, p 0)'
   ${EndIf}
-  DeleteRegKey HKCU "${UNKEY}"
-  Delete "$SMPROGRAMS\Mini C++.lnk"
+  ReadRegStr $0 HKCU "${UNKEY}" "InstallLocation"
+  ${If} $0 == "$INSTDIR"
+    DeleteRegKey HKCU "${UNKEY}"
+    Delete "${STARTLINK}"
+    Delete "${DESKTOPLINK}"
+  ${EndIf}
   !include "${UNFILES}"
   Delete "$INSTDIR\Uninstall.exe"
   RMDir "$INSTDIR"
@@ -201,5 +227,6 @@ SectionEnd
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${IDE} "安装编辑器、GCC 和 GDB，不更改系统 PATH。"
+  !insertmacro MUI_DESCRIPTION_TEXT ${DESKTOP_SHORTCUT} "在当前用户桌面添加 Mini C++ 快捷方式。"
   !insertmacro MUI_DESCRIPTION_TEXT ${ASSOC} "仅影响当前用户。Windows 可能需要你确认默认应用，不会修改 .cpp 文件的内容。"
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
