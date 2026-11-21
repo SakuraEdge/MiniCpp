@@ -45,9 +45,9 @@ namespace MiniCpp {
             issues.Font=FontSettings.Get(sizes[2],false);shownIssues=null;if(current!=null)RenderIssues(current.Problems);}
         static bool BuildIcon(string name){return name=="compile"||name=="run"||name=="compile-and-run"||name=="rebuild";}
         void FitToolbar(){if(!workspaceReady||fittingTools)return;fittingTools=true;
-            try{int hit=Px(prefs.LargeTools?40:36),reserve=language.Width+optimize.Width+Px(58);bool narrow=tools.ClientSize.Width<13*hit+reserve;bool small=tools.ClientSize.Width<7*hit+reserve;
+            try{int hit=Px(prefs.LargeTools?40:36),reserve=language.Width+optimize.Width+hit+Px(58);bool narrow=tools.ClientSize.Width<13*hit+reserve;bool small=tools.ClientSize.Width<7*hit+reserve;
                 tools.SuspendLayout();foreach(ToolStripItem item in tools.Items){if(item is ToolStripSeparator){item.Available=!narrow;continue;}
-                    if(item==language||item==optimize||BuildIcon(item.Name))item.Overflow=ToolStripItemOverflow.Never;
+                    if(item==language||item==optimize||item==themeButton||BuildIcon(item.Name))item.Overflow=ToolStripItemOverflow.Never;
                     else if(narrow&&(small||item.Name!="save"&&item.Name!="folder-open"))item.Overflow=ToolStripItemOverflow.Always;
                     else item.Overflow=ToolStripItemOverflow.AsNeeded;
                 }tools.ResumeLayout();
@@ -73,7 +73,7 @@ namespace MiniCpp {
             foreach(var d in problems){issueStarts.Add(issues.TextLength);int line=d.HintLine>0?d.HintLine:d.Line,col=d.HintColumn>0?d.HintColumn:d.Column;
                 string level=d.Severity=="note"?"说明":d.Severity=="warning"?"警告":"错误";
                 string loc=line>0?Path.GetFileName(d.File)+" · 第 "+line+" 行"+(col>0?"，第 "+col+" 列":""):"";
-                IssueText(level+"    "+loc+"\n",level=="错误"?Color.FromArgb(145,54,52):Ui.Accent);
+                IssueText(level+"    "+loc+"\n",level=="错误"?Theme.Current.Error:Ui.Accent);
                 if(!string.IsNullOrEmpty(d.Suggestion))IssueText(d.Suggestion+"\n",Ui.Ink);
                 IssueText((d.Message.StartsWith("U+",StringComparison.Ordinal)?"字符: ":"GCC: ")+d.Message+"\n\n",Ui.Muted);
             }issues.Select(0,0);issues.ScrollToCaret();}

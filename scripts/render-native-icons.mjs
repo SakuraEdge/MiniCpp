@@ -8,11 +8,12 @@ const require=createRequire(import.meta.url);let chromium;
 try{({chromium}=require('playwright-core'));}catch{({chromium}=require(path.join(root,'.review-tools/node_modules/playwright-core')));}
 const nodes=JSON.parse(await readFile(path.join(root,'design/vendor/lucide-subset.json'),'utf8'));
 const folder=path.join(root,'src/Assets');await mkdir(folder,{recursive:true});
-const basic=['file-plus-2','folder-open','save','undo-2','redo-2','search','replace','bug','square','step-forward','play','pause','plus','x','chevron-down'];
+const basic=['file-plus-2','folder-open','save','undo-2','redo-2','search','replace','bug','square','step-forward','play','pause','plus','x','chevron-down','contrast'];
 const builds=['compile','run','compile-and-run','rebuild'];
 const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH||'C:/Program Files/Google/Chrome/Application/chrome.exe'});
 try{const page=await browser.newPage({viewport:{width:96,height:96},deviceScaleFactor:1,colorScheme:'light'});
   for(const name of [...basic,...builds]){
+    if(process.argv.length>2&&!process.argv.slice(2).includes(name))continue;
     let svg;if(builds.includes(name))svg=await readFile(path.join(root,'design/icons',name+'.svg'),'utf8');
     else svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#424242" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${nodes[name].map(([tag,attrs])=>`<${tag} ${Object.entries(attrs).map(([k,v])=>`${k}="${v}"`).join(' ')}/>`).join('')}</svg>`;
     await page.setContent(`<style>html,body{margin:0;background:transparent}svg{display:block;width:96px;height:96px}</style>${svg}`);

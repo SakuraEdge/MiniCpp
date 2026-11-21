@@ -8,7 +8,7 @@ Unicode true
 !define CAP "Software\MiniCpp\Capabilities"
 !define CLASSES "Software\Classes"
 !define UNKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniCpp.Dev"
-Name "Mini C++ Dev v1.0.0"
+Name "Mini C++ Dev v${APPVERSION}"
 OutFile "${OUTPUT}"
 InstallDir "$LOCALAPPDATA\Programs\MiniCpp"
 RequestExecutionLevel user
@@ -17,10 +17,10 @@ SetCompressorDictSize 32
 ManifestDPIAware true
 Icon "${APPDIR}\assets\mini-cpp.ico"
 UninstallIcon "${APPDIR}\assets\mini-cpp.ico"
-VIProductVersion 1.0.0.0
+VIProductVersion ${APPVERSION}.0
 VIAddVersionKey "ProductName" "Mini C++"
-VIAddVersionKey "FileDescription" "Mini C++ Dev v1.0.0 Setup"
-VIAddVersionKey "FileVersion" "1.0.0.0"
+VIAddVersionKey "FileDescription" "Mini C++ Dev v${APPVERSION} Setup"
+VIAddVersionKey "FileVersion" "${APPVERSION}.0"
 VIAddVersionKey "LegalCopyright" "Mini C++ contributors"
 !define MUI_ABORTWARNING
 !insertmacro MUI_PAGE_COMPONENTS
@@ -53,7 +53,7 @@ Section "Mini C++ 和 C++ 工具链（必选）" IDE
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   CreateShortcut "$SMPROGRAMS\Mini C++.lnk" "$INSTDIR\MiniCpp.exe"
   WriteRegStr HKCU "${UNKEY}" "DisplayName" "Mini C++ Dev"
-  WriteRegStr HKCU "${UNKEY}" "DisplayVersion" "1.0.0-dev"
+  WriteRegStr HKCU "${UNKEY}" "DisplayVersion" "${APPVERSION}-dev"
   WriteRegStr HKCU "${UNKEY}" "Publisher" "Mini C++"
   WriteRegStr HKCU "${UNKEY}" "DisplayIcon" "$INSTDIR\MiniCpp.exe,0"
   WriteRegStr HKCU "${UNKEY}" "InstallLocation" "$INSTDIR"

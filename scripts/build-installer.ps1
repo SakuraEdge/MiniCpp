@@ -2,7 +2,7 @@
 param([string]$AppDir,[string]$MakeNsis)
 $ErrorActionPreference='Stop'
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-if (!$AppDir){$AppDir=Join-Path $root 'dist/dev-1.0.0/MiniCpp'}
+if (!$AppDir){$AppDir=Join-Path $root 'dist/dev-1.0.2/MiniCpp'}
 $app=(Resolve-Path -LiteralPath $AppDir).Path.TrimEnd('\')
 foreach ($file in 'MiniCpp.exe','MiniCpp.exe.config','MiniCpp.Console.exe','ScintillaNET.dll','w64devkit/bin/g++.exe','w64devkit/bin/gdb.exe','assets/cpp-file.ico'){
     if (!(Test-Path -LiteralPath (Join-Path $app $file) -PathType Leaf)){throw "Missing $file in staged distribution."}
@@ -17,7 +17,9 @@ $dirs=@(Get-ChildItem -LiteralPath $app -Recurse -Directory | Sort-Object { $_.F
 # Only remove named package files. Leave source files and nonempty directories alone.
 $lines=@(foreach($f in $files){'Delete "$INSTDIR\'+$f.FullName.Substring($app.Length+1).Replace('$','$$')+'"'};foreach($d in $dirs){'RMDir "$INSTDIR\'+$d.FullName.Substring($app.Length+1).Replace('$','$$')+'"'})
 [IO.File]::WriteAllLines($manifest,[string[]]$lines,(New-Object Text.UTF8Encoding $true))
-$setup=Join-Path $out 'MiniCpp-Dev-v1.0.0-win-x64-Setup.exe'
-& $MakeNsis '/V2' '/INPUTCHARSET' 'UTF8' "/DAPPDIR=$app" "/DOUTPUT=$setup" "/DUNFILES=$manifest" (Join-Path $root 'installer/MiniCpp.nsi')
+$info=[Diagnostics.FileVersionInfo]::GetVersionInfo((Join-Path $app 'MiniCpp.exe'))
+$version='{0}.{1}.{2}' -f $info.FileMajorPart,$info.FileMinorPart,$info.FileBuildPart
+$setup=Join-Path $out "MiniCpp-Dev-v$version-win-x64-Setup.exe"
+& $MakeNsis '/V2' '/INPUTCHARSET' 'UTF8' "/DAPPVERSION=$version" "/DAPPDIR=$app" "/DOUTPUT=$setup" "/DUNFILES=$manifest" (Join-Path $root 'installer/MiniCpp.nsi')
 if ($LASTEXITCODE -ne 0){throw 'NSIS build failed.'}
 Get-FileHash -Algorithm SHA256 -LiteralPath $setup

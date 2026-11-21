@@ -25,10 +25,10 @@ namespace MiniCpp {
         async void StartBuild(bool run,bool rebuild,bool withDebugger){
             if(!Ready())return;var d=current;
             if(!Save(d,false,true))return;BeginWork(d);bool handedToDebugger=false;
-            try{if(!withDebugger)d.BuildFailed=true;d.Status=withDebugger?"正在编译调试副本…":"正在编译…";d.LogText=d.Status;UpdateDoc(d,1);
+            try{d.ClearErrorLines();d.Problems=new List<Diagnostic>();if(!withDebugger)d.BuildFailed=true;d.Status=withDebugger?"正在编译调试副本…":"正在编译…";d.LogText=d.Status;UpdateDoc(d,1);
                 var result=await Compiler.BuildAsync(d.FullPath,d.Standard,d.O2,withDebugger,rebuild,bin,jobToken.Token);if(closing)return;
                 d.LogText=result.Log;d.Problems=result.Diagnostics;if(!withDebugger){d.BuildFailed=!result.Success;if(result.Success)d.BuiltSource=d.Edit.Text;}
-                if(!result.Success){d.Status="编译失败";if(current==d&&horizontal.Panel2Collapsed)SetOutputVisible(true,false);UpdateDoc(d,2);return;}d.Status="编译成功";UpdateDoc(d,1);
+                if(!result.Success){d.MarkCompileErrors(result.Diagnostics);d.Status="编译失败";if(current==d&&horizontal.Panel2Collapsed)SetOutputVisible(true,false);UpdateDoc(d,2);return;}d.Status="编译成功";UpdateDoc(d,1);
                 if(withDebugger){await StartDebugger(d,result.Executable);handedToDebugger=debug!=null;}
                 else if(run)await RunProgram(d,result.Executable);
             }catch(OperationCanceledException){d.Status="已停止编译或运行";}
