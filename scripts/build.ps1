@@ -24,4 +24,5 @@ $licenses = [IO.Directory]::CreateDirectory((Join-Path $out 'LICENSES')).FullNam
 Get-ChildItem -LiteralPath (Join-Path $root 'LICENSES') -File | ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $licenses -Force }
 Copy-Item -LiteralPath (Join-Path $root 'design/vendor/LUCIDE-LICENSE.txt') -Destination $licenses -Force
 Copy-Item -LiteralPath (Join-Path $root 'README.md') -Destination (Join-Path $out 'README.md') -Force
+Copy-Item -LiteralPath (Join-Path $root 'LICENSE') -Destination (Join-Path $out 'LICENSE') -Force
 Write-Output "Built: $out/MiniCpp.exe"

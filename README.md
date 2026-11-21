@@ -2,9 +2,9 @@
 
 面向竞赛生的 Windows 单文件 C++ IDE。桌面版使用 Scintilla 编辑代码、GCC 编译、GDB 调试，不需要建立项目。
 
-**Mini C++ Dev v1.0.3 · Windows x64** · [GitHub 发布记录](https://github.com/SakuraEdge/MiniCpp/releases)。离线安装包 `MiniCpp-Dev-v1.0.3-win-x64-Setup.exe` 内置 GCC 和 GDB，安装到当前用户目录，不改系统 PATH。安装时默认勾选关联 `.cpp`，可取消；Windows 10/11 的默认应用由用户在系统设置中确认，不修改任何源文件。便携版直接运行 `MiniCpp.exe`，不注册文件关联。需要 .NET Framework 4.8 或更新版本。
+**Mini C++ Rev v1.0.0 · Windows x64** · [GitHub 发布记录](https://github.com/SakuraEdge/MiniCpp/releases)。离线安装包 `MiniCpp-Rev-v1.0.0-win-x64-Setup.exe` 内置 GCC 和 GDB，安装到当前用户目录，无需管理员权限。安装时可选择关联 `.cpp` 文件，并在 Windows 10/11 中确认默认应用。便携版可直接运行 `MiniCpp.exe`。需要 .NET Framework 4.8 或更新版本。
 
-在「帮助 → 检查更新」可免登录查看 GitHub 上的正式版、开发版和对应更新说明。匿名 API 限流或暂时不可用时，会改读同一仓库的官方公开发布订阅；限流等待期内不再重复请求 API。订阅只覆盖近期发布。两个来源都无法读取时，可手动打开发布页，不会误报“已是最新版”。
+在「帮助 → 检查更新」可免登录查看 GitHub 上的版本和更新说明。正式版只跟踪正式发行通道。匿名 API 限流或暂时不可用时，会改读同一仓库的近期公开发布订阅。两个来源都不可用时，可以打开发布页手动查看。Dev v1.0.3 用户可从发布页下载安装包切换到 Rev v1.0.0。
 
 ## 从新文件到运行
 
@@ -60,4 +60,4 @@
 - [桌面 IDE](src/MiniCpp/) · [命令行宿主](src/ConsoleHost/) · [构建与便携打包脚本](scripts/)
 - [模块与线程分工](src/README.md)：定位编辑器、编译诊断、运行记录、GDB、设置和更新代码。
 - [原始界面和图标审查稿](design/review.html)仅作为设计归档；其中的多窗口演示不是桌面版的标签行为。
-- [第三方许可与工具链来源](LICENSES/) · [Lucide 图标许可](design/vendor/LUCIDE-LICENSE.txt)
+- Mini C++ 自有代码和资源以 [MIT 许可证](LICENSE) 发布。随附组件见[第三方许可与工具链源码](LICENSES/TOOLCHAIN.txt)和[其他许可声明](LICENSES/)。

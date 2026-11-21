@@ -17,6 +17,7 @@ namespace MiniCpp {
         [DataMember(Name="tag_name")] public string Tag {get;set;}
         [DataMember(Name="body")] public string Notes {get;set;}
         [DataMember(Name="draft")] public bool Draft {get;set;}
+        [DataMember(Name="prerelease")] public bool Prerelease {get;set;}
     }
 
     internal sealed class GitHubUpdates {
@@ -28,6 +29,7 @@ namespace MiniCpp {
             AllowAutoRedirect=false, UseCookies=false, AutomaticDecompression=DecompressionMethods.GZip|DecompressionMethods.Deflate
         }) {Timeout=TimeSpan.FromSeconds(15),MaxResponseContentBufferSize=MaxBytes});
         readonly HttpClient http;
+        readonly bool includePrereleases=ReleaseVersion.Parse(Program.ReleaseTag).IsPrerelease;
         DateTimeOffset apiRetryAt;
 
         internal GitHubUpdates(HttpClient http){this.http=http;}
@@ -85,8 +87,8 @@ namespace MiniCpp {
                     using(var stream=await r.Content.ReadAsStreamAsync().ConfigureAwait(false)){
                         var items=(GitRelease[])reader.ReadObject(stream);
                         if(items==null)throw new InvalidDataException("发布列表格式异常");
-                        foreach(var item in items){if(item==null||item.Draft)continue;var v=ReleaseVersion.Parse(item.Tag);
-                            if(v!=null&&(best==null||v.CompareTo(best)>0)){v.Notes=item.Notes;best=v;}}
+                        foreach(var item in items){if(item==null||item.Draft||(!includePrereleases&&item.Prerelease))continue;var v=ReleaseVersion.Parse(item.Tag);
+                            if(IsNewerCandidate(v,best)){v.Notes=item.Notes;best=v;}}
                         if(items.Length<30)return best;
                     }
                 }
@@ -107,15 +109,19 @@ namespace MiniCpp {
                         var href=entry.Elements(Atom+"link").Where(x=>(string)x.Attribute("rel")=="alternate").Select(x=>(string)x.Attribute("href"))
                             .FirstOrDefault(x=>x!=null&&x.StartsWith(prefix,StringComparison.Ordinal));
                         if(href==null)continue;var v=ReleaseVersion.Parse(Uri.UnescapeDataString(href.Substring(prefix.Length)));
-                        if(v==null||best!=null&&v.CompareTo(best)<=0)continue;
+                        if(!IsNewerCandidate(v,best))continue;
                         var content=entry.Element(Atom+"content")??entry.Element(Atom+"summary");
                         if(content!=null)v.Notes=(string)content.Attribute("type")=="html"?PlainNotes(content.Value):content.Value;
                         v.FromRecentFeed=true;best=v;
                     }
-                    if(best==null)throw new InvalidDataException("近期订阅中没有可识别的版本");
+                    if(best==null)throw new InvalidDataException("近期订阅中没有本发行通道的可识别版本");
                     return best;
                 }
             }
+        }
+
+        bool IsNewerCandidate(ReleaseVersion candidate,ReleaseVersion best){
+            return candidate!=null&&(includePrereleases||!candidate.IsPrerelease)&&(best==null||candidate.CompareTo(best)>0);
         }
 
         // GitHub puts escaped HTML in Atom content. Convert it to text, never render it as HTML.

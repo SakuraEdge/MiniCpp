@@ -6,12 +6,20 @@ on:
         description: Existing draft tag (the draft must target an exact commit)
         required: true
         type: string
+      sign:
+        description: Sign with the configured Azure Artifact Signing public-trust profile
+        type: boolean
+        default: false
 
 permissions:
   contents: write
 
 jobs:
   installer:
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+      id-token: write
     runs-on: windows-2022
     timeout-minutes: 35
     env:
@@ -23,11 +31,18 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if ($env:RELEASE_TAG -notmatch '^v[0-9]+\.[0-9]+\.[0-9]+-dev$') { throw 'Invalid development tag' }
+          if ($env:RELEASE_TAG -notmatch '^v[0-9]+\.[0-9]+\.[0-9]+(-dev)?$') { throw 'Invalid release tag' }
           $h = @{Authorization="Bearer $env:GH_TOKEN"}
           $items = Invoke-RestMethod -Headers $h "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases?per_page=100"
           $r = @($items | Where-Object { $_.tag_name -ceq $env:RELEASE_TAG -and $_.draft })
           if ($r.Count -ne 1 -or $r[0].target_commitish -notmatch '^[a-f0-9]{40}$') { throw 'Expected one draft pinned to a commit' }
+          $dev = $env:RELEASE_TAG.EndsWith('-dev')
+          if ($r[0].prerelease -ne $dev) { throw 'Tag and draft channel disagree' }
+          if ('${{ inputs.sign }}' -eq 'true' -and $r[0].target_commitish -ne $env:GITHUB_SHA) { throw 'Signing requires a draft targeting this main commit' }
+          $channel = if ($dev) { 'Dev' } else { 'Rev' }
+          $version = $env:RELEASE_TAG.Substring(1).Replace('-dev', '')
+          "setup=MiniCpp-$channel-v$version-win-x64-Setup.exe" >> $env:GITHUB_OUTPUT
+          "version=$($env:RELEASE_TAG.Substring(1))" >> $env:GITHUB_OUTPUT
           "sha=$($r[0].target_commitish)" >> $env:GITHUB_OUTPUT
           "id=$($r[0].id)" >> $env:GITHUB_OUTPUT
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -39,6 +54,24 @@ jobs:
         run: |
           ./scripts/build.ps1 -AppDir dist/MiniCpp
           ./scripts/smoke.ps1 -AppDir dist/MiniCpp -Unicode
+          if (!$env:RELEASE_TAG.EndsWith('-dev')) { ./scripts/smoke.ps1 -AppDir dist/MiniCpp -Updates }
+      - name: Sign in to Azure
+        if: inputs.sign
+        uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906 # v3
+        with:
+          client-id: ${{ vars.SIGNING_CLIENT_ID }}
+          tenant-id: ${{ vars.SIGNING_TENANT_ID }}
+          subscription-id: ${{ vars.SIGNING_SUBSCRIPTION_ID }}
+      - name: Sign the editor and console host
+        if: inputs.sign
+        uses: azure/artifact-signing-action@c7ab2a863ab5f9a846ddb8265964877ef296ee82 # v2
+        with:
+          endpoint: ${{ vars.SIGNING_ENDPOINT }}
+          signing-account-name: ${{ vars.SIGNING_ACCOUNT }}
+          certificate-profile-name: ${{ vars.SIGNING_CERT_PROFILE }}
+          files: |
+            ${{ github.workspace }}\dist\MiniCpp\MiniCpp.exe
+            ${{ github.workspace }}\dist\MiniCpp\MiniCpp.Console.exe
       - name: Package the offline installer
         shell: pwsh
         run: |
@@ -48,18 +81,61 @@ jobs:
             if ($LASTEXITCODE) { throw 'Could not install NSIS' }
           }
           ./scripts/build-installer.ps1 -AppDir dist/MiniCpp
+      - name: Sign the installer
+        if: inputs.sign
+        uses: azure/artifact-signing-action@c7ab2a863ab5f9a846ddb8265964877ef296ee82 # v2
+        with:
+          endpoint: ${{ vars.SIGNING_ENDPOINT }}
+          signing-account-name: ${{ vars.SIGNING_ACCOUNT }}
+          certificate-profile-name: ${{ vars.SIGNING_CERT_PROFILE }}
+          files: ${{ github.workspace }}\artifacts\${{ steps.draft.outputs.setup }}
+      - name: Verify the package and license
+        shell: pwsh
+        env:
+          SETUP: ${{ steps.draft.outputs.setup }}
+          PRODUCT_VERSION: ${{ steps.draft.outputs.version }}
+          SIGNED_BUILD: ${{ inputs.sign }}
+        run: |
+          $setup = Get-Item -LiteralPath "artifacts/$env:SETUP"
+          $installDir = Join-Path $env:RUNNER_TEMP 'MiniCpp-Install-Smoke'
+          $process = Start-Process -FilePath $setup.FullName -ArgumentList @('/S', "/D=$installDir") -WindowStyle Hidden -PassThru -Wait
+          if ($process.ExitCode -ne 0) { throw "Installer exited with $($process.ExitCode)" }
+          $editor = Get-Item -LiteralPath (Join-Path $installDir 'MiniCpp.exe')
+          $version = [Diagnostics.FileVersionInfo]::GetVersionInfo($editor.FullName).ProductVersion
+          if ($version -cne $env:PRODUCT_VERSION) { throw "Unexpected installed version: $version" }
+          $license = Get-FileHash -LiteralPath (Join-Path $installDir 'LICENSE')
+          if ($license.Hash -ne (Get-FileHash -LiteralPath 'LICENSE').Hash) { throw 'Installed MIT license is incorrect' }
+          foreach ($file in 'LICENSES/TOOLCHAIN.txt', 'w64devkit/bin/g++.exe', 'w64devkit/bin/gdb.exe') {
+            if (!(Test-Path -LiteralPath (Join-Path $installDir $file) -PathType Leaf)) { throw "Missing installed file: $file" }
+          }
+          if ($env:SIGNED_BUILD -eq 'true') {
+            foreach ($path in $setup.FullName, $editor.FullName, (Join-Path $installDir 'MiniCpp.Console.exe')) {
+              $signature = Get-AuthenticodeSignature -LiteralPath $path
+              if ($signature.Status -ne 'Valid' -or !$signature.TimeStamperCertificate) { throw "Trusted, timestamped signature missing: $path ($($signature.Status))" }
+              $signature.SignerCertificate.Subject | Write-Output
+            }
+          }
+          (Get-FileHash -Algorithm SHA256 -LiteralPath $setup.FullName).Hash.ToLowerInvariant() + "  $($setup.Name)" | Set-Content -LiteralPath ($setup.FullName + '.sha256') -Encoding ascii
+      - name: Retain unsigned stable candidate for review
+        if: ${{ !inputs.sign && !endsWith(inputs.tag, '-dev') }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ${{ inputs.tag }}-unsigned-candidate
+          path: artifacts/MiniCpp-Rev-v*-win-x64-Setup.exe*
+          if-no-files-found: error
       - name: Attach and verify without publishing
+        if: inputs.sign || endsWith(inputs.tag, '-dev')
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
           DRAFT_ID: ${{ steps.draft.outputs.id }}
           TARGET_SHA: ${{ steps.draft.outputs.sha }}
+          SETUP: ${{ steps.draft.outputs.setup }}
         run: |
           $h = @{Authorization="Bearer $env:GH_TOKEN"; Accept='application/vnd.github+json'}
           $r = Invoke-RestMethod -Headers $h "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases/$env:DRAFT_ID"
           if (!$r.draft -or $r.tag_name -cne $env:RELEASE_TAG -or $r.target_commitish -cne $env:TARGET_SHA) { throw 'Draft changed during build' }
-          $version = $env:RELEASE_TAG.Substring(1).Replace('-dev','')
-          $f = Get-Item -LiteralPath "artifacts/MiniCpp-Dev-v$version-win-x64-Setup.exe"
+          $f = Get-Item -LiteralPath "artifacts/$env:SETUP"
           if ($r.assets.name -contains $f.Name) { throw 'Refusing to replace an existing installer' }
           $sha = (Get-FileHash -Algorithm SHA256 -LiteralPath $f.FullName).Hash.ToLowerInvariant()
           $url = $r.upload_url.Split('{')[0] + '?name=' + [uri]::EscapeDataString($f.Name)
