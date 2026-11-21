@@ -33,6 +33,8 @@ VIAddVersionKey "LegalCopyright" "Mini C++ contributors"
 !insertmacro MUI_UNPAGE_INSTFILES
 !insertmacro MUI_LANGUAGE "SimpChinese"
 
+Var ConfigMatches
+
 Function .onInit
   ${IfNot} ${RunningX64}
     MessageBox MB_ICONSTOP "Mini C++ 需要 64 位 Windows。"
@@ -42,16 +44,98 @@ Function .onInit
   SetShellVarContext current
 FunctionEnd
 
+; Skip rewriting an identical config, even if another process has it open for reading.
+Function CompareAppConfig
+  StrCpy $ConfigMatches 0
+  ClearErrors
+  FileOpen $0 "$INSTDIR\MiniCpp.exe.config" r
+  IfErrors done
+  FileOpen $1 "$PLUGINSDIR\MiniCpp.exe.config" r
+  IfErrors closeInstalled
+  FileSeek $0 0 END $2
+  FileSeek $1 0 END $3
+  IfErrors closeBoth
+  IntCmp $2 $3 0 closeBoth closeBoth
+  FileSeek $0 0 SET
+  FileSeek $1 0 SET
+  IfErrors closeBoth
+  compareByte:
+    IntCmp $2 0 identical
+    FileReadByte $0 $3
+    FileReadByte $1 $4
+    IfErrors closeBoth
+    StrCmp $3 $4 0 closeBoth
+    IntOp $2 $2 - 1
+    Goto compareByte
+  identical:
+    StrCpy $ConfigMatches 1
+  closeBoth:
+    FileClose $1
+  closeInstalled:
+    FileClose $0
+  done:
+FunctionEnd
+
+; $0 is a package destination. Probe the same write access and sharing mode as File.
+Function CheckInstallFile
+  retry:
+    System::Call 'kernel32::GetFileAttributesW(w r0) i.r1 ?e'
+    Pop $2
+    ${If} $1 == -1
+      ${If} $2 == 2
+      ${OrIf} $2 == 3
+        Return
+      ${EndIf}
+      Goto blocked
+    ${EndIf}
+    IntOp $2 $1 & 1
+    ${If} $2 != 0
+      IntOp $3 $1 & 0xfffffffe
+      ${If} $3 == 0
+        StrCpy $3 0x80
+      ${EndIf}
+      System::Call 'kernel32::SetFileAttributesW(w r0, i r3) i.r3'
+      StrCmp $3 0 blocked
+    ${EndIf}
+    System::Call 'kernel32::CreateFileW(w r0, i 0x40000000, i 1, p 0, i 3, i 0, p 0) p.r3'
+    ${If} $2 != 0
+      System::Call 'kernel32::SetFileAttributesW(w r0, i r1) i.r4'
+    ${EndIf}
+    StrCmp $3 -1 blocked
+    System::Call 'kernel32::CloseHandle(p r3)'
+    Return
+  blocked:
+    MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "安装程序无法更新以下文件：$\r$\n$0$\r$\n$\r$\n请关闭 Mini C++ 和正在使用该文件的程序，确认当前用户有写入权限，再点击重试。" /SD IDCANCEL IDRETRY retry
+    SetErrorLevel 5
+    Abort
+FunctionEnd
+
 Section "Mini C++ 和 C++ 工具链（必选）" IDE
   SectionIn RO
-  SetOutPath "$INSTDIR"
-  SetOverwrite on
+  InitPluginsDir
+  SetOutPath "$PLUGINSDIR"
+  File "${APPDIR}\MiniCpp.exe.config"
+  Call CompareAppConfig
+  ${If} $ConfigMatches == 0
+    StrCpy $0 "$INSTDIR\MiniCpp.exe.config"
+    Call CheckInstallFile
+  ${EndIf}
+  StrCpy $0 "$INSTDIR\Uninstall.exe"
+  Call CheckInstallFile
+  !include "${CHECKFILES}"
+
   ClearErrors
-  File /r "${APPDIR}\*.*"
-  IfErrors 0 +3
-    MessageBox MB_ICONSTOP "安装未完成。请关闭正在使用的 Mini C++ 后重新安装。"
-    Abort
+  SetOutPath "$INSTDIR"
+  IfErrors installFailed
+  SetOverwrite on
+  AllowSkipFiles off
+  ${If} $ConfigMatches == 0
+    File "${APPDIR}\MiniCpp.exe.config"
+  ${EndIf}
+  File /r /x "MiniCpp.exe.config" "${APPDIR}\*.*"
+  IfErrors installFailed
   WriteUninstaller "$INSTDIR\Uninstall.exe"
+  IfErrors installFailed
   CreateShortcut "$SMPROGRAMS\Mini C++.lnk" "$INSTDIR\MiniCpp.exe"
   WriteRegStr HKCU "${UNKEY}" "DisplayName" "Mini C++ ${APPCHANNEL}"
   WriteRegStr HKCU "${UNKEY}" "DisplayVersion" "${PRODUCTVERSION}"
@@ -61,6 +145,12 @@ Section "Mini C++ 和 C++ 工具链（必选）" IDE
   WriteRegStr HKCU "${UNKEY}" "UninstallString" '$\"$INSTDIR\Uninstall.exe$\"'
   WriteRegDWORD HKCU "${UNKEY}" "NoModify" 1
   WriteRegDWORD HKCU "${UNKEY}" "NoRepair" 1
+  Goto installed
+  installFailed:
+    MessageBox MB_ICONSTOP "安装未完成。请关闭 Mini C++，确认当前用户可以写入 $INSTDIR 后重新安装。" /SD IDOK
+    SetErrorLevel 5
+    Abort
+  installed:
 SectionEnd
 
 ; An optional NSIS section is selected by default unless declared /o.

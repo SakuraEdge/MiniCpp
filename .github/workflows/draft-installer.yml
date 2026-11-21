@@ -10,6 +10,10 @@ on:
         description: Sign with the configured Azure Artifact Signing public-trust profile
         type: boolean
         default: false
+      attach_unsigned_stable:
+        description: Attach an unsigned Rev installer to the draft
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -89,7 +93,7 @@ jobs:
           signing-account-name: ${{ vars.SIGNING_ACCOUNT }}
           certificate-profile-name: ${{ vars.SIGNING_CERT_PROFILE }}
           files: ${{ github.workspace }}\artifacts\${{ steps.draft.outputs.setup }}
-      - name: Verify the package and license
+      - name: Verify installation, upgrade, and license
         shell: pwsh
         env:
           SETUP: ${{ steps.draft.outputs.setup }}
@@ -98,8 +102,47 @@ jobs:
         run: |
           $setup = Get-Item -LiteralPath "artifacts/$env:SETUP"
           $installDir = Join-Path $env:RUNNER_TEMP 'MiniCpp-Install-Smoke'
-          $process = Start-Process -FilePath $setup.FullName -ArgumentList @('/S', "/D=$installDir") -WindowStyle Hidden -PassThru -Wait
-          if ($process.ExitCode -ne 0) { throw "Installer exited with $($process.ExitCode)" }
+          function Invoke-Installer {
+            $process = Start-Process -FilePath $setup.FullName -ArgumentList @('/S', "/D=$installDir") -WindowStyle Hidden -PassThru
+            if (!$process.WaitForExit(120000)) {
+              $process.Kill()
+              throw 'Silent installer did not exit within two minutes'
+            }
+            $process.ExitCode
+          }
+          $exitCode = Invoke-Installer
+          if ($exitCode -ne 0) { throw "Fresh installation exited with $exitCode" }
+
+          $config = Join-Path $installDir 'MiniCpp.exe.config'
+          $program = Join-Path $installDir 'keep.cpp'
+          $licensePath = Join-Path $installDir 'LICENSE'
+          $originalConfigHash = (Get-FileHash -LiteralPath $config).Hash
+          Set-Content -LiteralPath $program -Value 'int main() {}'
+          $handle = [IO.File]::Open($config, 'Open', 'Read', 'Read')
+          try {
+            $exitCode = Invoke-Installer
+          } finally {
+            $handle.Dispose()
+          }
+          if ($exitCode -ne 0) { throw "Upgrade with identical locked config exited with $exitCode" }
+
+          Set-Content -LiteralPath $config -Value '<configuration/>'
+          Set-Content -LiteralPath $licensePath -Value 'Previous installation'
+          $oldConfigHash = (Get-FileHash -LiteralPath $config).Hash
+          $handle = [IO.File]::Open($config, 'Open', 'Read', 'Read')
+          try {
+            $exitCode = Invoke-Installer
+          } finally {
+            $handle.Dispose()
+          }
+          if ($exitCode -eq 0 -or (Get-FileHash -LiteralPath $config).Hash -ne $oldConfigHash -or (Get-Content -LiteralPath $licensePath) -cne 'Previous installation') {
+            throw 'Locked changed config should block upgrade before files are replaced'
+          }
+          (Get-Item -LiteralPath $config).IsReadOnly = $true
+          $exitCode = Invoke-Installer
+          if ($exitCode -ne 0 -or (Get-FileHash -LiteralPath $config).Hash -ne $originalConfigHash) { throw "Upgrade of unlocked read-only config failed with $exitCode" }
+          if ((Get-Content -LiteralPath $program) -cne 'int main() {}') { throw 'Upgrade modified a user source file' }
+
           $editor = Get-Item -LiteralPath (Join-Path $installDir 'MiniCpp.exe')
           $version = [Diagnostics.FileVersionInfo]::GetVersionInfo($editor.FullName).ProductVersion
           if ($version -cne $env:PRODUCT_VERSION) { throw "Unexpected installed version: $version" }
@@ -117,14 +160,14 @@ jobs:
           }
           (Get-FileHash -Algorithm SHA256 -LiteralPath $setup.FullName).Hash.ToLowerInvariant() + "  $($setup.Name)" | Set-Content -LiteralPath ($setup.FullName + '.sha256') -Encoding ascii
       - name: Retain unsigned stable candidate for review
-        if: ${{ !inputs.sign && !endsWith(inputs.tag, '-dev') }}
+        if: ${{ !inputs.sign && !inputs.attach_unsigned_stable && !endsWith(inputs.tag, '-dev') }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ${{ inputs.tag }}-unsigned-candidate
           path: artifacts/MiniCpp-Rev-v*-win-x64-Setup.exe*
           if-no-files-found: error
       - name: Attach and verify without publishing
-        if: inputs.sign || endsWith(inputs.tag, '-dev')
+        if: inputs.sign || inputs.attach_unsigned_stable || endsWith(inputs.tag, '-dev')
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}

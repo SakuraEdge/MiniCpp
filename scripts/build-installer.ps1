@@ -11,12 +11,21 @@ if (!$MakeNsis){$cmd=Get-Command makensis.exe -ErrorAction SilentlyContinue;if($
 if (!$MakeNsis){$MakeNsis=Get-ChildItem -Path "${env:ProgramFiles(x86)}/NSIS/makensis.exe","$env:LOCALAPPDATA/electron-builder/Cache/nsis-*/*/makensis.exe" -File -ErrorAction SilentlyContinue | Select-Object -First 1 -ExpandProperty FullName}
 if (!$MakeNsis){throw 'Install Unicode NSIS 3 or pass -MakeNsis <path>.'}
 $out=[IO.Directory]::CreateDirectory((Join-Path $root 'artifacts')).FullName
-$manifest=Join-Path ([IO.Directory]::CreateDirectory((Join-Path $root '.build-cache/installer')).FullName) 'uninstall-files.nsh'
+$includes=[IO.Directory]::CreateDirectory((Join-Path $root '.build-cache/installer')).FullName
+$manifest=Join-Path $includes 'uninstall-files.nsh'
+$checks=Join-Path $includes 'check-files.nsh'
 $files=@(Get-ChildItem -LiteralPath $app -Recurse -File)
 $dirs=@(Get-ChildItem -LiteralPath $app -Recurse -Directory | Sort-Object { $_.FullName.Length } -Descending)
 # Only remove named package files. Leave source files and nonempty directories alone.
 $lines=@(foreach($f in $files){'Delete "$INSTDIR\'+$f.FullName.Substring($app.Length+1).Replace('$','$$')+'"'};foreach($d in $dirs){'RMDir "$INSTDIR\'+$d.FullName.Substring($app.Length+1).Replace('$','$$')+'"'})
 [IO.File]::WriteAllLines($manifest,[string[]]$lines,(New-Object Text.UTF8Encoding $true))
+$checkLines=@(foreach($f in $files){
+    $relativePath=$f.FullName.Substring($app.Length+1)
+    if ($relativePath -eq 'MiniCpp.exe.config'){continue}
+    'StrCpy $0 "$INSTDIR\'+$relativePath.Replace('$','$$')+'"'
+    'Call CheckInstallFile'
+})
+[IO.File]::WriteAllLines($checks,[string[]]$checkLines,(New-Object Text.UTF8Encoding $true))
 $info=[Diagnostics.FileVersionInfo]::GetVersionInfo((Join-Path $app 'MiniCpp.exe'))
 $version='{0}.{1}.{2}' -f $info.FileMajorPart,$info.FileMinorPart,$info.FileBuildPart
 switch -Exact ($info.ProductVersion) {
@@ -25,6 +34,6 @@ switch -Exact ($info.ProductVersion) {
     default { throw "Unsupported product version: $($info.ProductVersion)" }
 }
 $setup=Join-Path $out "MiniCpp-$channel-v$version-win-x64-Setup.exe"
-& $MakeNsis '/V2' '/INPUTCHARSET' 'UTF8' "/DAPPVERSION=$version" "/DAPPCHANNEL=$channel" "/DPRODUCTVERSION=$($info.ProductVersion)" "/DAPPDIR=$app" "/DOUTPUT=$setup" "/DUNFILES=$manifest" (Join-Path $root 'installer/MiniCpp.nsi')
+& $MakeNsis '/V2' '/INPUTCHARSET' 'UTF8' "/DAPPVERSION=$version" "/DAPPCHANNEL=$channel" "/DPRODUCTVERSION=$($info.ProductVersion)" "/DAPPDIR=$app" "/DOUTPUT=$setup" "/DUNFILES=$manifest" "/DCHECKFILES=$checks" (Join-Path $root 'installer/MiniCpp.nsi')
 if ($LASTEXITCODE -ne 0){throw 'NSIS build failed.'}
 Get-FileHash -Algorithm SHA256 -LiteralPath $setup
