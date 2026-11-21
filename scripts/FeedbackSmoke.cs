@@ -19,6 +19,31 @@ internal static class FeedbackSmoke {
     static object Call(object o,string name,params object[] args){return o.GetType().GetMethods(F).First(m=>m.Name==name&&m.GetParameters().Length==args.Length).Invoke(o,args);}
     static void Check(bool ok,string why){if(!ok)throw new Exception(why);}
     static void TypeChar(Scintilla e,char ch){SendMessage(e.Handle,0x102,(IntPtr)ch,IntPtr.Zero);}
+    static int SavedPoints(string key){return (int)System.Xml.Linq.XElement.Load(Path.Combine(Environment.GetEnvironmentVariable("MINICPP_HOME"),"preferences.xml")).Attribute(key);}
+    static Form Open(Type type,string[] paths){var f=(Form)Activator.CreateInstance(type,new object[]{paths});f.Opacity=0;f.ShowInTaskbar=false;f.Show();Application.DoEvents();return f;}
+    static void CheckFonts(Type type,Form form,string file){
+        var doc=Field(form,"current");var e=(Scintilla)Field(doc,"Edit");var prefs=Field(form,"prefs");var sizes=(int[])Field(prefs,"FontSizes");
+        Check(sizes[1]==11&&e.Styles[Style.Default].Size==11,"default code size");
+        // A second window started before the change still holds the old values.
+        var stale=Open(type,new string[0]);
+        for(int i=0;i<3;i++)SendMessage(e.Handle,0x20A,(IntPtr)((120<<16)|8),IntPtr.Zero); // Ctrl + wheel up
+        Application.DoEvents();
+        Check(sizes[1]==14&&e.Zoom==0&&e.Styles[Style.Default].Size==14,"Ctrl+wheel not folded into the setting: "+sizes[1]+" zoom "+e.Zoom);
+        Check(SavedPoints("sourcePt")==14,"wheel size not written to disk");
+        var stalePrefs=Field(stale,"prefs");stalePrefs.GetType().GetField("LargeTools",F).SetValue(stalePrefs,true);
+        stale.Close();stale.Dispose();Application.DoEvents();
+        Check(SavedPoints("sourcePt")==14,"another window overwrote the size on exit");
+        Check((bool)System.Xml.Linq.XElement.Load(Path.Combine(Environment.GetEnvironmentVariable("MINICPP_HOME"),"preferences.xml")).Attribute("largeTools"),"other window's own change lost");
+        sizes[1]=18;Call(form,"ApplyMetrics");Check((bool)Call(prefs,"Save")&&SavedPoints("sourcePt")==18,"dialog size not written to disk");
+        form.Close();Application.DoEvents();
+        using(var again=Open(type,new[]{file})){
+            var d=Field(again,"current");var edit=(Scintilla)Field(d,"Edit");var number=(System.Drawing.Font)Field(Field(d,"Gutter"),"numberFont");
+            Check(((int[])Field(Field(again,"prefs"),"FontSizes"))[1]==18&&edit.Zoom==0&&edit.Styles[Style.Default].Size==18&&edit.Styles[Style.Cpp.Word].Size==18,"size reverted after reopening: "+edit.Styles[Style.Default].Size);
+            Check(Math.Abs(number.SizeInPoints-18)<0.6,"line numbers did not follow the code size");
+            again.Close();
+        }
+        Console.WriteLine("PASS: Ctrl+wheel 11 -> 14 pt saved, kept when another window exits, dialog 18 pt restored for code and line numbers after reopening.");
+    }
     static void CheckUnicode(Form form,string path){
         var doc=Field(form,"current");var e=(Scintilla)Field(doc,"Edit");
         Call(doc,"ApplyDisplay",96,11);Check(e.CaretWidth==2,"caret at 100%");
@@ -56,7 +81,15 @@ internal static class FeedbackSmoke {
         e.Text="";TypeChar(e,'\"');TypeChar(e,'(');TypeChar(e,'\"');Check(e.Text=="\"(\""&&e.CurrentPosition==3,"literal pairing: "+e.Text);
         e.Text="#include ";e.GotoPosition(e.TextLength);TypeChar(e,'<');Check(e.Text=="#include <>","header pair missing");
         e.Text="a ";e.GotoPosition(e.TextLength);TypeChar(e,'<');Check(e.Text=="a <","comparison wrongly paired");
-        e.SetSavePoint();Console.WriteLine("PASS: centered breakpoint toggle and badge, C++ token colors and bold keywords, nested pairs, overtype, quotes and include angles.");
+        e.EolMode=Eol.CrLf;e.Text="// before\r\n\r\n// after";e.SetEmptySelection(e.Lines[1].Position);
+        foreach(char ch in "/solve")TypeChar(e,ch);
+        string typed=e.Text;Check(typed=="// before\r\n/solve\r\n// after","template expanded before Enter");
+        SendMessage(e.Handle,0x100,(IntPtr)Keys.Enter,IntPtr.Zero);TypeChar(e,'\r');
+        string expected="// before\r\n#include <bits/stdc++.h>\r\nusing namespace std;\r\n\r\nvoid solve() {\r\n    \r\n}\r\n\r\nint main() {\r\n    solve();\r\n    return 0;\r\n}\r\n// after";
+        Check(e.Text==expected,"incorrect solve template: "+e.Text.Replace("\r","<CR>").Replace("\n","<LF>"));
+        Check(e.CurrentPosition==expected.IndexOf("    \r\n",StringComparison.Ordinal)+4,"solve caret: "+e.CurrentPosition);
+        e.Undo();Check(e.Text==typed,"one undo should restore the command");
+        e.SetSavePoint();Console.WriteLine("PASS: editor feedback and /solve Enter expansion, empty body caret, single undo.");
     }
     [STAThread] static int Main(string[] args){try{
         Environment.SetEnvironmentVariable("MINICPP_HOME",Path.Combine(args[0],"profile"));Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);
@@ -65,6 +98,7 @@ internal static class FeedbackSmoke {
         using(var form=(Form)Activator.CreateInstance(type,new object[]{new[]{file}})){
             form.Opacity=0;form.ShowInTaskbar=false;form.Show();Application.DoEvents();form.WindowState=FormWindowState.Normal;form.Width=(int)Call(form,"Px",520);Application.DoEvents();
             if(args.Length>1&&args[1]=="unicode"){CheckUnicode(form,file);form.Close();return 0;}
+            if(args.Length>1&&args[1]=="fonts"){CheckFonts(type,form,file);return 0;}
             if(args.Length>1&&args[1]=="editor"){CheckEditor(form);form.Close();return 0;}
             var tools=(ToolStrip)Field(form,"tools");foreach(var name in new[]{"compile","run","compile-and-run","rebuild"}){var b=tools.Items[name];Check(b!=null&&b.Placement==ToolStripItemPlacement.Main&&tools.ClientRectangle.Contains(b.Bounds)&&b.Width>=(int)Call(form,"Px",36),"toolbar clipped or too small: "+name);}
             var split=(SplitContainer)Field(form,"horizontal");int before=split.Panel2.Height;Call(form,"ToggleOutput");Check(split.Panel2Collapsed,"collapse failed");Call(form,"ToggleOutput");Check(!split.Panel2Collapsed&&Math.Abs(before-split.Panel2.Height)<=2,"restore height changed");Call(form,"ToggleOutput");

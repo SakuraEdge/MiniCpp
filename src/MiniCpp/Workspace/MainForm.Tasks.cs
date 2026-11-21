@@ -35,12 +35,19 @@ namespace MiniCpp {
             catch(Exception ex){d.Status="任务失败";d.LogText+="\r\n"+ex.Message;UpdateDoc(d,1);if(debug!=null){var g=debug;debug=null;g.Dispose();vertical.Panel2Collapsed=true;}if(!closing)Error(ex.Message);}
             finally{if(!handedToDebugger)EndWork(d);}
         }
-        async Task RunProgram(SourceDocument d,string exe){d.RunText="";d.Status="命令行运行中";UpdateDoc(d,0);bool file=RunSession.FileMode(d.BuiltSource??d.Edit.Text,d.IO);
-            d.RunText=await RunSession.LaunchAsync(exe,d.FullPath,bin,file,jobToken.Token);if(closing)return;d.Status=d.RunText.Contains("已中止")||d.RunText.Contains("运行中断")?"运行中止":"运行结束";UpdateDoc(d,0);}
-        async void RunOnly(){if(!Ready())return;var d=current;var exe=d.FullPath==null?null:Compiler.ArtifactPath(d.FullPath,false);if(d.BuildFailed||exe==null||!File.Exists(exe)){Say(d.BuildFailed?"上次编译失败，未运行旧程序":"尚无可执行文件，请先编译");return;}BeginWork(d);try{await RunProgram(d,exe);}catch(OperationCanceledException){d.Status="运行已停止";d.RunText="运行已中止。";}catch(Exception ex){d.Status="运行失败";Error(ex.Message);}finally{EndWork(d);}}
+        async Task RunProgram(SourceDocument d,string exe){
+            d.SetRecord(new RunRecord("正在命令行中运行…"));d.Status="命令行运行中";UpdateDoc(d,0);
+            var token=jobToken.Token;string code=d.BuiltSource??d.Edit.Text,source=d.FullPath,toolsPath=bin;var mode=d.IO;
+            try{
+                var record=await Task.Run(()=>RunSession.LaunchAsync(exe,source,toolsPath,RunSession.FileMode(code,mode),token),token);
+                if(closing||IsDisposed){record.Dispose();return;}d.SetRecord(record);d.Status=record.Aborted?"运行中止":"运行结束";UpdateDoc(d,0);
+            }catch(OperationCanceledException){d.SetRecord(new RunRecord("运行已中止。",true));throw;}
+            catch(Exception ex){d.SetRecord(new RunRecord("未能完成本次运行："+ex.Message));throw;}
+        }
+        async void RunOnly(){if(!Ready())return;var d=current;var exe=d.FullPath==null?null:Compiler.ArtifactPath(d.FullPath,false);if(d.BuildFailed||exe==null||!File.Exists(exe)){Say(d.BuildFailed?"上次编译失败，未运行旧程序":"尚无可执行文件，请先编译");return;}BeginWork(d);try{await RunProgram(d,exe);}catch(OperationCanceledException){d.Status="运行已停止";}catch(Exception ex){d.Status="运行失败";if(!closing)Error(ex.Message);}finally{EndWork(d);}}
         void StartOrContinue(){if(debug==null){StartBuild(false,false,true);return;}DebugCmd(true);}
         async Task StartDebugger(SourceDocument d,string exe){var g=new DebugSession(bin,exe,d.FullPath){LiveSampling=prefs.Sampling};debug=g;snapshot=null;debuggerRunning=false;locals.Items.Clear();vertical.Panel2Collapsed=false;
-            vertical.SplitterDistance=Math.Max(Px(160),vertical.Width-Math.Min(Px(315),vertical.Width/3));stateLabel.Text="调试器 · 正在启动";frameLabel.Text="";d.RunText="";d.Status="正在启动 GDB";UpdateDoc(d,0);
+            vertical.SplitterDistance=Math.Max(Px(160),vertical.Width-Math.Min(Px(315),vertical.Width/3));stateLabel.Text="调试器 · 正在启动";frameLabel.Text="";d.SetRecord(new RunRecord("调试输入输出使用独立命令行。"));d.Status="正在启动 GDB";UpdateDoc(d,0);
             g.Log+=msg=>OnUi(()=>{if(debug!=g)return;if(d.LogText.Length<131072)d.LogText+="\r\n"+msg;if(current==d&&selectedView==1)log.Text=d.LogText;});
             g.Running+=()=>OnUi(()=>{if(debug!=g)return;debuggerRunning=true;d.Execution(0);d.Status="调试运行中";stateLabel.Text=snapshot==null?"调试器 · 运行中":"调试器 · 运行中 / 最近快照";if(current==d)RefreshStatus();});
             g.Stopped+=value=>OnUi(()=>{if(debug!=g)return;snapshot=value;debuggerRunning=value.Sample;d.Status=value.Sample?"调试运行中":"调试暂停";

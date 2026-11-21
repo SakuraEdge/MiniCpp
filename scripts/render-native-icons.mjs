@@ -8,7 +8,7 @@ const require=createRequire(import.meta.url);let chromium;
 try{({chromium}=require('playwright-core'));}catch{({chromium}=require(path.join(root,'.review-tools/node_modules/playwright-core')));}
 const nodes=JSON.parse(await readFile(path.join(root,'design/vendor/lucide-subset.json'),'utf8'));
 const folder=path.join(root,'src/Assets');await mkdir(folder,{recursive:true});
-const basic=['file-plus-2','folder-open','save','undo-2','redo-2','search','replace','bug','square','step-forward','play','pause','plus','x','chevron-down','contrast'];
+const basic=['file-plus-2','folder-open','save','undo-2','redo-2','search','replace','bug','square','step-forward','play','pause','plus','x','chevron-down','contrast','settings-2'];
 const builds=['compile','run','compile-and-run','rebuild'];
 const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH||'C:/Program Files/Google/Chrome/Application/chrome.exe'});
 try{const page=await browser.newPage({viewport:{width:96,height:96},deviceScaleFactor:1,colorScheme:'light'});

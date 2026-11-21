@@ -1,0 +1,72 @@
+<meta charset="utf-8">
+<div id="mini-io-review" lang="zh-CN" aria-label="Mini C++ 运行记录设计审查">
+  <div class="review-bar">
+    <strong>运行记录</strong><small>设计审查</small>
+    <div class="preview-controls">
+      <label>窗口 <select data-width><option value="full">全屏</option><option value="half">半屏</option></select></label>
+      <label>样例 <select data-case><option value="normal">正常结束</option><option value="long">长输出</option><option value="files">文件输入输出</option><option value="running">运行中</option></select></label>
+    </div>
+  </div>
+  <section class="dock" aria-label="Mini C++ 编辑区与底部面板">
+    <header class="tab-line"><span class="file-tab"><i data-lucide="file-code-2" aria-hidden="true"></i>prefix.cpp</span><span class="app-name">Mini C++</span></header>
+    <div class="editor" aria-label="当前源文件末尾">
+      <div><em>8</em><code>    <b>for</b> (<b>int</b> x : a) {</code></div>
+      <div><em>9</em><code>        sum += x;</code></div>
+      <div><em>10</em><code>        cout &lt;&lt; sum &lt;&lt; <span>'\n'</span>;</code></div>
+      <div><em>11</em><code>    }</code></div>
+      <div><em>12</em><code>}</code></div>
+    </div>
+    <div class="divider" aria-hidden="true"><span></span></div>
+    <nav class="dock-tabs" aria-label="底部面板">
+      <button type="button" data-tab="record" aria-pressed="true">运行输出</button><button type="button" data-tab="log" aria-pressed="false">编译日志</button><button type="button" data-tab="issues" aria-pressed="false">问题</button>
+      <div class="dock-actions"><button type="button" data-settings aria-label="设置：字体大小" aria-expanded="false" data-tooltip="设置 · 字体大小"><i data-lucide="settings-2" aria-hidden="true"></i></button><button type="button" data-collapse aria-label="收起面板" aria-expanded="true" data-tooltip="收起面板"><i data-lucide="chevron-down" aria-hidden="true"></i></button></div>
+    </nav>
+    <div class="settings" hidden><strong>字体大小</strong><label>运行输入与输出 <select data-size><option>12</option><option>13</option><option selected>14</option><option>15</option><option>16</option><option>18</option><option>20</option><option>24</option></select> pt</label></div>
+    <div data-area>
+      <div class="stream-pair">
+        <section class="stream" aria-label="输入记录"><header><i data-lucide="log-in" aria-hidden="true"></i><strong>输入</strong><small>stdin</small><span class="counter" data-in-count>2 行</span></header><pre data-input>3
+2 5 4</pre></section>
+        <section class="stream" aria-label="输出记录"><header><i data-lucide="log-out" aria-hidden="true"></i><strong>输出</strong><small>stdout</small><span class="counter" data-out-count>3 行</span></header><pre data-output>2
+7
+11</pre><button type="button" data-more hidden>展开完整输出</button></section>
+      </div>
+      <div class="message" data-message hidden></div>
+    </div>
+    <footer><span class="state-dot"></span><span data-status role="status">运行结束</span><span class="exit" data-exit>退出码 0</span><span class="encoding">UTF-8</span></footer>
+  </section>
+</div>
+<style>
+#mini-io-review{color-scheme:light dark;--paper:light-dark(#fff,#202224);--chrome:light-dark(#f5f5f4,#2a2b2c);--edge:light-dark(#dbdedf,#45484a);--ink:light-dark(#272a2c,#e4e6e7);--quiet:light-dark(#5a6064,#b3b9bd);--blue:light-dark(#436a86,#a4c5dc);--hover:light-dark(#e7eef2,#37444c);--pts:14pt;font:14px/1.5 'Segoe UI','Microsoft YaHei UI',sans-serif;color:var(--ink);width:100%;max-width:1140px;margin-inline:auto}
+#mini-io-review *{box-sizing:border-box}#mini-io-review [hidden]{display:none!important}#mini-io-review strong{font-weight:600}#mini-io-review button,#mini-io-review select{font:inherit;color:inherit}#mini-io-review button{border:0;background:transparent;cursor:pointer}#mini-io-review button:hover{background:var(--hover)}#mini-io-review select{background:var(--paper);border:1px solid var(--edge);border-radius:4px;padding:3px 5px}#mini-io-review [data-lucide]{width:15px;height:15px;flex:none}
+#mini-io-review .review-bar,#mini-io-review .preview-controls,#mini-io-review .tab-line,#mini-io-review .dock-tabs,#mini-io-review .dock-actions,#mini-io-review footer,#mini-io-review .settings,#mini-io-review .stream header{display:flex;align-items:center}
+#mini-io-review .review-bar{gap:8px;flex-wrap:wrap;padding:0 0 10px}#mini-io-review small,#mini-io-review .encoding,#mini-io-review .counter,#mini-io-review .app-name{font-size:12px;color:var(--quiet)}#mini-io-review .preview-controls{margin-left:auto;gap:12px;flex-wrap:wrap;color:var(--quiet)}
+#mini-io-review .dock{width:100%;border:1px solid var(--edge);background:var(--paper);container-type:inline-size}#mini-io-review .dock.half{max-width:510px;margin-inline:auto}#mini-io-review .tab-line{justify-content:space-between;background:var(--chrome);border-bottom:1px solid var(--edge)}#mini-io-review .file-tab{display:inline-flex;align-items:center;gap:7px;background:var(--paper);box-shadow:inset 0 2px var(--blue);border-right:1px solid var(--edge);padding:7px 16px}#mini-io-review .app-name{padding:0 12px}
+#mini-io-review .editor{padding:8px 0 12px}#mini-io-review .editor>div{display:grid;grid-template-columns:3.2em minmax(0,1fr);font:14px/1.55 Consolas,'Cascadia Mono',monospace}#mini-io-review .editor em{text-align:center;font-style:normal;color:var(--quiet);background:var(--chrome)}#mini-io-review .editor code{font:inherit;white-space:pre-wrap;padding-left:8px;overflow-wrap:anywhere;color:var(--ink);background:none}#mini-io-review .editor code span{color:var(--blue)}
+#mini-io-review .divider{display:grid;place-items:center;height:6px;background:var(--edge)}#mini-io-review .divider span{height:2px;width:30px;background:var(--quiet);opacity:.55}#mini-io-review .dock-tabs{background:var(--chrome);border-bottom:1px solid var(--edge);flex-wrap:wrap;gap:1px}#mini-io-review .dock-tabs button{padding:7px 10px;min-height:34px}#mini-io-review .dock-tabs [aria-pressed=true]{background:var(--paper);box-shadow:inset 0 -2px var(--blue)}#mini-io-review .dock-actions{margin-left:auto}#mini-io-review .dock-actions button{display:grid;place-items:center;min-width:34px}#mini-io-review [data-collapse][aria-expanded=false]{transform:rotate(180deg)}
+#mini-io-review .settings{justify-content:flex-end;gap:16px;flex-wrap:wrap;background:var(--chrome);padding:8px 13px;border-bottom:1px solid var(--edge)}#mini-io-review .stream-pair{display:grid;grid-template-columns:1fr 1fr}#mini-io-review .stream{min-width:0;padding-bottom:10px}#mini-io-review .stream+.stream{border-left:1px solid var(--edge)}#mini-io-review .stream header{padding:10px 16px 5px;gap:7px}#mini-io-review .stream header i,#mini-io-review .stream header svg{color:var(--blue)}#mini-io-review .stream small{font:12px Consolas,monospace}#mini-io-review .counter{margin-left:auto}#mini-io-review pre{margin:0;padding:5px 16px 10px;min-height:5.5em;font:var(--pts)/1.48 Consolas,'Cascadia Mono',monospace;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink);background:none}#mini-io-review [data-more]{margin-left:14px;color:var(--blue);font-size:13px;text-decoration:underline}#mini-io-review .message{padding:16px;min-height:120px;color:var(--quiet)}#mini-io-review footer{border-top:1px solid var(--edge);background:var(--chrome);padding:5px 12px;gap:8px;font-size:12px}#mini-io-review .state-dot{width:6px;height:6px;border-radius:100%;background:var(--blue)}#mini-io-review .exit{color:var(--quiet);border-left:1px solid var(--edge);padding-left:8px}#mini-io-review .encoding{margin-left:auto}
+@container(max-width:520px){#mini-io-review .stream-pair{grid-template-columns:1fr}#mini-io-review .stream+.stream{border-left:0;border-top:1px solid var(--edge)}#mini-io-review pre{min-height:0}}@media(pointer:coarse){#mini-io-review button,#mini-io-review select{min-height:44px}#mini-io-review .dock-actions button{min-width:44px}}
+</style>
+<script>
+(()=>{
+ const root=document.getElementById('mini-io-review'),q=s=>root.querySelector(s),qa=s=>Array.from(root.querySelectorAll(s));
+ const examples={normal:['3','2 5 4'],long:['12','1 2 3 4 5 6 7 8 9 10 11 12']};
+ const sizes=[12,13,14,15,16,18,20,24];let points=14,half=false,scene='normal',tab='record',open=true,more=false;
+ function restore(s){if(!s)return;if(sizes.includes(s.points))points=s.points;if(typeof s.half==='boolean')half=s.half;if(['normal','long','files','running'].includes(s.scene))scene=s.scene;}
+ function save(){const api=window.openai;if(api&&api.setWidgetState)api.setWidgetState({modelContent:{points,half,scene}}).catch(()=>{});}
+ function render(){
+   q('[data-size]').value=String(points);q('[data-width]').value=half?'half':'full';q('[data-case]').value=scene;
+   root.style.setProperty('--pts',points+'pt');q('.dock').classList.toggle('half',half);
+   const rows=scene==='long'?[1,3,6,10,15,21,28,36,45,55,66,78]:[2,7,11],isLong=scene==='long',file=scene==='files',running=scene==='running';
+   q('[data-area]').hidden=!open;q('[data-collapse]').setAttribute('aria-expanded',String(open));q('[data-collapse]').setAttribute('aria-label',open?'收起面板':'展开面板');q('[data-collapse]').dataset.tooltip=open?'收起面板':'展开面板';
+   qa('[data-tab]').forEach(b=>b.setAttribute('aria-pressed',String(open&&tab===b.dataset.tab)));
+   const streams=tab==='record'&&!file&&!running;q('.stream-pair').hidden=!streams;q('[data-message]').hidden=streams;
+   q('[data-message]').textContent=tab==='issues'?'没有编译问题。':tab==='log'?'编译成功：prefix.cpp':running?'正在命令行中运行，结束后显示本次输入和输出。':'已完成文件输入输出';
+   q('[data-input]').textContent=(examples[scene]||[]).join('\n');q('[data-output]').textContent=(isLong&&!more?[...rows.slice(0,3),'…',rows[rows.length-1]]:rows).join('\n');
+   q('[data-out-count]').textContent=rows.length+' 行';q('[data-more]').hidden=!isLong;q('[data-more]').textContent=more?'收起中间 8 行':'展开省略的 8 行';q('[data-more]').setAttribute('aria-expanded',String(more));
+   q('[data-status]').textContent=running?'命令行运行中':'运行结束';q('[data-exit]').hidden=running;
+ }
+ q('[data-width]').onchange=e=>{half=e.target.value==='half';render();save()};q('[data-size]').onchange=e=>{points=Number(e.target.value);render();save()};q('[data-case]').onchange=e=>{scene=e.target.value;tab='record';open=true;more=false;render();save()};
+ qa('[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;open=true;render()});q('[data-more]').onclick=()=>{more=!more;render()};q('[data-collapse]').onclick=()=>{open=!open;render()};q('[data-settings]').onclick=()=>{const el=q('.settings');el.hidden=!el.hidden;q('[data-settings]').setAttribute('aria-expanded',String(!el.hidden));if(!el.hidden)q('[data-size]').focus()};
+ restore(window.openai?.widgetState?.modelContent);render();window.addEventListener('openai:set_globals',e=>{const s=e.detail?.globals?.widgetState;if(s){restore(s.modelContent);render()}});
+})();
+</script>

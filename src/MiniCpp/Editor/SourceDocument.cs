@@ -9,14 +9,11 @@ using System.Windows.Forms;
 using ScintillaNET;
 
 namespace MiniCpp {
-    internal static class FileCodec {
-        public static string Read(string path,out Encoding enc){byte[] b=File.ReadAllBytes(path);if(b.Length>=2&&((b[0]==255&&b[1]==254)||(b[0]==254&&b[1]==255)))throw new InvalidDataException("请将 UTF-16 源文件另存为 UTF-8 后打开。");
-            bool bom=b.Length>=3&&b[0]==239&&b[1]==187&&b[2]==191;try{enc=new UTF8Encoding(bom,true);return enc.GetString(b,bom?3:0,b.Length-(bom?3:0));}catch(DecoderFallbackException){enc=Encoding.GetEncoding(54936,EncoderFallback.ExceptionFallback,DecoderFallback.ExceptionFallback);return enc.GetString(b);}}
-        public static void Write(string path,string content,Encoding enc){string tmp=Path.Combine(Path.GetDirectoryName(path),".minicpp-"+Guid.NewGuid().ToString("N")+".tmp");try{using(var f=new FileStream(tmp,FileMode.CreateNew,FileAccess.Write,FileShare.None))using(var w=new StreamWriter(f,enc))w.Write(content);if(File.Exists(path))File.Replace(tmp,path,null);else File.Move(tmp,path);}finally{if(File.Exists(tmp))File.Delete(tmp);}}
-    }
     internal sealed partial class SourceDocument:IDisposable {
         public const string Template="#include <iostream>\r\n\r\nint main() {\r\n    \r\n    return 0;\r\n}\r\n";
-        public readonly Scintilla Edit=new PairedEditor();public readonly Panel Surface=new Panel{Dock=DockStyle.Fill};public readonly LineGutter Gutter; public string FullPath, Standard="14", RunText="", LogText="";public int Slot;public bool O2,BuildFailed;public DateTime LastWrite;public Encoding Encoding=Native.Utf8;public InputMode IO=InputMode.Auto;
+        public readonly Scintilla Edit=new PairedEditor();public readonly Panel Surface=new Panel{Dock=DockStyle.Fill};public readonly LineGutter Gutter; public string FullPath, Standard="14", LogText="";public int Slot;public bool O2,BuildFailed;public DateTime LastWrite;public Encoding Encoding=Native.Utf8;public InputMode IO=InputMode.Auto;
+        public RunRecord Record {get;private set;}
+        public void SetRecord(RunRecord value){var old=Record;Record=value;if(old!=null&&old!=value)old.Dispose();}
         public List<Diagnostic> Problems=new List<Diagnostic>();public string Status="就绪",BuiltSource;
         public event Action Changed,CursorChanged;public event Action<int,bool> BreakpointChanged;public Func<string,string> VariableTip;
         public string Name {get{return FullPath==null?"未命名"+Slot:Path.GetFileName(FullPath);}}
@@ -52,7 +49,8 @@ namespace MiniCpp {
                 if(n<=Edit.Lines.Count&&seen.Add(n)){Edit.Lines[n-1].MarkerAdd(ErrorMarker);hasErrorLines=true;}
             }if(hasErrorLines)Gutter.Invalidate();
         }
-        public void ApplyDisplay(int dpi,int points){if(editorPoints!=points){for(int i=0;i<Edit.Styles.Count;i++)Edit.Styles[i].Size=points;editorPoints=points;}
+        public void ApplyDisplay(int dpi,int points){if(Edit.Zoom!=0)Edit.Zoom=0;
+            if(editorPoints!=points){for(int i=0;i<Edit.Styles.Count;i++)Edit.Styles[i].Size=points;editorPoints=points;}
             Edit.CaretWidth=Math.Max(2,Math.Min(3,(2*dpi+48)/96));Gutter.SetMetrics(dpi,points);}
         static int Indent(string s){int k=0;foreach(char c in s){if(c==' ')k++;else if(c=='\t')k+=4-k%4;else break;}return k;}
         bool IsCode(int p){int v=Edit.GetStyleAt(p);return v!=1&&v!=2&&v!=3&&v!=6&&v!=7&&v!=12&&v!=13&&v!=15&&v!=17&&v!=18&&v!=20;}
@@ -68,6 +66,6 @@ namespace MiniCpp {
                 depth=Math.Max(0,depth+delta);}
                 if(selected)e.SetSel(e.Lines[first].Position,last+1<e.Lines.Count?e.Lines[last+1].Position:e.Lines[last].EndPosition);else e.GotoPosition(Math.Min(e.Lines[first].EndPosition,e.Lines[first].Position+caret));
             }finally{e.EndUndoAction();}}
-        public void Dispose(){Surface.Dispose();}
+        public void Dispose(){SetRecord(null);Surface.Dispose();}
     }
 }

@@ -10,12 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace MiniCpp {
-    internal sealed class Diagnostic {
-        public string File, Severity, Message, Suggestion; public int Line, Column, HintLine, HintColumn;
-    }
-    internal sealed class BuildResult {
-        public bool Success; public string Log, Executable; public List<Diagnostic> Diagnostics = new List<Diagnostic>();
-    }
     internal static class Compiler {
         public static readonly string[] Standards = {"98","11","14","17"};
         public static string FindBin(string configured) {
@@ -35,7 +29,12 @@ namespace MiniCpp {
             using(var sha=SHA256.Create()) { string id=BitConverter.ToString(sha.ComputeHash(Native.Utf8.GetBytes(Path.GetFullPath(source).ToUpperInvariant()))).Replace("-","").Substring(0,32); return Path.Combine(Native.DataDir,"build",id,debug?"debug.exe":"program.exe"); }
         }
         static readonly Regex Position=new Regex(@"^(?<file>.+?):(?<line>\d+):(?:(?<col>\d+):)?\s*(?<kind>fatal error|error|warning|note):\s*(?<msg>.*)$",RegexOptions.Compiled);
-        public static async Task<BuildResult> BuildAsync(string source,string std,bool o2,bool debug,bool rebuild,string bin,CancellationToken token) {
+        public static Task<BuildResult> BuildAsync(string source,string std,bool o2,bool debug,bool rebuild,string bin,CancellationToken token) {
+            // File decoding, shadow-source preparation and process startup can all block before the first await.
+            return Task.Run(()=>BuildCoreAsync(source,std,o2,debug,rebuild,bin,token),token);
+        }
+        static async Task<BuildResult> BuildCoreAsync(string source,string std,bool o2,bool debug,bool rebuild,string bin,CancellationToken token) {
+            token.ThrowIfCancellationRequested();
             if(!Standards.Contains(std)) throw new ArgumentException("不支持的语言标准");
             if(string.IsNullOrEmpty(bin))throw new InvalidOperationException("找不到 g++.exe。请使用含工具链的便携版，或在「工具 → 编译工具链」选择 GCC 的 bin 目录。");
             string output=ArtifactPath(source,debug),dir=Path.GetDirectoryName(output),cwd=Path.GetDirectoryName(source);

@@ -18,6 +18,7 @@ namespace MiniCpp {
         void SizeIconButtons(ToolStrip strip,int width,int height){foreach(ToolStripButton b in strip.Items.OfType<ToolStripButton>())if(b.DisplayStyle==ToolStripItemDisplayStyle.Image)b.Size=new Size(Px(width),Px(height));}
         void SetupWorkspace(StatusStrip foot){
             foldOutput=Ui.Button("chevron-down","收起底部面板 · Ctrl+J",ToggleOutput);foldOutput.Alignment=ToolStripItemAlignment.Right;outputTabs.Items.Add(foldOutput);
+            var fonts=Ui.Button("settings-2","设置 · 字体大小",ShowFontSettings);fonts.Alignment=ToolStripItemAlignment.Right;outputTabs.Items.Add(fonts);
             restoreOutput=new ToolStripStatusLabel{IsLink=true,DisplayStyle=ToolStripItemDisplayStyle.Image,Image=Ui.Art("chevron-down"),AccessibleName="展开底部面板",ToolTipText="展开底部面板 · Ctrl+J",Visible=false};
             var up=new Bitmap(restoreOutput.Image);up.RotateFlip(RotateFlipType.Rotate180FlipNone);restoreOutput.Image=up;foot.Disposed+=(s,e)=>up.Dispose();restoreOutput.Click+=(s,e)=>ToggleOutput();foot.Items.Add(restoreOutput);
             horizontal.FixedPanel=FixedPanel.Panel2;
@@ -38,10 +39,20 @@ namespace MiniCpp {
                 foreach(var d in docs)SizeEditor(d);
                 foreach(var strip in vertical.Panel2.Controls.OfType<ToolStrip>()){strip.ImageScalingSize=new Size(Px(22),Px(22));strip.Height=Px(38);SizeIconButtons(strip,36,32);}
             }finally{positioning=false;}LayoutOutput();}
-        void SizeEditor(SourceDocument d){d.ApplyDisplay(DeviceDpi,prefs.FontSizes[1]);}
-        void ShowFontSettings(){if(!FontSettings.Edit(this,prefs.FontSizes))return;ApplyMetrics();prefs.Save();}
+        void SizeEditor(SourceDocument d){d.ApplyDisplay(DeviceDpi,prefs.FontSizes[FontSettings.Source]);}
+        void EditorZoomChanged(SourceDocument d){
+            if(closing||current!=d||d.Edit.Zoom==0)return;
+            // Native zoom is a point offset. Fold it into the same absolute setting used by the dialog.
+            int points=FontSettings.Clamp(prefs.FontSizes[FontSettings.Source]+d.Edit.Zoom);
+            if(points==prefs.FontSizes[FontSettings.Source]){SizeEditor(d);return;}
+            prefs.FontSizes[FontSettings.Source]=points;
+            foreach(var doc in docs)SizeEditor(doc);
+            if(!prefs.Save())Say("字号已应用，但未能保存到本机。请检查设置目录的写入权限。");
+        }
+        void ShowFontSettings(){if(!FontSettings.Edit(this,prefs.FontSizes))return;ApplyMetrics();
+            if(!prefs.Save())Error("字号已应用，但未能保存到本机。请检查设置目录的写入权限。");}
         void ApplyTextSizes(){int[] sizes=prefs.FontSizes;var ui=FontSettings.Get(sizes[0],false);menu.Font=tabs.Font=tools.Font=outputTabs.Font=ui;if(status.Owner!=null)status.Owner.Font=ui;
-            log.Font=FontSettings.Get(sizes[3],true);transcript.Font=FontSettings.Get(sizes[4],true);locals.Font=FontSettings.Get(sizes[5],true);stateLabel.Font=frameLabel.Font=FontSettings.Get(sizes[5],false);stateLabel.Height=stateLabel.Font.Height+Px(5);if(stateLabel.Parent!=null)stateLabel.Parent.Height=stateLabel.Height+frameLabel.Font.Height+Px(18);
+            log.Font=FontSettings.Get(sizes[3],true);transcript.SetFonts(ui,FontSettings.Get(sizes[4],true),DeviceDpi);locals.Font=FontSettings.Get(sizes[5],true);stateLabel.Font=frameLabel.Font=FontSettings.Get(sizes[5],false);stateLabel.Height=stateLabel.Font.Height+Px(5);if(stateLabel.Parent!=null)stateLabel.Parent.Height=stateLabel.Height+frameLabel.Font.Height+Px(18);
             issues.Font=FontSettings.Get(sizes[2],false);shownIssues=null;if(current!=null)RenderIssues(current.Problems);}
         static bool BuildIcon(string name){return name=="compile"||name=="run"||name=="compile-and-run"||name=="rebuild";}
         void FitToolbar(){if(!workspaceReady||fittingTools)return;fittingTools=true;

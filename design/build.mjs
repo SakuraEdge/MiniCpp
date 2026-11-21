@@ -12,6 +12,7 @@ if(opts.includes('--import-icons')) {
   const vendor=path.resolve(dir,'../.review-tools/node_modules/lucide-static');
   const db=JSON.parse(await readFile(path.join(vendor,'icon-nodes.json'),'utf8'));
   const names=new Set([...((markup+work+term+controller).matchAll(/(?:data-lucide="|')([a-z][a-z0-9-]*)(?:"|')/g))].map(m=>m[1]).filter(n=>Object.hasOwn(db,n)));
+  for(const nativeOnly of ['contrast','settings-2'])names.add(nativeOnly);
   const subset=Object.fromEntries([...names].sort().map(n=>[n,db[n]]));
   await mkdir(path.join(dir,'vendor'),{recursive:true});
   await writeFile(path.join(dir,'vendor/lucide-subset.json'),JSON.stringify(subset,null,2)+'\n');

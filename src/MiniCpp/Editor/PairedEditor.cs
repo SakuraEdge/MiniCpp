@@ -37,16 +37,16 @@ namespace MiniCpp {
 
         bool ExpandCommand(){
             if(SelectionStart!=SelectionEnd||Selections.Count!=1||DirectMessage(SciSelectionIsRectangle,IntPtr.Zero,IntPtr.Zero)!=IntPtr.Zero)return false;
-            var line=Lines[CurrentLine];if(CurrentPosition!=line.EndPosition)return false;
-            string input=GetTextRange(line.Position,line.EndPosition-line.Position),command=input.TrimStart(' ','\t');
-            if(command!="/main"&&command!="/fremain")return false;
-            Colorize(Math.Min(GetEndStyled(),line.Position),line.EndPosition);
-            if((GetStyleAt(line.EndPosition-command.Length)&63)!=Style.Cpp.Operator)return false;
+            var line=Lines[CurrentLine];string input=line.Text.TrimEnd('\r','\n');
+            int start=line.Position,end=start+input.Length;
+            if(CurrentPosition!=end)return false;
+            string command=input.TrimStart(' ','\t');
             string nl=EolMode==Eol.CrLf?"\r\n":EolMode==Eol.Cr?"\r":"\n";
-            string code="#include <bits/stdc++.h>"+nl+"using namespace std;"+nl+"int main() {"+nl;
-            if(command=="/fremain")code+="    freopen(\".in\",\"r\",stdin);"+nl+"    freopen(\".out\",\"w\",stdout);"+nl;
-            int start=line.Position,caret=start+code.Length+4;code+="    return 0;"+nl+"}";
-            BeginUndoAction();try{TargetStart=start;TargetEnd=line.EndPosition;ReplaceTarget(code);SetEmptySelection(caret);ScrollCaret();}finally{EndUndoAction();}
+            string code;int caretOffset;
+            if(!ContestTemplates.TryExpand(command,nl,out code,out caretOffset))return false;
+            Colorize(Math.Min(GetEndStyled(),start),end);
+            if((GetStyleAt(end-command.Length)&63)!=Style.Cpp.Operator)return false;
+            BeginUndoAction();try{TargetStart=start;TargetEnd=end;ReplaceTarget(code);SetEmptySelection(start+caretOffset);ScrollCaret();}finally{EndUndoAction();}
             return true;
         }
 

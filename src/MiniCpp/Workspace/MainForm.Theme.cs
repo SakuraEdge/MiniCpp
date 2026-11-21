@@ -44,8 +44,8 @@ namespace MiniCpp {
             PaintStrip(menu,p.Soft);PaintStrip(tools,p.Paper);PaintStrip(tabs,p.Soft);PaintStrip(outputTabs,p.Soft);
             if(tools.OverflowButton.HasDropDownItems){var overflow=tools.OverflowButton.DropDown;overflow.Renderer=paletteRenderer;overflow.BackColor=p.Soft;overflow.ForeColor=p.Ink;}
             PaintStrip(status.Owner,p.Soft);restoreOutput.LinkColor=p.Accent;restoreOutput.ActiveLinkColor=p.Ink;
-            log.BackColor=transcript.BackColor=issues.BackColor=locals.BackColor=p.Paper;
-            log.ForeColor=transcript.ForeColor=locals.ForeColor=p.Ink;
+            log.BackColor=issues.BackColor=locals.BackColor=p.Paper;
+            log.ForeColor=locals.ForeColor=p.Ink;transcript.ApplyPalette(p);
             if(issues.ContextMenuStrip!=null)PaintStrip(issues.ContextMenuStrip,p.Soft);
             stateLabel.ForeColor=p.Accent;frameLabel.ForeColor=p.Muted;stateLabel.Parent.BackColor=p.Soft;
             foreach(var strip in vertical.Panel2.Controls.OfType<ToolStrip>())PaintStrip(strip,p.Soft);
