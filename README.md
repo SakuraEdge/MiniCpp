@@ -2,7 +2,7 @@
 
 面向竞赛生的 Windows 单文件 C++ IDE。桌面版使用 Scintilla 编辑代码、GCC 编译、GDB 调试，不需要建立项目。
 
-**Mini C++ Dev v1.0.2 · Windows x64** · [GitHub 发布记录](https://github.com/SakuraEdge/MiniCpp/releases)。离线安装包 `MiniCpp-Dev-v1.0.2-win-x64-Setup.exe` 内置 GCC 和 GDB，安装到当前用户目录，不改系统 PATH。安装时默认勾选关联 `.cpp`，可取消；Windows 10/11 的默认应用由用户在系统设置中确认，不修改任何源文件。便携版直接运行 `MiniCpp.exe`，不注册文件关联。需要 .NET Framework 4.8 或更新版本。
+**Mini C++ Dev v1.0.3 · Windows x64** · [GitHub 发布记录](https://github.com/SakuraEdge/MiniCpp/releases)。离线安装包 `MiniCpp-Dev-v1.0.3-win-x64-Setup.exe` 内置 GCC 和 GDB，安装到当前用户目录，不改系统 PATH。安装时默认勾选关联 `.cpp`，可取消；Windows 10/11 的默认应用由用户在系统设置中确认，不修改任何源文件。便携版直接运行 `MiniCpp.exe`，不注册文件关联。需要 .NET Framework 4.8 或更新版本。
 
 在「帮助 → 检查更新」可免登录查看 GitHub 上的正式版、开发版和对应更新说明。匿名 API 限流或暂时不可用时，会改读同一仓库的官方公开发布订阅；限流等待期内不再重复请求 API。订阅只覆盖近期发布。两个来源都无法读取时，可手动打开发布页，不会误报“已是最新版”。
 
