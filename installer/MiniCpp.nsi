@@ -18,8 +18,8 @@ RequestExecutionLevel user
 SetCompressor /SOLID lzma
 SetCompressorDictSize 32
 ManifestDPIAware true
-Icon "${APPDIR}\assets\mini-cpp.ico"
-UninstallIcon "${APPDIR}\assets\mini-cpp.ico"
+!define MUI_ICON "${APPDIR}\assets\mini-cpp.ico"
+!define MUI_UNICON "${APPDIR}\assets\mini-cpp.ico"
 VIProductVersion ${APPVERSION}.0
 VIAddVersionKey "ProductName" "Mini C++"
 VIAddVersionKey "FileDescription" "Mini C++ ${APPCHANNEL} v${APPVERSION} Setup"

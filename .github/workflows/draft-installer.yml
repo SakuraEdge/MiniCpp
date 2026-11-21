@@ -163,6 +163,19 @@ jobs:
           $editor = Get-Item -LiteralPath (Join-Path $installDir 'MiniCpp.exe')
           $version = [Diagnostics.FileVersionInfo]::GetVersionInfo($editor.FullName).ProductVersion
           if ($version -cne $env:PRODUCT_VERSION) { throw "Unexpected installed version: $version" }
+          Add-Type -AssemblyName System.Drawing
+          function Get-IconBytes([string]$path) {
+            $icon = [Drawing.Icon]::ExtractAssociatedIcon($path)
+            $bitmap = $icon.ToBitmap()
+            $stream = [IO.MemoryStream]::new()
+            try {
+              $bitmap.Save($stream, [Drawing.Imaging.ImageFormat]::Png)
+              [Convert]::ToBase64String($stream.ToArray())
+            } finally { $stream.Dispose(); $bitmap.Dispose(); $icon.Dispose() }
+          }
+          if ((Get-IconBytes $setup.FullName) -cne (Get-IconBytes $editor.FullName)) {
+            throw 'Installer icon does not match the editor icon'
+          }
           $license = Get-FileHash -LiteralPath (Join-Path $installDir 'LICENSE')
           if ($license.Hash -ne (Get-FileHash -LiteralPath 'LICENSE').Hash) { throw 'Installed MIT license is incorrect' }
           foreach ($file in 'LICENSES/TOOLCHAIN.txt', 'w64devkit/bin/g++.exe', 'w64devkit/bin/gdb.exe') {
