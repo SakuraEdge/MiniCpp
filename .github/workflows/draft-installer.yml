@@ -95,7 +95,8 @@ jobs:
         with:
           name: release-ui-previews
           path: .build-cache/smoke-*/*.png
-          if-no-files-found: ignore
+          include-hidden-files: true
+          if-no-files-found: error
       - name: Package the offline installer
         shell: pwsh
         run: |
