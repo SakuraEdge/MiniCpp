@@ -34,6 +34,10 @@ internal static class ReleaseSmoke {
         }
     }
     static void ExpectFailure(Action action,string name){bool failed=false;try{action();}catch(Exception){failed=true;}Need(failed,"Expected failure: "+name);}
+    static void Capture(Form form,string run,string name){
+        form.PerformLayout();Application.DoEvents();
+        using(var bitmap=new Bitmap(form.Width,form.Height)){form.DrawToBitmap(bitmap,new Rectangle(Point.Empty,bitmap.Size));bitmap.Save(Path.Combine(run,name+".png"));}
+    }
 
     static void Templates(string run){
         var settings=Call("TemplateSettings","Load");var stale=Call("TemplateSettings","Load");
@@ -59,8 +63,9 @@ internal static class ReleaseSmoke {
             var list=(ListBox)Field(dialog,"items");var code=(TextBox)Field(dialog,"code");
             list.SelectedIndex=1;code.Text="int saved_before_switch;";list.SelectedIndex=2;list.SelectedIndex=1;
             Need(code.Text=="int saved_before_switch;","switching templates lost edits");
-            using(var bitmap=new Bitmap(dialog.Width,dialog.Height)){dialog.DrawToBitmap(bitmap,new Rectangle(Point.Empty,bitmap.Size));bitmap.Save(Path.Combine(run,"templates.png"));}
+            Invoke(dialog.GetType(),dialog,"ResetSelected");Capture(dialog,run,"templates");
             dialog.ClientSize=new Size(620,380);Application.DoEvents();Need(code.Width>150&&code.Height>100,"compact template dialog clipped");
+            Capture(dialog,run,"templates-compact");
             dialog.Close();
         }
         Console.WriteLine("PASS: custom initial code, commands, literal |, cursor, duplicate and concurrent-save protection, template editor.");
@@ -69,11 +74,11 @@ internal static class ReleaseSmoke {
     static void UpdateLayout(string run){
         var latest=Call("ReleaseVersion","Parse","v1.0.3");Set(latest,"Notes","框架与快捷指令\r\n\r\n可编辑初始代码、新增快捷指令。\r\n下载更新后自动重启，并重新打开已保存源码。");
         using(var dialog=(Form)Activator.CreateInstance(assembly.GetType("MiniCpp.UpdateDialog"),true)){
-            dialog.CreateControl();Invoke(dialog.GetType(),dialog,"ShowRelease",latest);dialog.PerformLayout();
-            using(var bitmap=new Bitmap(dialog.Width,dialog.Height)){dialog.DrawToBitmap(bitmap,new Rectangle(Point.Empty,bitmap.Size));bitmap.Save(Path.Combine(run,"update.png"));}
+            Set(dialog,"checking",true);dialog.Show();Invoke(dialog.GetType(),dialog,"ShowRelease",latest);Capture(dialog,run,"update");
             dialog.ClientSize=new Size(510,370);dialog.PerformLayout();
             Need(((Control)Field(dialog,"notes")).Height>80,"update notes clipped at minimum size");
             var button=(Button)Field(dialog,"primary");Need(button.Text=="下载并更新"&&button.Enabled,"update action missing");
+            Capture(dialog,run,"update-compact");dialog.Close();
         }
     }
 
