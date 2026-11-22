@@ -1,0 +1,81 @@
+name: Build and publish a portable package
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing published release
+        type: string
+        default: v1.0.1
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  portable:
+    if: github.ref == 'refs/heads/main'
+    runs-on: windows-2022
+    timeout-minutes: 25
+    env:
+      RELEASE_TAG: ${{ inputs.tag }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Resolve the published release
+        id: release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ($env:RELEASE_TAG -notmatch '^v[0-9]+\.[0-9]+\.[0-9]+(-dev)?$') { throw 'Invalid release tag' }
+          $headers = @{Authorization="Bearer $env:GH_TOKEN"; Accept='application/vnd.github+json'}
+          $release = Invoke-RestMethod -Headers $headers "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases/tags/$env:RELEASE_TAG"
+          if ($release.draft -or $release.immutable) { throw 'Expected a mutable published release' }
+          "id=$($release.id)" >> $env:GITHUB_OUTPUT
+      - name: Build the portable application
+        shell: pwsh
+        run: |
+          ./scripts/build.ps1 -AppDir dist/MiniCpp
+          $version = [Diagnostics.FileVersionInfo]::GetVersionInfo((Resolve-Path 'dist/MiniCpp/MiniCpp.exe')).ProductVersion
+          if ($version -cne $env:RELEASE_TAG.Substring(1)) { throw "Unexpected product version: $version" }
+          if (Test-Path -LiteralPath 'dist/MiniCpp/portable.mode') { throw 'Portable marker must only be added to the ZIP' }
+          ./scripts/get-toolchain.ps1 -AppDir dist/MiniCpp
+          ./scripts/package.ps1 -AppDir dist/MiniCpp
+      - name: Verify the extracted portable edition
+        id: package
+        shell: pwsh
+        run: |
+          $zip = @(Get-ChildItem -LiteralPath artifacts -Filter '*-Portable.zip')
+          if ($zip.Count -ne 1) { throw 'Expected one portable ZIP' }
+          $extract = Join-Path $env:RUNNER_TEMP 'MiniCpp Portable 中文'
+          Expand-Archive -LiteralPath $zip[0].FullName -DestinationPath $extract
+          $app = Join-Path $extract 'MiniCpp'
+          ./scripts/smoke.ps1 -AppDir $app -Portable
+          $link = Join-Path ([Environment]::GetFolderPath('DesktopDirectory')) 'Mini C++ (免安装版).lnk'
+          $shell = New-Object -ComObject Shell.Application
+          $target = $shell.NameSpace((Split-Path -Parent $link)).ParseName((Split-Path -Leaf $link)).ExtendedProperty('System.Link.TargetParsingPath')
+          if ($target -ne (Join-Path $app 'MiniCpp.exe')) { throw 'Shortcut points outside the portable package' }
+          foreach ($file in 'MiniCpp.exe.config','MiniCpp.Console.exe','ScintillaNET.dll','portable.mode','assets/mini-cpp.ico','assets/cpp-file.ico','w64devkit/bin/gdb.exe','LICENSE','LICENSES/TOOLCHAIN.txt') {
+            if (!(Test-Path -LiteralPath (Join-Path $app $file) -PathType Leaf)) { throw "Missing file: $file" }
+          }
+          if ((Get-FileHash -LiteralPath (Join-Path $app 'LICENSE')).Hash -ne (Get-FileHash -LiteralPath 'LICENSE').Hash) { throw 'MIT license mismatch' }
+          "file=$($zip[0].Name)" >> $env:GITHUB_OUTPUT
+      - name: Upload and verify the portable ZIP
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_ID: ${{ steps.release.outputs.id }}
+          ZIP_NAME: ${{ steps.package.outputs.file }}
+        run: |
+          $headers = @{Authorization="Bearer $env:GH_TOKEN"; Accept='application/vnd.github+json'}
+          $url = "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases/$env:RELEASE_ID"
+          $release = Invoke-RestMethod -Headers $headers $url
+          if ($release.draft -or $release.tag_name -cne $env:RELEASE_TAG) { throw 'Release changed during build' }
+          if ($release.assets.name -contains $env:ZIP_NAME) { throw 'Portable ZIP already exists' }
+          $file = Get-Item -LiteralPath "artifacts/$env:ZIP_NAME"
+          $digest = (Get-FileHash -LiteralPath $file.FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+          $upload = $release.upload_url.Split('{')[0] + '?name=' + [uri]::EscapeDataString($file.Name)
+          $asset = Invoke-RestMethod -Uri $upload -Method Post -Headers $headers -ContentType 'application/zip' -InFile $file.FullName
+          if ($asset.state -ne 'uploaded' -or $asset.size -ne $file.Length -or $asset.digest -cne "sha256:$digest") { throw 'Uploaded ZIP verification failed' }
+          "Portable ZIP $($file.Name), $($file.Length) bytes, SHA-256 $digest, source $env:GITHUB_SHA" >> $env:GITHUB_STEP_SUMMARY
