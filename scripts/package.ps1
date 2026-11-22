@@ -3,7 +3,7 @@ param([string]$AppDir)
 $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $app = if ($AppDir) { [IO.Path]::GetFullPath($AppDir) } else { Join-Path $root 'dist/MiniCpp' }
-foreach ($item in 'MiniCpp.exe','MiniCpp.exe.config','MiniCpp.Console.exe','ScintillaNET.dll','w64devkit/bin/g++.exe','w64devkit/bin/gdb.exe','assets/mini-cpp.ico','assets/cpp-file.ico','LICENSE','LICENSES/TOOLCHAIN.txt') {
+foreach ($item in 'MiniCpp.exe','MiniCpp.exe.config','MiniCpp.Console.exe','MiniCpp.Updater.exe','ScintillaNET.dll','w64devkit/bin/g++.exe','w64devkit/bin/gdb.exe','assets/mini-cpp.ico','assets/cpp-file.ico','LICENSE','LICENSES/TOOLCHAIN.txt') {
     if (!(Test-Path -LiteralPath (Join-Path $app $item))) { throw "Missing $item; build and install the toolchain first." }
 }
 $out = [IO.Directory]::CreateDirectory((Join-Path $root 'artifacts')).FullName

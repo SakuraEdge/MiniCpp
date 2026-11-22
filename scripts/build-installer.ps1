@@ -4,7 +4,7 @@ $ErrorActionPreference='Stop'
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 if (!$AppDir){$AppDir=Join-Path $root 'dist/MiniCpp'}
 $app=(Resolve-Path -LiteralPath $AppDir).Path.TrimEnd('\')
-foreach ($file in 'MiniCpp.exe','MiniCpp.exe.config','MiniCpp.Console.exe','ScintillaNET.dll','w64devkit/bin/g++.exe','w64devkit/bin/gdb.exe','assets/cpp-file.ico','LICENSE'){
+foreach ($file in 'MiniCpp.exe','MiniCpp.exe.config','MiniCpp.Console.exe','MiniCpp.Updater.exe','ScintillaNET.dll','w64devkit/bin/g++.exe','w64devkit/bin/gdb.exe','assets/cpp-file.ico','LICENSE'){
     if (!(Test-Path -LiteralPath (Join-Path $app $file) -PathType Leaf)){throw "Missing $file in staged distribution."}
 }
 if (!$MakeNsis){$cmd=Get-Command makensis.exe -ErrorAction SilentlyContinue;if($cmd){$MakeNsis=$cmd.Source}}

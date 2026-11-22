@@ -2,9 +2,13 @@
 
 面向竞赛生的 Windows 单文件 C++ IDE。桌面版使用 Scintilla 编辑代码、GCC 编译、GDB 调试，不需要建立项目。
 
-**Mini C++ Rev v1.0.0 · Windows x64** · [GitHub 发布记录](https://github.com/SakuraEdge/MiniCpp/releases)。离线安装包 `MiniCpp-Rev-v1.0.0-win-x64-Setup.exe` 内置 GCC 和 GDB，安装到当前用户目录，无需管理员权限。安装时可选择关联 `.cpp` 文件，并在 Windows 10/11 中确认默认应用。便携版可直接运行 `MiniCpp.exe`。需要 .NET Framework 4.8 或更新版本。
+**Mini C++ Rev v1.0.2 · Windows x64** · [GitHub 发布记录](https://github.com/SakuraEdge/MiniCpp/releases)。离线安装包 `MiniCpp-Rev-v1.0.2-win-x64-Setup.exe` 内置 GCC 和 GDB，可选择安装位置。安装时可选择桌面快捷方式和关联 `.cpp` 文件，并在 Windows 10/11 中确认默认应用。便携版可直接运行 `MiniCpp.exe`。需要 .NET Framework 4.8 或更新版本。
 
 在「帮助 → 检查更新」可免登录查看 GitHub 上的版本和更新说明。正式版只跟踪正式发行通道。匿名 API 限流或暂时不可用时，会改读同一仓库的近期公开发布订阅。两个来源都不可用时，可以打开发布页手动查看。Dev v1.0.3 用户可从发布页下载安装包切换到 Rev v1.0.0。
+
+Rev v1.0.2 起支持在更新窗口中下载、校验和自动重启更新。小型更新包保留源码、个人配置、工具链和免安装标记，失败时从备份恢复。更新前需保存源码、结束运行或调试并关闭同一目录的其他窗口，程序目录需可写。旧版 v1.0.1 需先手动升级至 v1.0.2。完整免安装包名称为 `MiniCpp-Rev-v1.0.2-win-x64-Portable.zip`。
+
+「设置 → 框架与快捷指令」可修改新建文件初始代码，新增、修改、删除完整输入后按回车执行的 `/命令`。默认提供 `/main`、`/fremain`、`/solve`，模板中可选用 `${cursor}` 指定光标位置。配置保存在 `%LOCALAPPDATA%\MiniCpp\templates.xml`，恢复当前默认仅影响当前编辑项，点击保存后生效。
 
 Rev v1.0.1 另提供 `MiniCpp-Rev-v1.0.1-win-x64-Portable.zip` 免安装版，内置 GCC/GDB。完整解压到固定目录后运行其中的 `MiniCpp.exe`。首次启动可选择创建桌面快捷方式和注册 `.cpp` 打开方式，Windows 会要求确认默认应用。选择「暂不设置」后不再重复提示，也可从「设置 → 免安装版设置」重新打开。设置和编译缓存保存在当前用户的 `%LOCALAPPDATA%\MiniCpp`。移动解压目录后会重新提示，以便更新快捷方式和文件关联。
 

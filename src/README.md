@@ -12,7 +12,8 @@
 | `ConsoleHost/Execution`、`ConsoleHost/Recording` | 前者负责子进程与标准流，后者负责原始内容、行数与记录清单的写出。摘要与分页读取在 `MiniCpp/Execution/RunRecord.cs`，显示在 `MiniCpp/Interface/RunRecordView.cs` |
 | `MiniCpp/Debugging` | GDB 会话、MI 协议解析、变量快照 |
 | `MiniCpp/Interface`、`MiniCpp/Settings` | 前者是共享控件、绘制与配色；后者是偏好、字体及其持久化 |
-| `MiniCpp/Updates` | GitHub 发布列表、发布说明和版本比较，不负责弹窗 |
+| `MiniCpp/Updates` | GitHub 发布列表、更新窗口、后台下载、包校验及更新启动 |
+| `UpdateHost`、`Shared/Update*` | 独立更新进程、程序文件清单、备份替换和失败恢复 |
 | `Shared` | 两个可执行程序共用的 Windows 进程、参数和子进程生命周期工具 |
 
 ## 线程边界

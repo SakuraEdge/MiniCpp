@@ -76,6 +76,26 @@ jobs:
           files: |
             ${{ github.workspace }}\dist\MiniCpp\MiniCpp.exe
             ${{ github.workspace }}\dist\MiniCpp\MiniCpp.Console.exe
+            ${{ github.workspace }}\dist\MiniCpp\MiniCpp.Updater.exe
+      - name: Package and verify the application update
+        shell: pwsh
+        run: |
+          ./scripts/get-toolchain.ps1 -AppDir dist/MiniCpp
+          ./scripts/package-update.ps1 -AppDir dist/MiniCpp
+          ./scripts/smoke.ps1 -AppDir dist/MiniCpp -Release
+          ./scripts/package.ps1 -AppDir dist/MiniCpp
+          $portable = @(Get-ChildItem -LiteralPath artifacts -Filter '*-Portable.zip')
+          if ($portable.Count -ne 1) { throw 'Expected one portable ZIP' }
+          $extract = Join-Path $env:RUNNER_TEMP 'MiniCpp Portable'
+          Expand-Archive -LiteralPath $portable[0].FullName -DestinationPath $extract
+          ./scripts/smoke.ps1 -AppDir (Join-Path $extract 'MiniCpp') -Portable
+      - name: Retain focused UI previews
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: release-ui-previews
+          path: .build-cache/smoke-*/*.png
+          if-no-files-found: ignore
       - name: Package the offline installer
         shell: pwsh
         run: |
@@ -178,7 +198,7 @@ jobs:
           }
           $license = Get-FileHash -LiteralPath (Join-Path $installDir 'LICENSE')
           if ($license.Hash -ne (Get-FileHash -LiteralPath 'LICENSE').Hash) { throw 'Installed MIT license is incorrect' }
-          foreach ($file in 'LICENSES/TOOLCHAIN.txt', 'w64devkit/bin/g++.exe', 'w64devkit/bin/gdb.exe') {
+          foreach ($file in 'LICENSES/TOOLCHAIN.txt', 'w64devkit/bin/g++.exe', 'w64devkit/bin/gdb.exe', 'MiniCpp.Updater.exe', 'update-manifest.xml') {
             if (!(Test-Path -LiteralPath (Join-Path $installDir $file) -PathType Leaf)) { throw "Missing installed file: $file" }
           }
           if ($env:SIGNED_BUILD -eq 'true') {
@@ -194,7 +214,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ${{ inputs.tag }}-unsigned-candidate
-          path: artifacts/MiniCpp-Rev-v*-win-x64-Setup.exe*
+          path: artifacts/*
           if-no-files-found: error
       - name: Attach and verify without publishing
         if: inputs.sign || inputs.attach_unsigned_stable || endsWith(inputs.tag, '-dev')
@@ -208,10 +228,19 @@ jobs:
           $h = @{Authorization="Bearer $env:GH_TOKEN"; Accept='application/vnd.github+json'}
           $r = Invoke-RestMethod -Headers $h "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases/$env:DRAFT_ID"
           if (!$r.draft -or $r.tag_name -cne $env:RELEASE_TAG -or $r.target_commitish -cne $env:TARGET_SHA) { throw 'Draft changed during build' }
-          $f = Get-Item -LiteralPath "artifacts/$env:SETUP"
-          if ($r.assets.name -contains $f.Name) { throw 'Refusing to replace an existing installer' }
-          $sha = (Get-FileHash -Algorithm SHA256 -LiteralPath $f.FullName).Hash.ToLowerInvariant()
-          $url = $r.upload_url.Split('{')[0] + '?name=' + [uri]::EscapeDataString($f.Name)
-          $a = Invoke-RestMethod -Uri $url -Method Post -Headers $h -ContentType 'application/octet-stream' -InFile $f.FullName
-          if ($a.state -ne 'uploaded' -or $a.size -ne $f.Length -or $a.digest -cne "sha256:$sha") { throw 'Uploaded asset verification failed' }
-          "Verified $($f.Name): $($f.Length) bytes, SHA-256 $sha (source $env:TARGET_SHA)" >> $env:GITHUB_STEP_SUMMARY
+          $files = @(Get-Item -LiteralPath "artifacts/$env:SETUP")
+          $files += @(Get-ChildItem -LiteralPath artifacts -Filter '*.zip')
+          $files += @(Get-Item -LiteralPath artifacts/update.json)
+          if ($files.Count -ne 4) { throw 'Expected installer, portable ZIP, update ZIP and descriptor' }
+          foreach ($f in $files) {
+            $sha = (Get-FileHash -Algorithm SHA256 -LiteralPath $f.FullName).Hash.ToLowerInvariant()
+            $existing = @($r.assets | Where-Object name -CEQ $f.Name)
+            if ($existing.Count) {
+              if ($existing.Count -ne 1 -or $existing[0].digest -cne "sha256:$sha") { throw "Different draft asset already exists: $($f.Name)" }
+              continue
+            }
+            $url = $r.upload_url.Split('{')[0] + '?name=' + [uri]::EscapeDataString($f.Name)
+            $a = Invoke-RestMethod -Uri $url -Method Post -Headers $h -ContentType 'application/octet-stream' -InFile $f.FullName
+            if ($a.state -ne 'uploaded' -or $a.size -ne $f.Length -or $a.digest -cne "sha256:$sha") { throw 'Uploaded asset verification failed' }
+            "Verified $($f.Name): $($f.Length) bytes, SHA-256 $sha (source $env:TARGET_SHA)" >> $env:GITHUB_STEP_SUMMARY
+          }

@@ -9,10 +9,12 @@ $cache = [IO.Directory]::CreateDirectory((Join-Path $root '.build-cache')).FullN
 $csc = Join-Path $env:WINDIR 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
 if (!(Test-Path -LiteralPath $csc)) { throw 'Install the Windows .NET Framework 4.8 runtime.' }
 & (Join-Path $PSScriptRoot 'build-scintilla.ps1') -Cache $cache -OutDir $out -Csc $csc
-$common = @('/nologo','/langversion:5','/codepage:65001','/utf8output','/optimize+','/platform:x64','/r:System.dll','/r:System.Core.dll','/r:System.Xml.dll','/r:System.Xml.Linq.dll')
+$common = @('/nologo','/langversion:5','/codepage:65001','/utf8output','/optimize+','/platform:x64','/r:System.dll','/r:System.Core.dll','/r:System.Xml.dll','/r:System.Xml.Linq.dll','/r:System.IO.Compression.dll','/r:System.IO.Compression.FileSystem.dll')
 $shared = @(Get-ChildItem -LiteralPath (Join-Path $root 'src/Shared') -Recurse -File -Filter '*.cs' | Sort-Object FullName | ForEach-Object FullName)
 $gui = @(Get-ChildItem -LiteralPath (Join-Path $root 'src/MiniCpp') -Recurse -File -Filter '*.cs' | Sort-Object FullName | ForEach-Object FullName)
 $console = @(Get-ChildItem -LiteralPath (Join-Path $root 'src/ConsoleHost') -Recurse -File -Filter '*.cs' | Sort-Object FullName | ForEach-Object FullName)
+& $csc @common '/target:winexe' '/r:System.Windows.Forms.dll' "/out:$out/MiniCpp.Updater.exe" @shared (Join-Path $root 'src/UpdateHost/Program.cs')
+if ($LASTEXITCODE -ne 0) { throw 'Updater compilation failed.' }
 & $csc @common '/target:exe' "/out:$out/MiniCpp.Console.exe" @shared @console
 if ($LASTEXITCODE -ne 0) { throw 'Console host compilation failed.' }
 & $csc @common '/target:winexe' '/r:System.Drawing.dll' '/r:System.Windows.Forms.dll' '/r:System.Runtime.Serialization.dll' '/r:System.Net.Http.dll' "/r:$out/ScintillaNET.dll" "/win32icon:$root/design/icons/mini-cpp.ico" "/win32manifest:$root/src/MiniCpp/app.manifest" "/out:$out/MiniCpp.exe" @shared @gui
