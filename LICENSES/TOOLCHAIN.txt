@@ -1,6 +1,9 @@
 The full portable distribution includes the unmodified w64devkit x64 2.11.0 toolchain.
 It is started as separate programs, not linked into the IDE. Its components and
 their individual licenses are described in w64devkit/README.md and its source archive.
+The portable ZIP adds external Windows UTF-8 manifests for the compiler helpers.
+The original toolchain executables are unchanged. The added manifest is maintained
+in scripts/toolchain-utf8.manifest in the MiniCpp repository.
 
 Upstream release and executable:
 https://github.com/skeeto/w64devkit/releases/tag/v2.11.0
