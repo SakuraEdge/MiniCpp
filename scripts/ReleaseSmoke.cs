@@ -63,7 +63,7 @@ internal static class ReleaseSmoke {
             var list=(ListBox)Field(dialog,"items");var code=(TextBox)Field(dialog,"code");
             list.SelectedIndex=1;code.Text="int saved_before_switch;";list.SelectedIndex=2;list.SelectedIndex=1;
             Need(code.Text=="int saved_before_switch;","switching templates lost edits");
-            Invoke(dialog.GetType(),dialog,"ResetSelected");Capture(dialog,run,"templates");
+            Invoke(dialog.GetType(),dialog,"ResetSelected");Need(code.Lines.Length==5&&code.Text.Contains("\r\nusing namespace std;\r\n"),"template editor lost Windows line breaks");Capture(dialog,run,"templates");
             dialog.ClientSize=new Size(620,380);Application.DoEvents();Need(code.Width>150&&code.Height>100,"compact template dialog clipped");
             Capture(dialog,run,"templates-compact");
             dialog.Close();

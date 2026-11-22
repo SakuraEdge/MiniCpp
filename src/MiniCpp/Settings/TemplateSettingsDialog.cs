@@ -43,10 +43,11 @@ namespace MiniCpp {
             else{var item=settings.Commands[selected-1];item.Command=command.Text.Trim();item.Code=code.Text;loading=true;try{items.Items[selected]=item;}finally{loading=false;}}
         }
         void RefreshList(int index){loading=true;items.Items.Clear();items.Items.Add("新建文件");foreach(var item in settings.Commands)items.Items.Add(item);selected=-1;loading=false;items.SelectedIndex=index;}
+        static string EditorText(string value){return value.Replace("\r\n","\n").Replace("\r","\n").Replace("\n","\r\n");}
         void SelectItem(){
             if(loading)return;int next=items.SelectedIndex;StoreCurrent();selected=next;if(selected<0)return;
             command.Enabled=selected>0;command.Text=selected==0?"新建文件初始框架":settings.Commands[selected-1].Command;
-            code.Text=selected==0?settings.Initial:settings.Commands[selected-1].Code;error.Text="";
+            code.Text=EditorText(selected==0?settings.Initial:settings.Commands[selected-1].Code);error.Text="";
         }
         void AddCommand(){
             StoreCurrent();int n=1;while(settings.Commands.Any(item=>item.Command=="/template"+n))n++;
@@ -55,8 +56,8 @@ namespace MiniCpp {
         void RemoveCommand(){if(selected<=0)return;int at=selected;settings.Commands.RemoveAt(at-1);RefreshList(Math.Min(at,settings.Commands.Count));}
         void ResetSelected(){
             if(selected<0)return;var defaults=TemplateSettings.Defaults();
-            if(selected==0)code.Text=defaults.Initial;
-            else{var item=defaults.Commands.FirstOrDefault(x=>x.Command==command.Text.Trim());code.Text=item==null?"${cursor}":item.Code;}
+            if(selected==0)code.Text=EditorText(defaults.Initial);
+            else{var item=defaults.Commands.FirstOrDefault(x=>x.Command==command.Text.Trim());code.Text=EditorText(item==null?"${cursor}":item.Code);}
         }
         void SaveChanges(){try{StoreCurrent();settings.Save();DialogResult=DialogResult.OK;Close();}catch(Exception ex){error.Text=ex.Message;}}
     }
