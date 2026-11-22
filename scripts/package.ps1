@@ -23,17 +23,6 @@ try {
     try {
         $marker = (Split-Path -Leaf $app) + '/portable.mode'
         if (!$archive.GetEntry($marker)) { $null = $archive.CreateEntry($marker) }
-        # Supply external manifests for compiler helpers that do not opt in to UTF-8 paths.
-        $helpers = @(Get-ChildItem -LiteralPath (Join-Path $app 'w64devkit/libexec') -Filter 'collect2.exe' -File -Recurse)
-        $helpers += @(foreach ($name in 'ld.exe','as.exe','x86_64-w64-mingw32-ld.exe','x86_64-w64-mingw32-as.exe') {
-            Get-Item -LiteralPath (Join-Path $app "w64devkit/bin/$name")
-        })
-        foreach ($helper in $helpers) {
-            $entry = (Split-Path -Leaf $app) + '/' + $helper.FullName.Substring($app.TrimEnd('\').Length+1).Replace('\','/') + '.manifest'
-            if (!$archive.GetEntry($entry)) {
-                $null = [IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive,(Join-Path $PSScriptRoot 'toolchain-utf8.manifest'),$entry)
-            }
-        }
     } finally { $archive.Dispose() }
     if ([IO.File]::Exists($path)) { [IO.File]::Replace($temp,$path,$null) } else { [IO.File]::Move($temp,$path) }
 } finally { if (Test-Path -LiteralPath $temp) { Remove-Item -LiteralPath $temp -Force } }

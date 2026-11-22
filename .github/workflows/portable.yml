@@ -48,7 +48,7 @@ jobs:
         run: |
           $zip = @(Get-ChildItem -LiteralPath artifacts -Filter '*-Portable.zip')
           if ($zip.Count -ne 1) { throw 'Expected one portable ZIP' }
-          $extract = Join-Path $env:RUNNER_TEMP 'MiniCpp Portable 中文'
+          $extract = Join-Path $env:RUNNER_TEMP 'MiniCpp Portable'
           Expand-Archive -LiteralPath $zip[0].FullName -DestinationPath $extract
           $app = Join-Path $extract 'MiniCpp'
           ./scripts/smoke.ps1 -AppDir $app -Portable
